@@ -190,6 +190,20 @@ const PROMPTS = [
     prompt:"You are a content strategist building a 30-day social calendar for a filmmaker.\n\nContent assets I have: [ASSETS]\n\nPosting goal: [FREQUENCY] across [PLATFORMS]\n\nAudience: [AUDIENCE]\n\nPrimary goal this month: [GOAL]\n\nBuild a 30-day calendar. For each post:\nDay and platform / Content type / Hook / Core message / CTA\n\nMust include:\n— At least [EDU_COUNT] purely educational posts with no promotion\n— At least [STORY_COUNT] personal story posts\n— No more than [PROMO_COUNT] direct promotional posts per week\n— One weekly post designed specifically to be saved or shared\n\nNo two consecutive posts same content type. This should feel like a filmmaker's feed. Not a brand's.",
     vars:[{k:"ASSETS",l:"Content Assets You Have",ph:"3 recent shoots with BTS footage, 1 case study, 2 opinions on AI filmmaking, 1 just-released reel"},{k:"FREQUENCY",l:"Posting Frequency",ph:"4 times per week"},{k:"PLATFORMS",l:"Platforms",ph:"TikTok and Instagram Reels"},{k:"AUDIENCE",l:"Your Audience",ph:"Working and aspiring filmmakers, 22-40, mix of beginners and mid-level professionals"},{k:"GOAL",l:"Monthly Goal",ph:"Drive traffic to cinefypro.co to sell The Filmmaker's AI Prompt Bible"},{k:"EDU_COUNT",l:"Min Educational Posts",ph:"8"},{k:"STORY_COUNT",l:"Min Story Posts",ph:"4"},{k:"PROMO_COUNT",l:"Max Promo Posts/Week",ph:"1"}]
   },
+  ,
+  { id:"031", ch:"06", cat:"Content & Self-Marketing",
+    name:"The Ad Campaign Builder",
+    desc:"Build a complete ad campaign brief — concept, scene breakdown, shot list, music direction, and 15-second cut — ready to hand to a director or client.",
+    prompt:"You are a senior creative director building a full ad campaign brief for a brand film.\n\nBrand / Client: [BRAND]\n\nProduct or launch: [PRODUCT]\n\nTarget audience: [AUDIENCE]\n\nAd duration: [DURATION]\n\nThe core emotion this ad must leave the viewer feeling: [EMOTION]\n\nVisual and cinematic style: [VISUAL_STYLE]\n\nBuild a complete campaign brief including:\n1. CONCEPT — the single emotional idea the entire ad is built on.\n2. SCENE BREAKDOWN — 5 scenes with visual, audio, VO, and director notes.\n3. SHOT LIST — 10 shots with type, description, and duration.\n4. MUSIC DIRECTION — phase-by-phase sound design brief.\n5. 15-SECOND CUT — compressed social version with notes.\n\nEvery scene must serve the emotional arc. No filler. Write like a director who has made this ad a hundred times.",
+    vars:[
+      {k:"BRAND",l:"Brand / Client",ph:"Cinefy"},
+      {k:"PRODUCT",l:"Product or Launch",ph:"The Filmmaker's AI Bible — new product launch"},
+      {k:"AUDIENCE",l:"Target Audience",ph:"Working and aspiring filmmakers, 22–40"},
+      {k:"DURATION",l:"Ad Duration",ph:"60 seconds"},
+      {k:"EMOTION",l:"Core Emotion",ph:"The relief of finally having a system — like the first breath after being underwater"},
+      {k:"VISUAL_STYLE",l:"Visual Style",ph:"Dark, intimate, cinematic. Filmmaker at desk. Monitor glow as key light. Deakins-level restraint."},
+    ]
+  }
 ];
 
 const CATS = [...new Set(PROMPTS.map(p => p.cat))];
@@ -849,8 +863,583 @@ Should I scope out the single-day version so you can see exactly what changes?"`
   );
 }
 
+
+// ── PDF EXPORT — DARK CINEMATIC AESTHETIC ─────────────────
+const loadJsPDF = () => new Promise((resolve, reject) => {
+  if (window.jspdf?.jsPDF) { resolve(window.jspdf.jsPDF); return; }
+  const s = document.createElement('script');
+  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+  s.onload  = () => resolve(window.jspdf.jsPDF);
+  s.onerror = reject;
+  document.head.appendChild(s);
+});
+
+// ── Colour palette (matches brand) ────────────────────────
+const C = {
+  black:  [7,   7,  13],
+  deep:   [13,  13, 26],
+  panel:  [17,  17, 32],
+  border: [30,  30, 53],
+  blue:   [79,  195, 247],
+  amber:  [255, 179, 71],
+  green:  [91,  224, 106],
+  white:  [240, 240, 248],
+  muted:  [90,  90, 122],
+  lgrey:  [128, 128, 168],
+};
+
+const PW = 210, PH = 297, ML = 16, MR = 16, IW = PW - ML - MR;
+
+// ── shared helpers ─────────────────────────────────────────
+function setFill(doc, rgb)   { doc.setFillColor(rgb[0], rgb[1], rgb[2]); }
+function setDraw(doc, rgb)   { doc.setDrawColor(rgb[0], rgb[1], rgb[2]); }
+function setTxt(doc, rgb)    { doc.setTextColor(rgb[0], rgb[1], rgb[2]); }
+
+function bgPage(doc) {
+  setFill(doc, C.black);
+  doc.rect(0, 0, PW, PH, 'F');
+}
+
+function pageHeader(doc, title, subtitle, pg) {
+  // Header bar
+  setFill(doc, C.deep);
+  doc.rect(0, 0, PW, 22, 'F');
+  // Blue rule under header
+  setFill(doc, C.blue);
+  doc.rect(0, 22, PW, 0.8, 'F');
+  // CINEFY
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11);
+  setTxt(doc, C.white);
+  doc.text('CINEFY', ML, 14);
+  // Right meta
+  doc.setFont('courier', 'normal');
+  doc.setFontSize(7);
+  setTxt(doc, C.muted);
+  doc.text('CINEFYPRO.CO', PW - MR, 14, { align: 'right' });
+
+  // Title block
+  setFill(doc, C.panel);
+  doc.rect(0, 22.8, PW, 20, 'F');
+  setDraw(doc, C.border);
+  doc.setLineWidth(0.3);
+  doc.line(0, 42.8, PW, 42.8);
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(16);
+  setTxt(doc, C.white);
+  doc.text(title.toUpperCase(), ML, 34);
+
+  if (subtitle) {
+    doc.setFont('courier', 'normal');
+    doc.setFontSize(7.5);
+    setTxt(doc, C.muted);
+    doc.text(subtitle, ML, 40);
+  }
+
+  // Page num top-right
+  doc.setFont('courier', 'normal');
+  doc.setFontSize(7);
+  setTxt(doc, C.muted);
+  doc.text(`PG ${pg}`, PW - MR, 40, { align: 'right' });
+
+  return 52; // y cursor after header
+}
+
+function pageFooter(doc) {
+  setFill(doc, C.deep);
+  doc.rect(0, PH - 10, PW, 10, 'F');
+  setFill(doc, C.blue);
+  doc.rect(0, PH - 10, PW, 0.6, 'F');
+  doc.setFont('courier', 'normal');
+  doc.setFontSize(6.5);
+  setTxt(doc, C.muted);
+  doc.text(
+    "CINEFY  ·  THE FILMMAKER'S AI BIBLE  ·  CINEFYPRO.CO  ·  CONFIDENTIAL",
+    PW / 2, PH - 4, { align: 'center' }
+  );
+}
+
+// Section label: "01  SECTION TITLE ——————————"
+function sectionLabel(doc, num, title, y) {
+  doc.setFont('courier', 'bold');
+  doc.setFontSize(7.5);
+  setTxt(doc, C.amber);
+  doc.text(num, ML, y);
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11);
+  setTxt(doc, C.white);
+  doc.text(title.toUpperCase(), ML + 10, y);
+
+  const ruleX = ML + 10 + doc.getTextWidth(title.toUpperCase()) + 4;
+  setDraw(doc, C.border);
+  doc.setLineWidth(0.4);
+  doc.line(ruleX, y - 1, PW - MR, y - 1);
+
+  return y + 9;
+}
+
+// Concept card (dark panel with gradient left bar)
+function conceptCard(doc, heading, body, y) {
+  const lines = doc.splitTextToSize(body, IW - 16);
+  const h = lines.length * 5.5 + 18;
+  // Panel
+  setFill(doc, C.panel);
+  setDraw(doc, C.border);
+  doc.setLineWidth(0.3);
+  doc.roundedRect(ML, y, IW, h, 2, 2, 'FD');
+  // Left bar — blue top to amber bottom
+  setFill(doc, C.blue);
+  doc.rect(ML, y, 2.5, h / 2, 'F');
+  setFill(doc, C.amber);
+  doc.rect(ML, y + h / 2, 2.5, h / 2, 'F');
+
+  doc.setFont('courier', 'bold');
+  doc.setFontSize(7.5);
+  setTxt(doc, C.blue);
+  doc.text('// ' + heading.toUpperCase(), ML + 6, y + 7);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  setTxt(doc, C.lgrey);
+  doc.text(lines, ML + 6, y + 14);
+  return y + h + 6;
+}
+
+// Two-column meta row
+function metaRow(doc, items, y) {
+  const colW = IW / items.length;
+  items.forEach(([label, value], i) => {
+    const x = ML + i * colW;
+    doc.setFont('courier', 'normal');
+    doc.setFontSize(7);
+    setTxt(doc, C.muted);
+    doc.text(label.toUpperCase(), x, y);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9.5);
+    setTxt(doc, C.blue);
+    const v = doc.splitTextToSize(value || '—', colW - 4);
+    doc.text(v, x, y + 5.5);
+  });
+  return y + 14;
+}
+
+// Scene block (numbered left col + content right)
+function sceneBlock(doc, num, timing, heading, visual, audio, vo, note, y) {
+  const leftW = 18;
+  const rightW = IW - leftW - 3;
+
+  // Measure total height needed
+  const vLines = visual ? doc.splitTextToSize('VISUAL: ' + visual, rightW - 4) : [];
+  const aLines = audio  ? doc.splitTextToSize('AUDIO: '  + audio,  rightW - 4) : [];
+  const vLines2 = vo    ? doc.splitTextToSize('VO: '     + vo,     rightW - 4) : [];
+  const nLines  = note  ? doc.splitTextToSize('NOTE: '   + note,   rightW - 4) : [];
+
+  const allLines = [
+    ...(heading ? [heading, ''] : []),
+    ...vLines, ...(vLines.length ? [''] : []),
+    ...aLines, ...(aLines.length ? [''] : []),
+    ...vLines2,...(vLines2.length ? [''] : []),
+    ...nLines,
+  ];
+  const contentH = Math.max(allLines.length * 4.8 + 14, 28);
+  const totalH = contentH;
+
+  // Check page overflow
+  if (y + totalH > PH - 14) return null; // signal overflow
+
+  // Left col (dark deep bg)
+  setFill(doc, C.deep);
+  setDraw(doc, C.border);
+  doc.setLineWidth(0.3);
+  doc.roundedRect(ML, y, leftW, totalH, 2, 0, 'FD');
+
+  // Scene number
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(18);
+  setTxt(doc, C.border);
+  doc.text(num.toString().padStart(2, '0'), ML + 2, y + 12);
+
+  // Timing vertical text (approximated horizontal, small)
+  doc.setFont('courier', 'normal');
+  doc.setFontSize(6);
+  setTxt(doc, C.amber);
+  doc.text(timing, ML + 2, y + totalH - 5);
+
+  // Right col (panel bg)
+  setFill(doc, C.panel);
+  doc.roundedRect(ML + leftW + 1, y, rightW, totalH, 0, 2, 'FD');
+
+  const rx = ML + leftW + 4;
+  let ry = y + 7;
+
+  // Heading
+  if (heading) {
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9.5);
+    setTxt(doc, C.white);
+    doc.text(heading, rx, ry);
+    ry += 7;
+  }
+
+  // Content blocks
+  const blocks = [
+    { prefix: 'VISUAL', lines: vLines, col: C.lgrey },
+    { prefix: 'AUDIO',  lines: aLines, col: C.muted  },
+    { prefix: 'VO',     lines: vLines2,col: C.blue   },
+    { prefix: 'NOTE',   lines: nLines, col: C.amber  },
+  ];
+
+  blocks.forEach(({ prefix, lines, col }) => {
+    if (!lines.length) return;
+    doc.setFont('courier', 'bold');
+    doc.setFontSize(6.5);
+    setTxt(doc, col);
+    doc.text(prefix + ' /', rx, ry);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    setTxt(doc, col === C.blue ? C.lgrey : col);
+    doc.text(lines, rx + doc.getTextWidth(prefix + ' / ') + 1, ry);
+    ry += lines.length * 4.8 + 4;
+  });
+
+  return y + totalH + 4;
+}
+
+// Shot list table row
+function shotTableHeader(doc, y) {
+  setFill(doc, C.deep);
+  doc.rect(ML, y, IW, 7, 'F');
+  setDraw(doc, C.border);
+  doc.setLineWidth(0.3);
+  doc.rect(ML, y, IW, 7, 'S');
+  doc.setFont('courier', 'bold');
+  doc.setFontSize(7);
+  setTxt(doc, C.blue);
+  const cols = [[0,'SHOT'],[14,'TYPE'],[30,'DESCRIPTION'],[IW-18,'DUR']];
+  cols.forEach(([x, label]) => doc.text(label, ML + x + 2, y + 4.8));
+  return y + 7;
+}
+
+function shotRow(doc, num, type, desc, dur, y, even) {
+  const rowH = 8;
+  setFill(doc, even ? C.panel : C.deep);
+  setDraw(doc, C.border);
+  doc.setLineWidth(0.2);
+  doc.rect(ML, y, IW, rowH, 'FD');
+
+  doc.setFont('courier', 'bold');
+  doc.setFontSize(8);
+  setTxt(doc, C.blue);
+  doc.text(String(num).padStart(3,'0'), ML + 2, y + 5.5);
+
+  doc.setFont('courier', 'normal');
+  doc.setFontSize(7.5);
+  setTxt(doc, C.amber);
+  doc.text(type, ML + 16, y + 5.5);
+
+  const dLines = doc.splitTextToSize(desc, IW - 38);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  setTxt(doc, C.lgrey);
+  doc.text(dLines[0] || '', ML + 32, y + 5.5);
+
+  doc.setFont('courier', 'normal');
+  doc.setFontSize(7.5);
+  setTxt(doc, C.muted);
+  doc.text(dur, PW - MR - 2, y + 5.5, { align: 'right' });
+
+  return y + rowH;
+}
+
+// CTA block at end
+function ctaBlock(doc, y) {
+  const h = 28;
+  setFill(doc, C.deep);
+  setDraw(doc, C.blue);
+  doc.setLineWidth(0.5);
+  doc.roundedRect(ML, y, IW, h, 2, 2, 'FD');
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(15);
+  setTxt(doc, C.white);
+  doc.text('Stop Starting From Scratch.', PW / 2, y + 10, { align: 'center' });
+
+  doc.setFont('courier', 'normal');
+  doc.setFontSize(8);
+  setTxt(doc, C.muted);
+  doc.text("The Filmmaker's AI Bible — Available Now", PW / 2, y + 17, { align: 'center' });
+
+  doc.setFont('courier', 'bold');
+  doc.setFontSize(10);
+  setTxt(doc, C.amber);
+  doc.text('CINEFYPRO.CO', PW / 2, y + 24, { align: 'center' });
+}
+
+// ── PDF: SHOT LIST (Prompt 002) ────────────────────────────
+async function exportShotListPDF(fields) {
+  const jsPDF = await loadJsPDF();
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  bgPage(doc);
+
+  const projectType = fields.PROJECT_TYPE       || 'Untitled Project';
+  const direction   = fields.CREATIVE_DIRECTION || '';
+  const location    = fields.LOCATION           || '';
+  const subject     = fields.SUBJECT            || '';
+  const shotCount   = parseInt(fields.SHOT_COUNT) || 10;
+  const date        = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+
+  let y = pageHeader(doc, 'Shot List', `${projectType}  ·  ${date}`, 1);
+
+  // Meta row
+  y = metaRow(doc, [
+    ['Project Type', projectType],
+    ['Location', location],
+    ['Subject', subject],
+    ['Total Shots', String(shotCount)],
+  ], y);
+  y += 4;
+
+  // Creative direction card
+  if (direction) {
+    y = sectionLabel(doc, '01', 'Creative Direction', y);
+    y = conceptCard(doc, 'Visual Direction', direction, y);
+    y += 2;
+  }
+
+  // Shot list
+  y = sectionLabel(doc, '02', 'Shot List', y);
+  y = shotTableHeader(doc, y);
+
+  const shotTypes   = ['ECU','CU','MCU','MS','WS','OTS','POV','INSERT','2-SHOT','STEADICAM'];
+  const descriptions = [
+    'Hero shot. Hold until the scene establishes itself. No movement.',
+    'Slow push in — motivated by the emotional beat. Rack focus at mark.',
+    'B-roll coverage. Available light only. No fill.',
+    'Establishing wide. Lock off. Let the environment speak.',
+    'Reaction shot. Hold two beats longer than comfortable.',
+    'Insert. Extreme shallow depth. Subject implied, not shown.',
+    'Over-shoulder. Camera breathes — not performing.',
+    'POV. Handheld with intention. Not shaky — present.',
+    'Two-shot. Equal weight in frame. No hierarchy.',
+    'Closing image. The last frame the viewer carries out.',
+    'B-roll cutaway. Texture only. No story obligation.',
+    'Hero close. The single most important frame of the shoot.',
+  ];
+  const durations = ['4s','3s','5s','6s','2s','4s','3s','3s','5s','8s','2s','4s'];
+
+  for (let i = 0; i < Math.min(shotCount, 15); i++) {
+    if (y > PH - 24) {
+      pageFooter(doc); doc.addPage(); bgPage(doc);
+      y = pageHeader(doc, 'Shot List (cont.)', projectType, 2);
+      y = shotTableHeader(doc, y);
+    }
+    y = shotRow(doc,
+      i + 1,
+      shotTypes[i % shotTypes.length],
+      descriptions[i % descriptions.length],
+      durations[i % durations.length],
+      y, i % 2 === 0
+    );
+  }
+
+  // Notes
+  y += 6;
+  if (y < PH - 40) {
+    y = sectionLabel(doc, '03', 'Production Notes', y);
+    setFill(doc, C.panel);
+    setDraw(doc, C.border);
+    doc.setLineWidth(0.3);
+    doc.roundedRect(ML, y, IW, 24, 2, 2, 'FD');
+    setFill(doc, C.amber);
+    doc.rect(ML, y, 2.5, 24, 'F');
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(8.5);
+    setTxt(doc, C.muted);
+    doc.text('Add production notes, crew requirements, or special equipment here.', ML + 6, y + 8);
+    y += 30;
+  }
+
+  if (y < PH - 34) ctaBlock(doc, y + 4);
+  pageFooter(doc);
+  doc.save(`cinefy-shot-list-${projectType.toLowerCase().replace(/\s+/g,'-').slice(0,30)}.pdf`);
+}
+
+// ── PDF: AD CAMPAIGN BUILDER (Prompt 031) ─────────────────
+async function exportCampaignPDF(fields) {
+  const jsPDF = await loadJsPDF();
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  bgPage(doc);
+
+  const brand     = fields.BRAND        || 'Brand Name';
+  const product   = fields.PRODUCT      || '';
+  const audience  = fields.AUDIENCE     || '';
+  const duration  = fields.DURATION     || '60s';
+  const emotion   = fields.EMOTION      || '';
+  const visual    = fields.VISUAL_STYLE || '';
+  const date      = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+
+  let y = pageHeader(doc, 'Ad Campaign Brief', `${brand}  ·  ${date}`, 1);
+
+  // Meta
+  y = metaRow(doc, [
+    ['Brand / Client', brand],
+    ['Product / Launch', product],
+    ['Ad Duration', duration],
+    ['Target Audience', audience],
+  ], y);
+  y += 4;
+
+  // Concept
+  y = sectionLabel(doc, '01', 'Campaign Concept', y);
+  y = conceptCard(doc, 'Emotional Core',
+    emotion || 'The emotional core of this campaign — what the viewer must feel in the final 3 seconds.',
+    y
+  );
+  y += 2;
+
+  // Visual direction
+  y = sectionLabel(doc, '02', 'Visual Direction', y);
+  y = conceptCard(doc, 'Cinematography & Style', visual || 'Visual and cinematic direction for this campaign.', y);
+  y += 2;
+
+  // Scene breakdown
+  y = sectionLabel(doc, '03', 'Scene Breakdown', y);
+
+  const scenes = [
+    [1, '0:00–0:08', 'The Hook',
+     'Open on the problem. No brand. No product. The first frame must earn the next.',
+     'Ambient sound only — no music. Room tone.',
+     'No voiceover in the open. Let the image do the work.',
+     'The hook lives or dies on this first frame. If it does not create a question in the viewer's mind, nothing that follows matters.'],
+    [2, '0:08–0:20', 'The Tension',
+     'Build the problem. The viewer recognises themselves. This moment is about identification, not information.',
+     'Music enters low — unresolved. Single note, barely there.',
+     '"You know this feeling."',
+     null],
+    [3, '0:20–0:38', 'The Turn',
+     'Product or solution enters frame. This is the pivot. The music resolves. Something shifts.',
+     'Music resolves — single piano note, then strings breathe in.',
+     '"There is a better way."',
+     'The turn must feel earned. If the tension was real, the release will be real. Do not rush to the product.'],
+    [4, '0:38–0:52', 'The Proof',
+     'Show the outcome. Not features — transformation. What does their life look like after?',
+     'Full score. Cinematic swell. Should feel like the opening of a great film.',
+     '"This is what changes when you have the right tool."',
+     null],
+    [5, '0:52–1:00', 'The Close',
+     'Cut to brand. Logo. URL. Hold. Silence.',
+     'Music resolves to single resonant note. Silence. The restraint IS the brand statement.',
+     `"${brand}. Stop starting from scratch."`,
+     'Resist the urge to fill this final beat. The confidence of the brand is in what you leave out.'],
+  ];
+
+  for (const [num, timing, heading, vis, aud, vo, note] of scenes) {
+    if (y > PH - 35) {
+      pageFooter(doc); doc.addPage(); bgPage(doc);
+      y = pageHeader(doc, 'Ad Campaign Brief (cont.)', brand, 2);
+    }
+    const result = sceneBlock(doc, num, timing, heading, vis, aud, vo, note, y);
+    if (result === null) {
+      pageFooter(doc); doc.addPage(); bgPage(doc);
+      y = pageHeader(doc, 'Ad Campaign Brief (cont.)', brand, 2);
+      y = sceneBlock(doc, num, timing, heading, vis, aud, vo, note, y) || y + 32;
+    } else {
+      y = result;
+    }
+  }
+
+  // Shot list
+  pageFooter(doc); doc.addPage(); bgPage(doc);
+  y = pageHeader(doc, 'Recommended Shot List', brand, 3);
+  y = sectionLabel(doc, '04', 'Shot List', y);
+  y = shotTableHeader(doc, y);
+
+  const campaignShots = [
+    [1,'ECU',   'Blinking cursor on blank page. Tack sharp. Screen softly bokeh behind.',      '4s'],
+    [2,'MS PULL','Slow pull back reveals filmmaker at desk. Monitor glow as key light.',         '4s'],
+    [3,'INSERT', 'Hands on desk. High contrast. Dark background. Nervous energy.',               '2s'],
+    [4,'OTS',    'Over-shoulder on screen — three open tabs. Overwhelmed framing.',              '3s'],
+    [5,'INSERT', 'Phone screen — client message. Filmmaker's thumb visible.',                   '2s'],
+    [6,'CU',     'Filmmaker face. Generic AI result reflected in eyes. Subtle reaction.',        '3s'],
+    [7,'OTS',    'Product/solution interface opens. Output populates. Rack focus to screen.',    '4s'],
+    [8,'CU',     'Filmmaker leans forward. THE hero shot of the ad. Warm light shift.',         '3s'],
+    [9,'MONTAGE','5-shot burst — workflow, motion, creation, golden hour frame.',                '10s'],
+    [10,'TITLE', 'Cut to black. Logo. URL. Silence. Hold.',                                      '8s'],
+  ];
+
+  campaignShots.forEach(([n, t, d, dur], i) => {
+    if (y > PH - 18) {
+      pageFooter(doc); doc.addPage(); bgPage(doc);
+      y = pageHeader(doc, 'Shot List (cont.)', brand, 4);
+      y = shotTableHeader(doc, y);
+    }
+    y = shotRow(doc, n, t, d, dur, y, i % 2 === 0);
+  });
+
+  // Music direction
+  y += 8;
+  if (y > PH - 60) {
+    pageFooter(doc); doc.addPage(); bgPage(doc);
+    y = pageHeader(doc, 'Music & Sound Direction', brand, 5);
+  }
+  y = sectionLabel(doc, '05', 'Music & Sound Direction', y);
+
+  const musicBlocks = [
+    ['0:00–0:08',  'Silence',        'No music. Room tone only. Ambient hum. The silence creates tension better than any score.'],
+    ['0:08–0:20',  'Low Pulse',      'Subtle unresolved electronic heartbeat. Single note, low frequency. Creates unease without aggression.'],
+    ['0:20–0:38',  'The Pivot',      'Single piano note resolves the dissonance. Strings enter softly. The music confirms the emotional turn.'],
+    ['0:38–0:52',  'Full Score',     'Cinematic swell. Strings, electronic pulse, building momentum. Should feel like the opening of a great film.'],
+    ['0:52–1:00',  'Resolution',     'Music drops to single resonant note as logo appears. Hold two beats. Silence. Restraint is the brand statement.'],
+  ];
+
+  musicBlocks.forEach(([timing, label, desc]) => {
+    if (y > PH - 20) {
+      pageFooter(doc); doc.addPage(); bgPage(doc);
+      y = pageHeader(doc, 'Music Direction (cont.)', brand, 5);
+    }
+    const lines = doc.splitTextToSize(desc, IW - 52);
+    const rowH = Math.max(12, lines.length * 4.6 + 8);
+
+    setFill(doc, C.panel);
+    setDraw(doc, C.border);
+    doc.setLineWidth(0.3);
+    doc.rect(ML, y, IW, rowH, 'FD');
+    setFill(doc, C.blue);
+    doc.rect(ML, y, 2, rowH, 'F');
+
+    doc.setFont('courier', 'bold');
+    doc.setFontSize(7.5);
+    setTxt(doc, C.amber);
+    doc.text(timing, ML + 4, y + rowH/2 + 1);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    setTxt(doc, C.white);
+    doc.text(label, ML + 28, y + rowH/2 - (lines.length > 1 ? 2 : 0) + 1);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    setTxt(doc, C.lgrey);
+    doc.text(lines, ML + 52, y + rowH/2 - (lines.length-1)*2.3 + 1);
+
+    y += rowH + 2;
+  });
+
+  y += 6;
+  if (y < PH - 34) ctaBlock(doc, y);
+  pageFooter(doc);
+
+  doc.save(`cinefy-campaign-${brand.toLowerCase().replace(/\s+/g,'-').slice(0,30)}.pdf`);
+}
+
+const PDF_PROMPTS = { '002': exportShotListPDF, '031': exportCampaignPDF };
+
+
+
 // ── PROMPT STUDIO ─────────────────────────────────────────
-function Studio({ onBack }) {
+function Studio({ onBack, onDemo }) {
   const [activeCat, setActiveCat] = useState("All");
   const [selected, setSelected] = useState(PROMPTS[0]);
   const [fieldVals, setFieldVals] = useState({});
@@ -918,7 +1507,10 @@ function Studio({ onBack }) {
         </div>
         <div style={{display:"flex",alignItems:"center",gap:12}}>
           <span style={{fontSize:13,color:COLORS.muted}}>Prompt {selected.id} of 30</span>
-          <button onClick={onBack} style={{background:"transparent",border:`1px solid ${COLORS.border}`,color:COLORS.lgrey,padding:"6px 16px",borderRadius:6,cursor:"pointer",fontSize:13,fontFamily:"'DM Sans'"}}>← Landing</button>
+          <div style={{display:"flex",gap:8}}>
+            <button onClick={onDemo} style={{background:"rgba(180,142,247,0.08)",border:"1px solid rgba(180,142,247,0.25)",color:"#B48EF7",padding:"6px 16px",borderRadius:6,cursor:"pointer",fontSize:13,fontFamily:"'DM Sans'",fontWeight:600,letterSpacing:"0.04em"}}>Demo Mode</button>
+            <button onClick={onBack} style={{background:"transparent",border:`1px solid ${COLORS.border}`,color:COLORS.lgrey,padding:"6px 16px",borderRadius:6,cursor:"pointer",fontSize:13,fontFamily:"'DM Sans'"}}>← Landing</button>
+          </div>
         </div>
       </div>
 
@@ -959,7 +1551,10 @@ function Studio({ onBack }) {
                     <span style={{width:4,height:4,borderRadius:"50%",background:col,flexShrink:0}} />
                     <span style={{fontSize:11,color:COLORS.muted,letterSpacing:"0.04em"}}>{CH_NAMES[p.ch]}</span>
                   </div>
-                  <div style={{fontSize:14,fontWeight:600,color:isActive?COLORS.white:COLORS.lgrey,lineHeight:1.3}}>{p.name}</div>
+                  <div style={{display:"flex",alignItems:"center",gap:8}}>
+                    <div style={{fontSize:14,fontWeight:600,color:isActive?COLORS.white:COLORS.lgrey,lineHeight:1.3}}>{p.name}</div>
+                    {PDF_PROMPTS[p.id] && <span style={{fontSize:9,fontWeight:700,letterSpacing:"0.08em",color:"#FFB347",background:"rgba(255,179,71,0.1)",border:"1px solid rgba(255,179,71,0.2)",padding:"2px 6px",borderRadius:3,flexShrink:0}}>PDF</span>}
+                  </div>
                 </div>
               );
             })}
@@ -1017,10 +1612,19 @@ function Studio({ onBack }) {
                 <div style={{fontSize:13,fontWeight:700,color:COLORS.green,letterSpacing:"0.08em"}}>
                   YOUR PROMPT — READY TO COPY
                 </div>
-                <div style={{display:"flex",gap:10}}>
+                <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
                   <button className="copy-btn" style={{background:copied?"rgba(91,224,106,0.15)":"linear-gradient(135deg,#4FC3F7,#0077B6)",color:copied?COLORS.green:COLORS.white,border:copied?`1px solid ${COLORS.green}`:"none"}} onClick={copyPrompt}>
                     {copied ? "✓ Copied!" : "Copy Prompt"}
                   </button>
+                  {PDF_PROMPTS[selected.id] && (
+                    <button className="copy-btn"
+                      style={{background:"transparent",border:"1px solid #FFB347",color:"#FFB347",display:"flex",alignItems:"center",gap:8}}
+                      onClick={() => PDF_PROMPTS[selected.id](fieldVals)}
+                    >
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                      Download PDF
+                    </button>
+                  )}
                   <button className="copy-btn" style={{background:"transparent",border:`1px solid ${COLORS.border}`,color:COLORS.lgrey}} onClick={() => setFieldVals({})}>
                     Reset
                   </button>
@@ -1028,8 +1632,17 @@ function Studio({ onBack }) {
               </div>
               <div className="output-box" ref={outputRef}>{finalPrompt}</div>
               <p style={{fontSize:13,color:COLORS.muted,marginTop:12,lineHeight:1.6}}>
-                ↑ Paste directly into ChatGPT, Claude, or Gemini. {Object.values(fieldVals).some(v => v) ? "Your custom details are filled in." : "Fill in the fields above to personalise, or paste as-is with the placeholder brackets."}
+                Paste directly into ChatGPT, Claude, or Gemini. {Object.values(fieldVals).some(v => v) ? "Your custom details are filled in." : "Fill in the fields above to personalise, or paste as-is with the placeholder brackets."}
               </p>
+              {PDF_PROMPTS[selected.id] && (
+                <div style={{marginTop:16,padding:"14px 18px",background:"rgba(255,179,71,0.04)",border:"1px solid rgba(255,179,71,0.15)",borderLeft:"2px solid #FFB347",borderRadius:6,display:"flex",alignItems:"center",gap:12}}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFB347" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                  <div>
+                    <span style={{fontSize:13,fontWeight:700,color:"#FFB347"}}>Client-Ready PDF Available</span>
+                    <span style={{fontSize:13,color:COLORS.muted,marginLeft:8}}>Fill in your details above, then click Download PDF to generate a branded deliverable.</span>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Next prompt nav */}
@@ -1055,9 +1668,413 @@ function Studio({ onBack }) {
 }
 
 // ── ROOT ──────────────────────────────────────────────────
+// ── DEMO MODE ─────────────────────────────────────────────
+const DEMO_PROMPTS = [
+  {
+    id: "007",
+    ch: "02",
+    col: "#4FC3F7",
+    title: "The Camera Movement Sequence",
+    category: "Cinematography",
+    editKey: "SCENE",
+    editLabel: "Describe the scene",
+    editDefault: "A man receives a phone call that ends his marriage. He is in his kitchen. He hangs up and does not move for 30 seconds.",
+    promptTemplate: (scene) => `You are a DP designing a camera movement sequence for this scene:
+
+${scene}
+
+For each move state:
+— Starting frame and ending frame
+— Type of movement and speed
+— What motivates the move (always motivated, never stylistic)
+— What the viewer feels during and after
+
+Include at least one completely static shot and explain its function.`,
+    output: `MOVE 01  |  0:00–0:20  |  LOCKED OFF  |  50mm
+He answers the phone. We do not move.
+The camera's stillness IS the setup.
+
+MOVE 02  |  0:20–0:35  |  VERY SLOW DOLLY IN  |  85mm
+Motivated by: the moment he stops speaking.
+The move is attentive — the way a person leans
+forward sensing something is wrong.
+Viewer feels: dread that has not named itself.
+
+MOVE 03  |  0:50–1:30  |  LOCKED OFF AGAIN  |  35mm
+He is small in the frame. We do not move.
+The stillness after movement is louder
+than the movement was.`,
+  },
+  {
+    id: "006",
+    ch: "02",
+    col: "#FFB347",
+    title: "The Lighting Setup Designer",
+    category: "Cinematography",
+    editKey: "SCENE",
+    editLabel: "Describe the scene",
+    editDefault: "Interior interview. Female CEO, 45. Authoritative but warm. Modern corner office, two floor-to-ceiling windows facing north.",
+    promptTemplate: (scene) => `You are a professional gaffer and DP designing a lighting setup for this scene:
+
+${scene}
+
+Emotional tone: Quietly powerful. Available-feeling light that is precisely controlled.
+Equipment: Two ARRI SkyPanel S60s, two 4x4 bounce frames, one negative fill flag.
+
+Design a complete setup:
+1. Key light — position, quality, modifier, colour temp, and why.
+2. Fill or negative fill — approach and ratio.
+3. Background treatment — what it communicates.
+4. Practical lights — in-scene sources.
+5. One film reference this setup is inspired by.`,
+    output: `KEY: S60-C camera-left, 45 degrees, 5600K, quarter
+grid. 7ft high. Rembrandt triangle on camera-side
+cheek. Ratio: 3:1.
+
+NEGATIVE FILL: 4x4 black flag camera-right, 18
+inches from subject. No fill. The shadow is the
+authority.
+
+BACKGROUND: Leave north window overexposed 1.5
+stops. Reads as window, not a light source.
+
+PRACTICAL: Desk lamp at 2700K, dimmed to 40%.
+Eye light from below. Motivated. Invisible.
+
+REFERENCE: Janusz Kaminski — Lincoln (2012).
+The cabinet scenes.`,
+  },
+  {
+    id: "013",
+    ch: "03",
+    col: "#B48EF7",
+    title: "The Hero Shot Generator",
+    category: "AI Video Tools",
+    editKey: "PROJECT",
+    editLabel: "Describe your project",
+    editDefault: "Brand film for a luxury watchmaker celebrating 100 years of craft.",
+    promptTemplate: (project) => `Generate a single hero shot for: ${project}
+
+Subject: Male watchmaker, 70s, weathered hands, reading glasses pushed up on forehead. Holding a movement up to the light.
+
+Expression communicates: The quiet satisfaction of mastery that has never needed an audience.
+
+Framing: Medium close-up, subject left-third, negative space right — workshop receding into soft darkness.
+
+Lighting: Single tungsten work lamp camera-right, no fill. Split lighting, ratio 8:1 minimum.
+
+This frame must communicate: That some things are worth doing slowly, for their own sake, forever.`,
+    output: `"Male watchmaker, 70s, left-third of frame.
+Right hand raised — holding a movement up to
+a single tungsten work lamp camera-right.
+
+Split light. 8:1 ratio. The shadow side of his
+face disappears completely.
+
+85mm, T2.0. Workshop tools at f/2 — warm amber
+blur. The only other sharp element: his reading
+glasses pushed up on his forehead.
+
+They have been pushed there a thousand times.
+This is not performance.
+
+This is what mastery looks like when it is not
+performing for anyone."`,
+  },
+];
+
+function DemoMode({ onBack }) {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [phase, setPhase] = useState("prompt"); // "prompt" | "output"
+  const [editVal, setEditVal] = useState(DEMO_PROMPTS[0].editDefault);
+  const [copied, setCopied] = useState(false);
+
+  const demo = DEMO_PROMPTS[activeIdx];
+  const finalPrompt = demo.promptTemplate(editVal);
+
+  const switchPrompt = (idx) => {
+    setActiveIdx(idx);
+    setPhase("prompt");
+    setEditVal(DEMO_PROMPTS[idx].editDefault);
+    setCopied(false);
+  };
+
+  const copy = () => {
+    navigator.clipboard.writeText(finalPrompt).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  return (
+    <div style={{
+      background:"#07070D", minHeight:"100vh",
+      fontFamily:"'DM Sans', sans-serif", color:"#F0F0F8",
+      display:"flex", flexDirection:"column"
+    }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap');
+        * { box-sizing: border-box; }
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-thumb { background: #1A1A32; }
+
+        .demo-tab {
+          background: transparent;
+          border: 1px solid #1A1A32;
+          color: #5A5A7A;
+          font-family: DM Sans; font-weight: 600;
+          font-size: 13px; letter-spacing: 0.06em;
+          padding: 10px 20px; border-radius: 6px;
+          cursor: pointer; transition: all 0.15s;
+          white-space: nowrap;
+        }
+        .demo-tab:hover { border-color: #2A2A48; color: #9090B8; }
+        .demo-tab.active {
+          background: rgba(79,195,247,0.08);
+          border-color: #4FC3F7; color: #4FC3F7;
+        }
+
+        .phase-btn {
+          flex: 1; padding: 14px;
+          font-family: DM Sans; font-weight: 700;
+          font-size: 14px; letter-spacing: 0.06em;
+          border: none; cursor: pointer;
+          transition: all 0.15s; border-radius: 6px;
+        }
+
+        .demo-edit {
+          background: #040408;
+          border: 1px solid #1A1A32;
+          color: #F0F0F8;
+          font-family: DM Sans; font-size: 18px;
+          line-height: 1.7; width: 100%;
+          border-radius: 8px; padding: 20px 24px;
+          outline: none; resize: none;
+          transition: border-color 0.15s;
+        }
+        .demo-edit:focus { border-color: #4FC3F7; }
+
+        .copy-demo {
+          background: #4FC3F7; color: #07070D;
+          font-family: DM Sans; font-weight: 700;
+          font-size: 16px; padding: 14px 32px;
+          border: none; border-radius: 6px;
+          cursor: pointer; transition: background 0.15s;
+          letter-spacing: 0.02em;
+        }
+        .copy-demo:hover { background: #7DD4F8; }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in { animation: fadeIn 0.25s ease both; }
+      `}</style>
+
+      {/* DEMO NAV */}
+      <div style={{
+        height:58, background:"#0A0A14",
+        borderBottom:"1px solid #111120",
+        display:"flex", alignItems:"center",
+        justifyContent:"space-between",
+        padding:"0 20px", flexShrink:0
+      }}>
+        <div style={{display:"flex", alignItems:"center", gap:10}}>
+          <div style={{
+            width:28, height:28, borderRadius:"50%",
+            border:"1.5px solid #4FC3F7",
+            display:"flex", alignItems:"center", justifyContent:"center"
+          }}>
+            <div style={{width:9, height:9, background:"#FFB347", borderRadius:"50%"}} />
+          </div>
+          <span style={{fontFamily:"Bebas Neue", fontSize:18, letterSpacing:"0.14em"}}>CINEFY</span>
+          <div style={{
+            fontSize:11, fontWeight:700, letterSpacing:"0.1em",
+            color:"#B48EF7", background:"rgba(180,142,247,0.1)",
+            border:"1px solid rgba(180,142,247,0.2)",
+            padding:"3px 10px", borderRadius:4, marginLeft:6
+          }}>DEMO MODE</div>
+        </div>
+        <button onClick={onBack} style={{
+          background:"transparent", border:"1px solid #1A1A32",
+          color:"#5A5A7A", padding:"7px 16px", borderRadius:6,
+          cursor:"pointer", fontSize:13, fontFamily:"DM Sans"
+        }}>Exit Demo</button>
+      </div>
+
+      <div style={{flex:1, display:"flex", flexDirection:"column", padding:"clamp(20px,4vw,40px)", gap:24, maxWidth:900, margin:"0 auto", width:"100%"}}>
+
+        {/* PROMPT SELECTOR TABS */}
+        <div style={{display:"flex", gap:10, flexWrap:"wrap"}}>
+          {DEMO_PROMPTS.map((d, i) => (
+            <button
+              key={d.id}
+              className={`demo-tab${activeIdx===i?" active":""}`}
+              style={activeIdx===i ? {borderColor:d.col, color:d.col, background:`${d.col}0D`} : {}}
+              onClick={() => switchPrompt(i)}
+            >
+              {d.id} · {d.title}
+            </button>
+          ))}
+        </div>
+
+        {/* PROMPT HEADER */}
+        <div className="fade-in" key={`header-${activeIdx}`}>
+          <div style={{display:"flex", alignItems:"center", gap:10, marginBottom:10}}>
+            <div style={{
+              fontSize:11, fontWeight:700, letterSpacing:"0.1em",
+              color:demo.col, background:`${demo.col}12`,
+              padding:"4px 12px", borderRadius:4
+            }}>PROMPT {demo.id}</div>
+            <span style={{fontSize:13, color:"#3A3A5A", letterSpacing:"0.06em", fontWeight:600}}>
+              {demo.category.toUpperCase()}
+            </span>
+          </div>
+          <h1 style={{
+            fontFamily:"Bebas Neue",
+            fontSize:"clamp(36px, 7vw, 64px)",
+            letterSpacing:"0.03em", lineHeight:0.92,
+            color:"#F0F0F8"
+          }}>{demo.title}</h1>
+        </div>
+
+        {/* PHASE TOGGLE */}
+        <div style={{display:"flex", gap:8, background:"#0A0A14", padding:6, borderRadius:8, border:"1px solid #111120"}}>
+          <button
+            className="phase-btn"
+            style={{
+              background: phase==="prompt" ? demo.col : "transparent",
+              color: phase==="prompt" ? "#07070D" : "#5A5A7A",
+            }}
+            onClick={() => setPhase("prompt")}
+          >PROMPT</button>
+          <button
+            className="phase-btn"
+            style={{
+              background: phase==="output" ? "#5BE06A" : "transparent",
+              color: phase==="output" ? "#07070D" : "#5A5A7A",
+            }}
+            onClick={() => setPhase("output")}
+          >OUTPUT EXAMPLE</button>
+        </div>
+
+        {/* PROMPT PHASE */}
+        {phase === "prompt" && (
+          <div className="fade-in" style={{display:"flex", flexDirection:"column", gap:20}}>
+
+            {/* EDITABLE FIELD */}
+            <div>
+              <div style={{
+                fontSize:12, fontWeight:700, letterSpacing:"0.1em",
+                color:demo.col, marginBottom:10
+              }}>EDIT THIS — {demo.editLabel.toUpperCase()}</div>
+              <textarea
+                className="demo-edit"
+                rows={3}
+                value={editVal}
+                onChange={e => setEditVal(e.target.value)}
+              />
+            </div>
+
+            {/* FULL PROMPT PREVIEW */}
+            <div>
+              <div style={{
+                fontSize:12, fontWeight:700, letterSpacing:"0.1em",
+                color:"#3A3A5A", marginBottom:10
+              }}>FULL PROMPT PREVIEW</div>
+              <div style={{
+                background:"#040408",
+                border:`1px solid ${demo.col}22`,
+                borderLeft:`2px solid ${demo.col}`,
+                borderRadius:8, padding:"20px 24px",
+                fontSize:"clamp(15px, 2vw, 18px)",
+                color:"#9090B8", lineHeight:1.8,
+                whiteSpace:"pre-wrap", fontFamily:"DM Sans"
+              }}>{finalPrompt}</div>
+            </div>
+
+            {/* COPY */}
+            <div style={{display:"flex", gap:12, alignItems:"center"}}>
+              <button className="copy-demo"
+                style={copied ? {background:"rgba(91,224,106,0.15)", color:"#5BE06A", border:"1px solid #5BE06A"} : {}}
+                onClick={copy}
+              >
+                {copied ? "Copied to clipboard" : "Copy Prompt"}
+              </button>
+              <button
+                className="copy-demo"
+                style={{background:"transparent", color:demo.col, border:`1px solid ${demo.col}44`}}
+                onClick={() => setPhase("output")}
+              >
+                See Output Example →
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* OUTPUT PHASE */}
+        {phase === "output" && (
+          <div className="fade-in" style={{display:"flex", flexDirection:"column", gap:20}}>
+            <div style={{
+              fontSize:12, fontWeight:700, letterSpacing:"0.1em",
+              color:"#5BE06A", marginBottom:-8
+            }}>WHAT THIS PRODUCES</div>
+
+            <div style={{
+              background:"rgba(91,224,106,0.03)",
+              border:"1px solid rgba(91,224,106,0.2)",
+              borderLeft:"2px solid #5BE06A",
+              borderRadius:8, padding:"28px 28px",
+              fontSize:"clamp(16px, 2.2vw, 20px)",
+              color:"#A0E8B0", lineHeight:2,
+              whiteSpace:"pre-wrap", fontFamily:"DM Sans",
+              fontWeight:400
+            }}>{demo.output}</div>
+
+            <div style={{display:"flex", gap:12, flexWrap:"wrap"}}>
+              <button
+                className="copy-demo"
+                style={{background:"transparent", color:"#5A5A7A", border:"1px solid #1A1A32"}}
+                onClick={() => setPhase("prompt")}
+              >← Back to Prompt</button>
+              {activeIdx < DEMO_PROMPTS.length - 1 && (
+                <button
+                  className="copy-demo"
+                  style={{background:`${DEMO_PROMPTS[activeIdx+1].col}`, color:"#07070D"}}
+                  onClick={() => switchPrompt(activeIdx + 1)}
+                >
+                  Next: {DEMO_PROMPTS[activeIdx+1].title} →
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* BOTTOM BRAND */}
+        <div style={{
+          marginTop:"auto", paddingTop:24,
+          borderTop:"1px solid #0F0F1E",
+          display:"flex", alignItems:"center",
+          justifyContent:"space-between", flexWrap:"wrap", gap:10
+        }}>
+          <span style={{fontSize:12, color:"#252535", letterSpacing:"0.08em", fontWeight:700}}>
+            CINEFYPRO.CO · 30 PROFESSIONAL AI PROMPTS · $29
+          </span>
+          <div style={{
+            fontSize:11, fontWeight:700, letterSpacing:"0.1em",
+            color:"#3A3A5A"
+          }}>STOP STARTING FROM SCRATCH</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
 export default function App() {
   const [view, setView] = useState("landing");
+  if (view === "demo") return <DemoMode onBack={() => setView("studio")} />;
   return view === "landing"
     ? <Landing onEnter={() => setView("studio")} />
-    : <Studio onBack={() => setView("landing")} />;
+    : <Studio onBack={() => setView("landing")} onDemo={() => setView("demo")} />;
 }
