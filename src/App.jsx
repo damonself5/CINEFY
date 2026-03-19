@@ -206,10 +206,11 @@ const PROMPTS = [
   }
 ];
 
-const CATS = [...new Set(PROMPTS.map(p => p.cat))];
+const CATS = [...new Set(PROMPTS.map(p => p.cat).filter(Boolean))];
 const CH_NAMES = {"01":"Pre-Production","02":"Cinematography","03":"AI Video Tools","04":"Post-Production","05":"Business","06":"Marketing"};
 
 function fillPrompt(template, values) {
+  if (!template) return '';
   let result = template;
   Object.entries(values).forEach(([k, v]) => {
     if (v) result = result.replaceAll(`[${k}]`, v);
@@ -1461,7 +1462,7 @@ function Studio({ onBack, onDemo }) {
     setCopied(false);
   };
 
-  const currentVals = { ...(selected.vars.reduce((a,v) => ({...a,[v.k]:""}),{})), ...fieldVals };
+  const currentVals = { ...((selected.vars || []).reduce((a,v) => ({...a,[v.k]:""}),{})), ...fieldVals };
   const finalPrompt = fillPrompt(selected.prompt, currentVals);
 
   const copyPrompt = () => {
@@ -1526,7 +1527,7 @@ function Studio({ onBack, onDemo }) {
           {/* Category pills */}
           <div style={{padding:"0 16px 12px",display:"flex",flexWrap:"wrap",gap:6}}>
             {allCats.map(cat => {
-              const shortCat = cat === "All" ? "All" : cat.split(" ")[0];
+              const shortCat = cat === "All" ? "All" : (cat || "").split(" ")[0];
               return (
                 <button key={cat} className={`cat-btn${activeCat===cat?" active":""}`} onClick={() => setActiveCat(cat)} title={cat}>
                   {shortCat}
@@ -1593,7 +1594,7 @@ function Studio({ onBack, onDemo }) {
                         <span style={{color:COLORS.muted,fontWeight:400,marginLeft:4}}>— {v.l}</span>
                       </label>
                       <textarea className="field-input"
-                        rows={v.ph.length > 60 ? 3 : 2}
+                        rows={(v.ph || "").length > 60 ? 3 : 2}
                         placeholder={v.ph}
                         value={fieldVals[v.k] || ""}
                         onChange={e => setFieldVals(prev => ({...prev, [v.k]: e.target.value}))}
