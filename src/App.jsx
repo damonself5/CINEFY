@@ -190,7 +190,6 @@ const PROMPTS = [
     prompt:"You are a content strategist building a 30-day social calendar for a filmmaker.\n\nContent assets I have: [ASSETS]\n\nPosting goal: [FREQUENCY] across [PLATFORMS]\n\nAudience: [AUDIENCE]\n\nPrimary goal this month: [GOAL]\n\nBuild a 30-day calendar. For each post:\nDay and platform / Content type / Hook / Core message / CTA\n\nMust include:\n— At least [EDU_COUNT] purely educational posts with no promotion\n— At least [STORY_COUNT] personal story posts\n— No more than [PROMO_COUNT] direct promotional posts per week\n— One weekly post designed specifically to be saved or shared\n\nNo two consecutive posts same content type. This should feel like a filmmaker's feed. Not a brand's.",
     vars:[{k:"ASSETS",l:"Content Assets You Have",ph:"3 recent shoots with BTS footage, 1 case study, 2 opinions on AI filmmaking, 1 just-released reel"},{k:"FREQUENCY",l:"Posting Frequency",ph:"4 times per week"},{k:"PLATFORMS",l:"Platforms",ph:"TikTok and Instagram Reels"},{k:"AUDIENCE",l:"Your Audience",ph:"Working and aspiring filmmakers, 22-40, mix of beginners and mid-level professionals"},{k:"GOAL",l:"Monthly Goal",ph:"Drive traffic to cinefypro.co to sell The Filmmaker's AI Prompt Bible"},{k:"EDU_COUNT",l:"Min Educational Posts",ph:"8"},{k:"STORY_COUNT",l:"Min Story Posts",ph:"4"},{k:"PROMO_COUNT",l:"Max Promo Posts/Week",ph:"1"}]
   },
-  ,
   { id:"031", ch:"06", cat:"Content & Self-Marketing",
     name:"The Ad Campaign Builder",
     desc:"Build a complete ad campaign brief — concept, scene breakdown, shot list, music direction, and 15-second cut — ready to hand to a director or client.",
@@ -1450,7 +1449,7 @@ function Studio({ onBack, onDemo }) {
 
   const allCats = ["All", ...CATS];
 
-  const filtered = PROMPTS.filter(p => {
+  const filtered = PROMPTS.filter(p => p && p.id).filter(p => {
     const matchCat = activeCat === "All" || p.cat === activeCat;
     const matchSearch = !search || p.name.toLowerCase().includes(search.toLowerCase()) || p.desc.toLowerCase().includes(search.toLowerCase());
     return matchCat && matchSearch;
@@ -1648,14 +1647,14 @@ function Studio({ onBack, onDemo }) {
 
             {/* Next prompt nav */}
             <div style={{display:"flex",gap:12,marginTop:32,paddingTop:24,borderTop:`1px solid ${COLORS.border}`}}>
-              {PROMPTS.find(p => parseInt(p.id) === parseInt(selected.id)-1) && (
-                <button onClick={() => selectPrompt(PROMPTS.find(p => parseInt(p.id) === parseInt(selected.id)-1))}
+              {PROMPTS.find(p => p && parseInt(p.id) === parseInt(selected.id)-1) && (
+                <button onClick={() => selectPrompt(PROMPTS.find(p => p && parseInt(p.id) === parseInt(selected.id)-1))}
                   style={{background:"transparent",border:`1px solid ${COLORS.border}`,color:COLORS.lgrey,padding:"10px 20px",borderRadius:6,cursor:"pointer",fontSize:14,fontFamily:"'DM Sans'"}}>
                   ← Previous
                 </button>
               )}
-              {PROMPTS.find(p => parseInt(p.id) === parseInt(selected.id)+1) && (
-                <button onClick={() => selectPrompt(PROMPTS.find(p => parseInt(p.id) === parseInt(selected.id)+1))}
+              {PROMPTS.find(p => p && parseInt(p.id) === parseInt(selected.id)+1) && (
+                <button onClick={() => selectPrompt(PROMPTS.find(p => p && parseInt(p.id) === parseInt(selected.id)+1))}
                   style={{background:`${chCol}18`,border:`1px solid ${chCol}`,color:chCol,padding:"10px 20px",borderRadius:6,cursor:"pointer",fontSize:14,fontFamily:"'DM Sans'",marginLeft:"auto"}}>
                   Next Prompt →
                 </button>
