@@ -218,12 +218,151 @@ function fillPrompt(template, values) {
 }
 
 // ── LANDING PAGE ─────────────────────────────────────────
+
+// ── FREE DEMO — PROMPT 006 ────────────────────────────────
+function FreeDemo006({ onUnlock }) {
+  const [scene, setScene] = useState("Interior interview. Female CEO, 45. Feeling: authoritative but warm. Modern corner office, two floor-to-ceiling windows facing north.");
+  const [tone, setTone] = useState("Quietly powerful — available-feeling light that is precisely controlled.");
+  const [equipment, setEquipment] = useState("Two ARRI SkyPanel S60s, two 4x4 bounce frames, one negative fill flag.");
+  const [copied, setCopied] = useState(false);
+
+  const prompt = `You are a professional gaffer and DP designing a lighting setup for this scene:
+
+${scene}
+
+Emotional tone: ${tone}
+
+Available equipment: ${equipment}
+
+Design a complete lighting setup:
+1. Key light — position, quality, modifier, colour temp, and why.
+2. Fill or negative fill — approach and ratio.
+3. Background treatment — lit or unlit and what each communicates.
+4. Practical lights — in-scene sources and how they are enhanced.
+5. One film reference scene this setup is inspired by.
+6. What changes if the subject moves 2 feet toward the window.`;
+
+  const copy = () => {
+    navigator.clipboard.writeText(prompt).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    });
+  };
+
+  return (
+    <div style={{
+      background:"#07070F", border:"1px solid #141428",
+      borderRadius:12, overflow:"hidden",
+      fontFamily:"'DM Sans', sans-serif"
+    }}>
+      <style>{`
+        .fd-input {
+          background: #040408; border: 1px solid #1A1A32;
+          color: #F0F0F8; font-family: DM Sans; font-size: 14px;
+          width: 100%; padding: 12px 16px; border-radius: 6px;
+          outline: none; resize: vertical; line-height: 1.6;
+          transition: border-color 0.15s;
+        }
+        .fd-input:focus { border-color: #4FC3F7; }
+      `}</style>
+
+      {/* Header */}
+      <div style={{
+        background:"#0A0A18", borderBottom:"1px solid #111120",
+        padding:"16px 24px", display:"flex", alignItems:"center",
+        justifyContent:"space-between", flexWrap:"wrap", gap:10
+      }}>
+        <div style={{display:"flex", alignItems:"center", gap:10}}>
+          <div style={{fontSize:10, fontWeight:700, letterSpacing:"0.1em", color:"#4FC3F7", background:"rgba(79,195,247,0.1)", padding:"3px 10px", borderRadius:3}}>
+            PROMPT 006
+          </div>
+          <span style={{fontSize:15, fontWeight:700, color:"#F0F0F8"}}>The Lighting Setup Designer</span>
+        </div>
+        <span style={{fontSize:12, color:"#5BE06A", fontWeight:600}}>FREE TO TRY</span>
+      </div>
+
+      <div style={{padding:"24px"}}>
+        {/* Inputs */}
+        <div style={{display:"grid", gap:16, marginBottom:20}}>
+          <div>
+            <label style={{display:"block", fontSize:11, fontWeight:700, letterSpacing:"0.08em", color:"#5A5A7A", marginBottom:8}}>
+              [SCENE_DESCRIPTION] — Describe the scene
+            </label>
+            <textarea className="fd-input" rows={3} value={scene} onChange={e => setScene(e.target.value)} />
+          </div>
+          <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:12}}>
+            <div>
+              <label style={{display:"block", fontSize:11, fontWeight:700, letterSpacing:"0.08em", color:"#5A5A7A", marginBottom:8}}>
+                [TONE] — Emotional tone
+              </label>
+              <textarea className="fd-input" rows={2} value={tone} onChange={e => setTone(e.target.value)} />
+            </div>
+            <div>
+              <label style={{display:"block", fontSize:11, fontWeight:700, letterSpacing:"0.08em", color:"#5A5A7A", marginBottom:8}}>
+                [EQUIPMENT] — Available equipment
+              </label>
+              <textarea className="fd-input" rows={2} value={equipment} onChange={e => setEquipment(e.target.value)} />
+            </div>
+          </div>
+        </div>
+
+        {/* Output preview */}
+        <div style={{marginBottom:16}}>
+          <div style={{fontSize:11, fontWeight:700, letterSpacing:"0.08em", color:"#3A3A5A", marginBottom:10}}>
+            YOUR PROMPT — READY TO COPY
+          </div>
+          <div style={{
+            background:"#040408", border:"1px solid #1A1A32",
+            borderLeft:"2px solid #4FC3F7", borderRadius:6,
+            padding:"16px 18px", fontSize:13, color:"#8080A8",
+            lineHeight:1.8, whiteSpace:"pre-wrap", maxHeight:200,
+            overflow:"auto", fontFamily:"DM Sans"
+          }}>{prompt}</div>
+        </div>
+
+        {/* Actions */}
+        <div style={{display:"flex", gap:12, flexWrap:"wrap", alignItems:"center"}}>
+          <button
+            onClick={copy}
+            style={{
+              background: copied ? "rgba(91,224,106,0.1)" : "#4FC3F7",
+              color: copied ? "#5BE06A" : "#07070D",
+              border: copied ? "1px solid #5BE06A" : "none",
+              fontFamily:"DM Sans", fontWeight:700, fontSize:15,
+              padding:"13px 28px", borderRadius:6, cursor:"pointer",
+              transition:"all 0.15s"
+            }}
+          >
+            {copied ? "Copied to clipboard ✓" : "Copy Prompt — Free"}
+          </button>
+          <button
+            onClick={onUnlock}
+            style={{
+              background:"transparent", border:"1px solid #1A1A32",
+              color:"#8080A8", fontFamily:"DM Sans", fontWeight:500,
+              fontSize:14, padding:"13px 24px", borderRadius:6,
+              cursor:"pointer", transition:"all 0.15s"
+            }}
+          >
+            Unlock all 30 prompts →
+          </button>
+        </div>
+
+        <p style={{fontSize:12, color:"#252535", marginTop:14}}>
+          Paste into ChatGPT, Claude, or Gemini. Purchase at cinefypro.co to unlock all 30 prompts + the full studio.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+
 function scrollTo(id) {
   const el = document.getElementById(id);
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function Landing({ onEnter }) {
+function Landing({ onBuy, onEnterGate }) {
   return (
     <div style={{background:"#07070D", color:"#F0F0F8", fontFamily:"'DM Sans', sans-serif", lineHeight:1}}>
       <style>{`
@@ -235,7 +374,7 @@ function Landing({ onEnter }) {
         ::-webkit-scrollbar-thumb { background: #1A1A32; }
 
         .nav-link {
-          color: #5A5A7A; font-size: 14px; font-family: DM Sans; font-weight: 500;
+          color: #7A7A9A; font-size: 14px; font-family: DM Sans; font-weight: 500;
           text-decoration: none; cursor: pointer; letter-spacing: 0.02em;
           transition: color 0.2s; background: none; border: none; padding: 0;
         }
@@ -262,7 +401,7 @@ function Landing({ onEnter }) {
         .btn-primary-lg:hover { background: #7DD4F8; transform: translateY(-1px); }
 
         .btn-ghost {
-          background: transparent; color: #8080A8;
+          background: transparent; color: #B0B0CC;
           font-family: DM Sans; font-weight: 500; font-size: 14px;
           padding: 12px 24px; border-radius: 6px;
           border: 1px solid #1A1A32; cursor: pointer;
@@ -280,7 +419,7 @@ function Landing({ onEnter }) {
         .prompt-demo {
           background: #040408; border: 1px solid #1A1A32;
           border-radius: 8px; padding: 20px; font-family: DM Sans;
-          font-size: 13px; color: #8080A8; line-height: 1.8;
+          font-size: 13px; color: #B0B0CC; line-height: 1.8;
           white-space: pre-wrap; font-variant-ligatures: none;
         }
 
@@ -295,7 +434,7 @@ function Landing({ onEnter }) {
         .feature-row {
           display: flex; align-items: center; gap: 14px;
           padding: 14px 0; border-bottom: 1px solid #0F0F1E;
-          font-size: 16px; color: #8080A8;
+          font-size: 16px; color: #B0B0CC;
         }
         .feature-row:last-child { border-bottom: none; }
 
@@ -409,7 +548,7 @@ function Landing({ onEnter }) {
           <button className="nav-link" onClick={() => scrollTo("pricing")}>Pricing</button>
         </div>
 
-        <button className="btn-primary" onClick={onEnter}>
+        <button className="btn-primary" onClick={() => window.open("https://cinefy.gumroad.com/l/mapzvs", "_blank")}>
           Get Access — $29
         </button>
       </nav>
@@ -468,11 +607,11 @@ function Landing({ onEnter }) {
         </p>
 
         <div className="fu4 hero-actions" style={{display:"flex", justifyContent:"center", gap:12, flexWrap:"wrap"}}>
-          <button className="btn-primary-lg" onClick={onEnter}>
+          <button className="btn-primary-lg" onClick={() => window.open("https://cinefy.gumroad.com/l/mapzvs", "_blank")}>
             Get Instant Access — $29
           </button>
-          <button className="btn-ghost" onClick={() => scrollTo("examples")}>
-            See prompt examples
+          <button className="btn-ghost" onClick={onEnterGate}>
+            Try the Prompt Studio
           </button>
         </div>
         <p className="fu4" style={{fontSize:12, color:"#2A2A40", marginTop:16}}>
@@ -714,6 +853,32 @@ Should I scope out the single-day version so you can see exactly what changes?"`
 
       <div className="divider" />
 
+      {/* FREE PROMPT 006 DEMO */}
+      <section id="free-demo" style={{padding:"80px clamp(20px,5vw,48px)", maxWidth:900, margin:"0 auto"}}>
+        <div style={{textAlign:"center", marginBottom:40}}>
+          <div style={{
+            display:"inline-block", background:"rgba(91,224,106,0.06)",
+            border:"1px solid rgba(91,224,106,0.2)", borderRadius:4,
+            padding:"5px 14px", marginBottom:16
+          }}>
+            <span style={{fontSize:11, fontWeight:700, letterSpacing:"0.12em", color:"#5BE06A"}}>
+              TRY IT FREE — PROMPT 006
+            </span>
+          </div>
+          <h2 style={{fontFamily:"Bebas Neue", fontSize:"clamp(32px,5vw,52px)", letterSpacing:"0.04em", marginBottom:12}}>
+            See What a Real Prompt Produces
+          </h2>
+          <p style={{fontSize:16, color:"#5A5A7A", maxWidth:500, margin:"0 auto"}}>
+            Fill in your scene below and copy the complete lighting setup prompt — free, no purchase needed.
+          </p>
+        </div>
+
+        <FreeDemo006 onUnlock={onEnterGate} />
+      </section>
+
+
+      <div className="divider" />
+
       {/* CREATOR */}
       <section id="creator" style={{padding:"80px clamp(20px,5vw,48px)", maxWidth:720, margin:"0 auto", textAlign:"center"}}>
         <span className="section-label">The Creator</span>
@@ -795,7 +960,7 @@ Should I scope out the single-day version so you can see exactly what changes?"`
               ))}
             </div>
 
-            <button className="btn-primary-lg" style={{width:"100%"}} onClick={onEnter}>
+            <button className="btn-primary-lg" style={{width:"100%"}} onClick={() => window.open("https://cinefy.gumroad.com/l/mapzvs", "_blank")}>
               Get The Filmmaker's Bible — $29
             </button>
             <p style={{fontSize:11, color:"#252535", marginTop:12}}>Instant delivery · cinefypro.co</p>
@@ -838,7 +1003,7 @@ Should I scope out the single-day version so you can see exactly what changes?"`
           <p style={{fontSize:"clamp(15px,1.8vw,18px)", color:"#5A5A7A", lineHeight:1.65, marginBottom:36}}>
             30 prompts. One system. Every project starts with clarity.
           </p>
-          <button className="btn-primary-lg" onClick={onEnter}>
+          <button className="btn-primary-lg" onClick={() => window.open("https://cinefy.gumroad.com/l/mapzvs", "_blank")}>
             Get The Filmmaker's Bible — $29
           </button>
           <p style={{fontSize:12, color:"#252535", marginTop:14}}>Launch price — regular price will be $49</p>
@@ -1438,6 +1603,142 @@ const PDF_PROMPTS = { '002': exportShotListPDF, '031': exportCampaignPDF };
 
 
 
+
+// ── ACCESS GATE ───────────────────────────────────────────
+function AccessGate({ onUnlock, onBack }) {
+  const [code, setCode] = useState("");
+  const [error, setError] = useState("");
+  const [checking, setChecking] = useState(false);
+
+  const VALID_CODES = ["CINEFY2026", "cinefy2026"];
+
+  const handleSubmit = () => {
+    setChecking(true);
+    setTimeout(() => {
+      if (VALID_CODES.includes(code.trim().toUpperCase()) ||
+          VALID_CODES.includes(code.trim())) {
+        onUnlock();
+      } else {
+        setError("Invalid access code. Check your Gumroad receipt and try again.");
+        setChecking(false);
+      }
+    }, 600);
+  };
+
+  return (
+    <div style={{
+      background:"#07070D", minHeight:"100vh",
+      display:"flex", flexDirection:"column",
+      alignItems:"center", justifyContent:"center",
+      fontFamily:"'DM Sans', sans-serif", color:"#F0F0F8",
+      padding:"24px"
+    }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap');
+        .gate-input {
+          background: #0A0A16; border: 1px solid #1A1A32;
+          color: #F0F0F8; font-family: DM Sans; font-size: 18px;
+          letter-spacing: 0.12em; text-align: center; font-weight: 600;
+          width: 100%; padding: 18px 24px; border-radius: 8px;
+          outline: none; transition: border-color 0.15s;
+          text-transform: uppercase;
+        }
+        .gate-input:focus { border-color: #4FC3F7; }
+        .gate-input::placeholder { color: #252540; letter-spacing: 0.08em; font-weight: 400; text-transform: none; }
+        .gate-btn {
+          width: 100%; background: #4FC3F7; color: #07070D;
+          font-family: DM Sans; font-weight: 700; font-size: 16px;
+          padding: 16px; border: none; border-radius: 8px;
+          cursor: pointer; transition: background 0.15s, opacity 0.15s;
+          letter-spacing: 0.02em;
+        }
+        .gate-btn:hover { background: #7DD4F8; }
+        .gate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+      `}</style>
+
+      {/* Logo */}
+      <div style={{
+        width:48, height:48, borderRadius:"50%",
+        border:"2px solid #4FC3F7",
+        display:"flex", alignItems:"center", justifyContent:"center",
+        marginBottom:20
+      }}>
+        <div style={{width:16, height:16, borderRadius:"50%", background:"#FFB347"}} />
+      </div>
+
+      <div style={{
+        width:"100%", maxWidth:420,
+        background:"#0A0A16", border:"1px solid #1A1A32",
+        borderRadius:12, padding:"40px 36px"
+      }}>
+        <div style={{textAlign:"center", marginBottom:32}}>
+          <h1 style={{fontFamily:"Bebas Neue", fontSize:32, letterSpacing:"0.06em", marginBottom:8}}>
+            Enter Access Code
+          </h1>
+          <p style={{fontSize:15, color:"#5A5A7A", lineHeight:1.6}}>
+            Your access code was delivered to your email after purchase. Check your Gumroad receipt.
+          </p>
+        </div>
+
+        <div style={{display:"flex", flexDirection:"column", gap:12}}>
+          <input
+            className="gate-input"
+            placeholder="Enter your code"
+            value={code}
+            onChange={e => { setCode(e.target.value); setError(""); }}
+            onKeyDown={e => e.key === "Enter" && handleSubmit()}
+          />
+
+          {error && (
+            <p style={{
+              fontSize:13, color:"#FF6B6B", textAlign:"center",
+              background:"rgba(255,107,107,0.06)", border:"1px solid rgba(255,107,107,0.2)",
+              borderRadius:6, padding:"10px 16px"
+            }}>{error}</p>
+          )}
+
+          <button className="gate-btn" onClick={handleSubmit} disabled={!code.trim() || checking}>
+            {checking ? "Checking..." : "Unlock Studio"}
+          </button>
+        </div>
+
+        <div style={{
+          marginTop:28, paddingTop:24,
+          borderTop:"1px solid #111120",
+          textAlign:"center"
+        }}>
+          <p style={{fontSize:13, color:"#3A3A5A", marginBottom:12}}>
+            Don't have a code yet?
+          </p>
+          <button
+            onClick={() => window.open("https://cinefy.gumroad.com/l/mapzvs", "_blank")}
+            style={{
+              background:"transparent", border:"1px solid #FFB347",
+              color:"#FFB347", fontFamily:"DM Sans", fontWeight:700,
+              fontSize:14, padding:"10px 24px", borderRadius:6,
+              cursor:"pointer", width:"100%"
+            }}
+          >
+            Get Access — $29
+          </button>
+        </div>
+      </div>
+
+      <button
+        onClick={onBack}
+        style={{
+          marginTop:20, background:"transparent", border:"none",
+          color:"#3A3A5A", fontFamily:"DM Sans", fontSize:14,
+          cursor:"pointer"
+        }}
+      >
+        ← Back to landing page
+      </button>
+    </div>
+  );
+}
+
+
 // ── PROMPT STUDIO ─────────────────────────────────────────
 function Studio({ onBack, onDemo }) {
   const [activeCat, setActiveCat] = useState("All");
@@ -1445,6 +1746,7 @@ function Studio({ onBack, onDemo }) {
   const [fieldVals, setFieldVals] = useState({});
   const [copied, setCopied] = useState(false);
   const [search, setSearch] = useState("");
+  const [editedPrompt, setEditedPrompt] = useState(null);
   const outputRef = useRef(null);
 
   const allCats = ["All", ...CATS];
@@ -1459,10 +1761,12 @@ function Studio({ onBack, onDemo }) {
     setSelected(p);
     setFieldVals({});
     setCopied(false);
+    setEditedPrompt(null);
   };
 
   const currentVals = { ...((selected.vars || []).reduce((a,v) => ({...a,[v.k]:""}),{})), ...fieldVals };
-  const finalPrompt = fillPrompt(selected.prompt, currentVals);
+  const generatedPrompt = fillPrompt(selected.prompt, currentVals);
+  const finalPrompt = editedPrompt !== null ? editedPrompt : generatedPrompt;
 
   const copyPrompt = () => {
     navigator.clipboard.writeText(finalPrompt).then(() => {
@@ -1482,7 +1786,7 @@ function Studio({ onBack, onDemo }) {
         .p-card { background: #0F0F1C; border: 1px solid #1A1A32; border-radius: 8px; padding: 14px 16px; cursor: pointer; transition: all 0.15s; }
         .p-card:hover { border-color: #2A2A50; background: #111124; }
         .p-card.active { border-color: var(--ch-col); background: #0D0D20; }
-        .cat-btn { background: transparent; border: 1px solid #1A1A32; color: #8080A8; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: 500; white-space: nowrap; transition: all 0.15s; font-family: 'DM Sans'; }
+        .cat-btn { background: transparent; border: 1px solid #1A1A32; color: #B0B0CC; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: 500; white-space: nowrap; transition: all 0.15s; font-family: 'DM Sans'; }
         .cat-btn:hover { border-color: #2A2A50; color: #F0F0F8; }
         .cat-btn.active { background: rgba(79,195,247,0.1); border-color: #4FC3F7; color: #4FC3F7; }
         .field-input { background: #07070D; border: 1px solid #1A1A32; color: #F0F0F8; width: 100%; border-radius: 6px; padding: 10px 14px; font-size: 14px; font-family: 'DM Sans'; outline: none; resize: vertical; transition: border-color 0.15s; }
@@ -1596,7 +1900,7 @@ function Studio({ onBack, onDemo }) {
                         rows={(v.ph || "").length > 60 ? 3 : 2}
                         placeholder={v.ph}
                         value={fieldVals[v.k] || ""}
-                        onChange={e => setFieldVals(prev => ({...prev, [v.k]: e.target.value}))}
+                        onChange={e => { setFieldVals(prev => ({...prev, [v.k]: e.target.value})); setEditedPrompt(null); }}
                       />
                     </div>
                   ))}
@@ -1625,14 +1929,26 @@ function Studio({ onBack, onDemo }) {
                       Download PDF
                     </button>
                   )}
-                  <button className="copy-btn" style={{background:"transparent",border:`1px solid ${COLORS.border}`,color:COLORS.lgrey}} onClick={() => setFieldVals({})}>
+                  <button className="copy-btn" style={{background:"transparent",border:`1px solid ${COLORS.border}`,color:COLORS.lgrey}} onClick={() => { setFieldVals({}); setEditedPrompt(null); }}>
                     Reset
                   </button>
                 </div>
               </div>
-              <div className="output-box" ref={outputRef}>{finalPrompt}</div>
-              <p style={{fontSize:13,color:COLORS.muted,marginTop:12,lineHeight:1.6}}>
-                Paste directly into ChatGPT, Claude, or Gemini. {Object.values(fieldVals).some(v => v) ? "Your custom details are filled in." : "Fill in the fields above to personalise, or paste as-is with the placeholder brackets."}
+              <textarea
+                className="output-box"
+                ref={outputRef}
+                value={finalPrompt}
+                onChange={e => {
+                  // Allow direct editing — update via a local override
+                  setEditedPrompt(e.target.value);
+                }}
+                style={{
+                  width:"100%", resize:"vertical", cursor:"text",
+                  minHeight:180, fontFamily:"DM Sans"
+                }}
+              />
+              <p style={{fontSize:12,color:COLORS.muted,marginTop:8,lineHeight:1.6}}>
+                Click inside the prompt above to edit any word directly before copying. {Object.values(fieldVals).some(v => v) ? "Your custom details are filled in." : "Fill in the fields above to personalise, or paste as-is with the placeholder brackets."}
               </p>
               {PDF_PROMPTS[selected.id] && (
                 <div style={{marginTop:16,padding:"14px 18px",background:"rgba(255,179,71,0.04)",border:"1px solid rgba(255,179,71,0.15)",borderLeft:"2px solid #FFB347",borderRadius:6,display:"flex",alignItems:"center",gap:12}}>
@@ -1821,14 +2137,14 @@ function DemoMode({ onBack }) {
         .demo-tab {
           background: transparent;
           border: 1px solid #1A1A32;
-          color: #5A5A7A;
+          color: #7A7A9A;
           font-family: DM Sans; font-weight: 600;
           font-size: 13px; letter-spacing: 0.06em;
           padding: 10px 20px; border-radius: 6px;
           cursor: pointer; transition: all 0.15s;
           white-space: nowrap;
         }
-        .demo-tab:hover { border-color: #2A2A48; color: #9090B8; }
+        .demo-tab:hover { border-color: #2A2A48; color: #C0C0D8; }
         .demo-tab.active {
           background: rgba(79,195,247,0.08);
           border-color: #4FC3F7; color: #4FC3F7;
@@ -2073,8 +2389,8 @@ function DemoMode({ onBack }) {
 
 export default function App() {
   const [view, setView] = useState("landing");
-  if (view === "demo") return <DemoMode onBack={() => setView("studio")} />;
-  return view === "landing"
-    ? <Landing onEnter={() => setView("studio")} />
-    : <Studio onBack={() => setView("landing")} onDemo={() => setView("demo")} />;
+  if (view === "demo")    return <DemoMode onBack={() => setView("studio")} />;
+  if (view === "gate")    return <AccessGate onUnlock={() => setView("studio")} onBack={() => setView("landing")} />;
+  if (view === "studio")  return <Studio onBack={() => setView("landing")} onDemo={() => setView("demo")} />;
+  return <Landing onBuy={() => window.open("https://cinefy.gumroad.com/l/mapzvs", "_blank")} onEnterGate={() => setView("gate")} />;
 }
