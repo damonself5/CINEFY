@@ -13,14 +13,14 @@ const PROMPTS = [
   { id:"001", ch:"01", cat:"Pre-Production & Vision",
     name:"The Brief Decoder",
     desc:"Decode a vague client brief into three concrete visual directions with film references, lighting styles, and one red flag.",
-    prompt:"You are a senior creative director and cinematographer with 15 years of high-end commercial production experience. A client has given me the following brief:\n\n[CLIENT_BRIEF]\n\nMy production budget is approximately [BUDGET]\n\nThe deliverable is [FORMAT]\n\nDecode this brief and return:\n1. The single core emotional message the client actually wants, in one sentence.\n2. Three distinct visual directions — each with a film reference, lighting style, camera movement approach, and one-sentence emotional tone.\n3. Five clarifying questions I should ask before pre-production begins.\n4. One red flag in this brief that could cause scope creep.\n\nBe precise. No generic suggestions. Write like a DP who has been burned by a vague brief before.",
-    vars:[{k:"CLIENT_BRIEF",l:"Client Brief",ph:'"We want something that feels authentic and modern for our wellness brand launch."'},{k:"BUDGET",l:"Production Budget",ph:"$15,000 all-in including post-production"},{k:"FORMAT",l:"Deliverable Format",ph:"60-second hero brand film plus three 15-second social cuts"}]
+    prompt:"You are a senior creative director and cinematographer with 15 years of high-end commercial production experience. You have directed and shot campaigns for luxury, wellness, automotive, and non-profit brands.\n\nA client has given me the following brief:\n[CLIENT_BRIEF]\n\nProduction budget: [BUDGET]\nDeliverable format: [FORMAT]\nShoot timeline: [TIMELINE]\n\nDecode this brief completely. Return the following sections:\n\nSECTION 01 — CORE MESSAGE\nThe single emotional truth this film must communicate. One sentence. Ruthlessly specific — not generic words like authentic or inspiring, but the precise human feeling at the centre of this film.\n\nSECTION 02 — THREE VISUAL DIRECTIONS\nFor each direction:\n- Film reference: specific DP and film title, not just the director\n- Lighting philosophy: colour temperature, quality, shadow ratio\n- Camera movement: locked, handheld, dolly — and the emotional reason for each choice\n- Dominant focal length and what it communicates\n- One-sentence emotional tone for the entire piece\n\nSECTION 03 — FIVE PRE-PRODUCTION QUESTIONS\nQuestions I must have answered before a single frame is designed. Ranked by importance.\n\nSECTION 04 — TWO RED FLAGS\nSpecific scope creep risks buried in this brief and how to address each before signing.\n\nSECTION 05 — RECOMMENDED DIRECTION\nWhich of the three you recommend and the precise reason why.\n\nWrite with the authority of someone who has been burned by a vague brief and made it work anyway.",
+    vars:[{k:"CLIENT_BRIEF",l:"Client Brief",ph:'"We want something that feels authentic and modern for our wellness brand launch."'},{k:"BUDGET",l:"Production Budget",ph:"$15,000 all-in including post-production"},{k:"FORMAT",l:"Deliverable Format",ph:"60-second hero brand film plus three 15-second social cuts"},{k:"TIMELINE",l:"Shoot Timeline",ph:"4 weeks from brief to delivery — shoot in week 2"}]
   },
   { id:"002", ch:"01", cat:"Pre-Production & Vision",
     name:"The Shot List Generator",
     desc:"Generate a complete, professional shot list with shot types, focal lengths, camera movements, lighting notes, and emotional function.",
-    prompt:"You are a professional cinematographer building a shot list for a [PROJECT_TYPE]\n\nThe creative direction is: [CREATIVE_DIRECTION]\n\nThe shoot location is [LOCATION]\n\nThe primary subject is [SUBJECT]\n\nBuild a complete shot list. For each shot include:\nShot Number / Shot Type (ECU, CU, MS, WS, OTS, POV) / Lens Focal Length / Camera Movement with motivation / Lighting Setup referencing a specific film / Estimated Duration / Emotional Function\n\nInclude: hero shot, establishing shot, B-roll coverage, closing shot.\nTotal shots: [SHOT_COUNT]\nEvery shot must serve the narrative. No filler.",
-    vars:[{k:"PROJECT_TYPE",l:"Project Type",ph:"90-second luxury skincare brand film"},{k:"CREATIVE_DIRECTION",l:"Creative Direction",ph:"Intimate golden hour aesthetic referencing Terrence Malick — natural light only"},{k:"LOCATION",l:"Shoot Location",ph:"Modern minimalist apartment, floor-to-ceiling windows facing west"},{k:"SUBJECT",l:"Primary Subject",ph:"Female founder, late 30s, confident and unhurried"},{k:"SHOT_COUNT",l:"Number of Shots",ph:"12 shots"}]
+    prompt:"You are a professional cinematographer and 1st AD building a production-ready shot list. Every shot on this list must be achievable on the day, serve the narrative, and be executable by any competent crew.\n\nProject type: [PROJECT_TYPE]\nCreative direction: [CREATIVE_DIRECTION]\nPrimary location: [LOCATION]\nPrimary subject: [SUBJECT]\nTotal shots required: [SHOT_COUNT]\nShoot day duration: [SHOOT_DAY]\n\nBuild a complete shot list. For every shot include:\n\nSHOT [NUMBER]\nDescription: What is in the frame, where the camera is, what the subject is doing\nShot Type: ECU, CU, MCU, MS, WS, OTS, POV, INSERT, or 2-SHOT\nLens: Focal length and T-stop if critical to the look\nMovement: Specific movement, speed, and what motivates it in the scene\nLighting Reference: One specific film scene this shot echoes\nSound Notes: Dialogue, atmos, wild track, or silent\nDuration in Edit: How long this shot lives in the final cut\nEmotional Function: The single emotional job this shot performs. If it cannot be stated in one sentence, the shot is not yet conceived.\n\nClose with:\nPRIORITY ORDER — ranked from most critical to coverage shots\nCONTINGENCY — two shots that can be cut without losing the story\nHERO SHOT — the single most important frame of the day and why",
+    vars:[{k:"PROJECT_TYPE",l:"Project Type",ph:"90-second luxury skincare brand film"},{k:"CREATIVE_DIRECTION",l:"Creative Direction",ph:"Intimate golden hour aesthetic referencing Terrence Malick — natural light only"},{k:"LOCATION",l:"Shoot Location",ph:"Modern minimalist apartment, floor-to-ceiling windows facing west"},{k:"SUBJECT",l:"Primary Subject",ph:"Female founder, late 30s, confident and unhurried"},{k:"SHOT_COUNT",l:"Number of Shots",ph:"12 shots"},{k:"SHOOT_DAY",l:"Shoot Day Duration",ph:"10-hour day, 1 location"}]
   },
   { id:"003", ch:"01", cat:"Pre-Production & Vision",
     name:"The Visual Bible Builder",
@@ -43,8 +43,8 @@ const PROMPTS = [
   { id:"006", ch:"02", cat:"Cinematography & Visual Language",
     name:"The Lighting Setup Designer",
     desc:"Design a complete, shootable lighting setup — key, fill, background, practicals, and a film reference — that any gaffer can execute.",
-    prompt:"You are a professional gaffer and DP designing a lighting setup for this scene:\n\n[SCENE_DESCRIPTION]\n\nEmotional tone: [TONE]\n\nAvailable equipment: [EQUIPMENT]\n\nDesign a complete lighting setup:\n1. Key light — position, quality, modifier, colour temp, and why.\n2. Fill or negative fill — approach and ratio.\n3. Background treatment — lit or unlit and what each communicates.\n4. Practical lights — in-scene sources and how they are enhanced.\n5. One film reference scene this setup is inspired by.\n6. What changes if the subject moves 2 feet toward the window.",
-    vars:[{k:"SCENE_DESCRIPTION",l:"Scene Description",ph:"Interior interview. Female CEO, 45. Feeling: authoritative but warm. Modern corner office, two floor-to-ceiling windows facing north."},{k:"TONE",l:"Emotional Tone",ph:"Quietly powerful. Think Vilmos Zsigmond — available-feeling light that is precisely controlled."},{k:"EQUIPMENT",l:"Available Equipment",ph:"Two ARRI SkyPanel S60s, two 4x4 bounce frames, one negative fill flag, one practical desk lamp"}]
+    prompt:"You are a professional gaffer and director of photography with credits on major commercial and documentary productions. You approach every lighting setup as a creative decision, not a technical one.\n\nScene to light: [SCENE_DESCRIPTION]\nEmotional tone required: [TONE]\nFilm reference direction: [FILM_REFERENCE]\nAvailable equipment: [EQUIPMENT]\nLocation constraints: [CONSTRAINTS]\n\nDesign a complete, shootable lighting setup:\n\nKEY LIGHT\nPosition relative to camera, height, distance from subject, modifier, colour temperature, quality, ratio, and the emotional reason for every decision.\n\nFILL OR NEGATIVE FILL\nApproach, ratio, and what the shadow reveals about the subject that flat light would destroy.\n\nBACKGROUND TREATMENT\nLit or unlit, separated or merged, and what the background communicates about the subject's world.\n\nPRACTICAL SOURCES\nEvery in-frame light source, its actual vs. perceived output, and how to enhance it toward the look.\n\nFILM REFERENCE BREAKDOWN\nThe specific scene from your reference that defines this setup and what the gaffer technically did to achieve it.\n\nWHAT CHANGES IF:\n- Subject moves 2 feet toward the window\n- You lose your key light 30 minutes before wrap\n- The client asks for a warmer, more commercial look",
+    vars:[{k:"SCENE_DESCRIPTION",l:"Scene Description",ph:"Interior interview. Female CEO, 45. Feeling: authoritative but warm. Modern corner office, two floor-to-ceiling windows facing north."},{k:"TONE",l:"Emotional Tone",ph:"Quietly powerful. Think Vilmos Zsigmond — available-feeling light that is precisely controlled."},{k:"EQUIPMENT",l:"Available Equipment",ph:"Two ARRI SkyPanel S60s, two 4x4 bounce frames, one negative fill flag, one practical desk lamp"},{k:"FILM_REFERENCE",l:"Film Reference",ph:"Janusz Kaminski — Lincoln (2012), cabinet scenes"},{k:"CONSTRAINTS",l:"Location Constraints",ph:"Cannot black out windows. No rigging to ceiling. Two-hour setup time."}]
   },
   { id:"007", ch:"02", cat:"Cinematography & Visual Language",
     name:"The Camera Movement Sequence",
@@ -242,11 +242,123 @@ Design a complete lighting setup:
 5. One film reference scene this setup is inspired by.
 6. What changes if the subject moves 2 feet toward the window.`;
 
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [email, setEmail] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  const [sendingEmail, setSendingEmail] = useState(false);
+
   const copy = () => {
     navigator.clipboard.writeText(prompt).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     });
+  };
+
+  const handleEmailSubmit = async () => {
+    if (!email || !email.includes("@")) {
+      setEmailError("Please enter a valid email address.");
+      return;
+    }
+    setSendingEmail(true);
+    setEmailError("");
+    try {
+      const res = await fetch("https://formspree.io/f/xjgazdvz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          email,
+          source: "Cinefy Free PDF — Prompt 006 Lighting Setup Designer",
+          timestamp: new Date().toISOString(),
+        }),
+      });
+      if (res.ok) {
+        setEmailSent(true);
+        setTimeout(() => {
+          setShowEmailModal(false);
+          generatePDF006();
+        }, 1200);
+      } else {
+        setEmailError("Something went wrong. Please try again.");
+      }
+    } catch {
+      // If Formspree not set up yet, still download the PDF
+      setEmailSent(true);
+      setTimeout(() => {
+        setShowEmailModal(false);
+        generatePDF006();
+      }, 1200);
+    }
+    setSendingEmail(false);
+  };
+
+  const generatePDF006 = async () => {
+    const jsPDF = await new Promise((resolve, reject) => {
+      if (window.jspdf) { resolve(window.jspdf.jsPDF); return; }
+      const s = document.createElement("script");
+      s.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+      s.onload = () => resolve(window.jspdf.jsPDF);
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+    const doc = new jsPDF({ unit: "mm", format: "a4" });
+    const W = 210, H = 297, ML = 16, IW = 178;
+    // Dark header
+    doc.setFillColor(7,7,13); doc.rect(0,0,W,H,"F");
+    doc.setFillColor(13,13,26); doc.rect(0,0,W,22,"F");
+    doc.setFillColor(79,195,247); doc.rect(0,22,W,0.8,"F");
+    doc.setFont("helvetica","bold"); doc.setFontSize(11);
+    doc.setTextColor(240,240,248); doc.text("CINEFY",ML,14);
+    doc.setFont("helvetica","normal"); doc.setFontSize(7);
+    doc.setTextColor(90,90,122); doc.text("CINEFYPRO.CO",W-ML,14,{align:"right"});
+    // Title block
+    doc.setFillColor(17,17,32); doc.rect(0,22.8,W,20,"F");
+    doc.setFillColor(30,30,53); doc.rect(0,42.8,W,0.3,"F");
+    doc.setFont("helvetica","bold"); doc.setFontSize(16);
+    doc.setTextColor(240,240,248); doc.text("LIGHTING SETUP DESIGNER",ML,34);
+    doc.setFont("helvetica","normal"); doc.setFontSize(7.5);
+    doc.setTextColor(90,90,122);
+    doc.text("PROMPT 006  ·  CINEMATOGRAPHY & VISUAL LANGUAGE  ·  " + new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"}),ML,40);
+    let y = 52;
+    // Scene details
+    const fields = [
+      ["SCENE DESCRIPTION", scene],
+      ["EMOTIONAL TONE", tone],
+      ["EQUIPMENT", equipment],
+    ];
+    fields.forEach(([label, val]) => {
+      doc.setFillColor(17,17,32); doc.setDrawColor(30,30,53); doc.setLineWidth(0.3);
+      const lines = doc.splitTextToSize(val || "—", IW-12);
+      const h = Math.max(12, lines.length*5+8);
+      doc.roundedRect(ML,y,IW,h,1.5,1.5,"FD");
+      doc.setFillColor(79,195,247); doc.rect(ML,y,2.5,h,"F");
+      doc.setFont("helvetica","bold"); doc.setFontSize(7);
+      doc.setTextColor(79,195,247); doc.text(label,ML+5,y+5);
+      doc.setFont("helvetica","normal"); doc.setFontSize(9);
+      doc.setTextColor(176,176,204); doc.text(lines,ML+5,y+10);
+      y += h+4;
+    });
+    y += 4;
+    // Prompt section
+    doc.setFillColor(4,4,15); doc.setDrawColor(255,179,71); doc.setLineWidth(0.5);
+    const pLines = doc.splitTextToSize(prompt, IW-12);
+    const pH = Math.min(pLines.length*4.8+16, H-y-20);
+    doc.roundedRect(ML,y,IW,pH,2,2,"FD");
+    doc.setFillColor(255,179,71); doc.rect(ML,y,2.5,pH,"F");
+    doc.setFont("helvetica","bold"); doc.setFontSize(7.5);
+    doc.setTextColor(255,179,71); doc.text("COMPLETE PROMPT  ·  COPY INTO CHATGPT, CLAUDE OR GEMINI",ML+5,y+6);
+    doc.setFillColor(42,26,0); doc.rect(ML+4,y+8,IW-8,0.4,"F");
+    doc.setFont("helvetica","normal"); doc.setFontSize(8.5);
+    doc.setTextColor(212,192,144);
+    const visibleLines = pLines.slice(0, Math.floor((pH-14)/4.8));
+    doc.text(visibleLines,ML+5,y+13);
+    // Footer
+    doc.setFillColor(13,13,26); doc.rect(0,H-10,W,10,"F");
+    doc.setFillColor(79,195,247); doc.rect(0,H-10,W,0.6,"F");
+    doc.setFont("helvetica","normal"); doc.setFontSize(6.5);
+    doc.setTextColor(90,90,122);
+    doc.text("CINEFY  ·  THE FILMMAKER\'S AI BIBLE  ·  CINEFYPRO.CO  ·  STOP STARTING FROM SCRATCH",W/2,H-4,{align:"center"});
+    doc.save("cinefy-lighting-setup-prompt-006.pdf");
   };
 
   return (
@@ -308,7 +420,7 @@ Design a complete lighting setup:
 
         {/* Output preview */}
         <div style={{marginBottom:16}}>
-          <div style={{fontSize:11, fontWeight:700, letterSpacing:"0.08em", color:"#3A3A5A", marginBottom:10}}>
+          <div style={{fontSize:11, fontWeight:700, letterSpacing:"0.08em", color:"#6060808", marginBottom:10}}>
             YOUR PROMPT — READY TO COPY
           </div>
           <div style={{
@@ -320,36 +432,59 @@ Design a complete lighting setup:
           }}>{prompt}</div>
         </div>
 
+                {/* EMAIL CAPTURE MODAL */}
+        {showEmailModal && (
+          <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.88)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:999,padding:24}}>
+            <div style={{background:"#0A0A16",border:"1px solid #1A1A32",borderRadius:12,padding:"36px 32px",maxWidth:420,width:"100%"}}>
+              {emailSent ? (
+                <div style={{textAlign:"center"}}>
+                  <div style={{fontFamily:"Bebas Neue",fontSize:28,color:"#5BE06A",letterSpacing:"0.06em",marginBottom:8}}>Generating PDF...</div>
+                  <p style={{fontSize:14,color:"#7A7A9A"}}>Your download will start automatically.</p>
+                </div>
+              ) : (
+                <>
+                  <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",color:"#FFB347",background:"rgba(255,179,71,0.08)",border:"1px solid rgba(255,179,71,0.2)",padding:"4px 12px",borderRadius:4,display:"inline-block",marginBottom:16}}>FREE DOWNLOAD</div>
+                  <h3 style={{fontFamily:"Bebas Neue",fontSize:26,letterSpacing:"0.04em",color:"#F0F0F8",marginBottom:8}}>Get Your Branded PDF</h3>
+                  <p style={{fontSize:14,color:"#7A7A9A",lineHeight:1.65,marginBottom:24}}>Enter your email to download the client-ready Lighting Setup PDF. We will notify you when new free prompts drop.</p>
+                  <input type="email" placeholder="your@email.com" value={email}
+                    onChange={e => { setEmail(e.target.value); setEmailError(""); }}
+                    onKeyDown={e => e.key === "Enter" && handleEmailSubmit()}
+                    style={{background:"#040408",border:"1px solid #1A1A32",color:"#F0F0F8",fontFamily:"DM Sans",fontSize:15,width:"100%",padding:"14px 16px",borderRadius:6,outline:"none",marginBottom:10}}
+                  />
+                  {emailError && <p style={{fontSize:12,color:"#FF6B6B",marginBottom:10}}>{emailError}</p>}
+                  <button onClick={handleEmailSubmit} disabled={sendingEmail}
+                    style={{width:"100%",background:"#FFB347",color:"#07070D",fontFamily:"DM Sans",fontWeight:700,fontSize:15,padding:"14px",borderRadius:6,border:"none",cursor:"pointer",marginBottom:10,opacity:sendingEmail?0.6:1}}>
+                    {sendingEmail ? "Processing..." : "Download PDF — Free"}
+                  </button>
+                  <button onClick={() => setShowEmailModal(false)}
+                    style={{width:"100%",background:"transparent",border:"1px solid #1A1A32",color:"#7A7A9A",fontFamily:"DM Sans",fontSize:14,padding:"10px",borderRadius:6,cursor:"pointer"}}>
+                    Cancel
+                  </button>
+                  <p style={{fontSize:11,color:"#3A3A5A",textAlign:"center",marginTop:12}}>No spam. Unsubscribe anytime.</p>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Actions */}
-        <div style={{display:"flex", gap:12, flexWrap:"wrap", alignItems:"center"}}>
-          <button
-            onClick={copy}
-            style={{
-              background: copied ? "rgba(91,224,106,0.1)" : "#4FC3F7",
-              color: copied ? "#5BE06A" : "#07070D",
-              border: copied ? "1px solid #5BE06A" : "none",
-              fontFamily:"DM Sans", fontWeight:700, fontSize:15,
-              padding:"13px 28px", borderRadius:6, cursor:"pointer",
-              transition:"all 0.15s"
-            }}
-          >
-            {copied ? "Copied to clipboard ✓" : "Copy Prompt — Free"}
+        <div style={{display:"flex", gap:10, flexWrap:"wrap", alignItems:"center"}}>
+          <button onClick={copy}
+            style={{background:copied?"rgba(91,224,106,0.1)":"#4FC3F7",color:copied?"#5BE06A":"#07070D",border:copied?"1px solid #5BE06A":"none",fontFamily:"DM Sans",fontWeight:700,fontSize:15,padding:"13px 24px",borderRadius:6,cursor:"pointer",transition:"all 0.15s"}}>
+            {copied ? "Copied ✓" : "Copy Prompt — Free"}
           </button>
-          <button
-            onClick={onUnlock}
-            style={{
-              background:"transparent", border:"1px solid #1A1A32",
-              color:"#8080A8", fontFamily:"DM Sans", fontWeight:500,
-              fontSize:14, padding:"13px 24px", borderRadius:6,
-              cursor:"pointer", transition:"all 0.15s"
-            }}
-          >
-            Unlock all 30 prompts →
+          <button onClick={() => setShowEmailModal(true)}
+            style={{background:"transparent",border:"1px solid #FFB347",color:"#FFB347",fontFamily:"DM Sans",fontWeight:700,fontSize:14,padding:"13px 20px",borderRadius:6,cursor:"pointer",display:"flex",alignItems:"center",gap:8}}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download PDF
+          </button>
+          <button onClick={onUnlock}
+            style={{background:"transparent",border:"1px solid #1A1A32",color:"#9090B0",fontFamily:"DM Sans",fontWeight:500,fontSize:14,padding:"13px 20px",borderRadius:6,cursor:"pointer"}}>
+            Unlock all 30 →
           </button>
         </div>
-
-        <p style={{fontSize:12, color:"#252535", marginTop:14}}>
-          Paste into ChatGPT, Claude, or Gemini. Purchase at cinefypro.co to unlock all 30 prompts + the full studio.
+        <p style={{fontSize:12,color:"#4A4A6A",marginTop:14}}>
+          Paste into ChatGPT, Claude, or Gemini · Unlock all 30 prompts at cinefypro.co
         </p>
       </div>
     </div>
@@ -374,7 +509,7 @@ function Landing({ onBuy, onEnterGate }) {
         ::-webkit-scrollbar-thumb { background: #1A1A32; }
 
         .nav-link {
-          color: #7A7A9A; font-size: 14px; font-family: DM Sans; font-weight: 500;
+          color: #9090B0; font-size: 14px; font-family: DM Sans; font-weight: 500;
           text-decoration: none; cursor: pointer; letter-spacing: 0.02em;
           transition: color 0.2s; background: none; border: none; padding: 0;
         }
@@ -382,59 +517,53 @@ function Landing({ onBuy, onEnterGate }) {
 
         .btn-primary {
           background: #4FC3F7; color: #07070D;
-          font-family: DM Sans; font-weight: 700;
-          font-size: 15px; letter-spacing: 0.02em;
-          padding: 12px 28px; border-radius: 6px; border: none;
-          cursor: pointer; transition: background 0.15s, transform 0.1s;
+          font-family: DM Sans; font-weight: 700; font-size: 15px;
+          letter-spacing: 0.02em; padding: 12px 28px; border-radius: 6px;
+          border: none; cursor: pointer; transition: background 0.15s, transform 0.1s;
           white-space: nowrap;
         }
         .btn-primary:hover { background: #7DD4F8; transform: translateY(-1px); }
-        .btn-primary:active { transform: translateY(0); }
 
         .btn-primary-lg {
-          background: #4FC3F7; color: #07070D;
-          font-family: DM Sans; font-weight: 700;
-          font-size: 17px; letter-spacing: 0.02em;
+          background: #4FC3F7; color: #07070D; font-family: DM Sans;
+          font-weight: 700; font-size: 17px; letter-spacing: 0.02em;
           padding: 18px 44px; border-radius: 6px; border: none;
           cursor: pointer; transition: background 0.15s, transform 0.1s;
+          display: inline-block;
         }
         .btn-primary-lg:hover { background: #7DD4F8; transform: translateY(-1px); }
 
         .btn-ghost {
-          background: transparent; color: #B0B0CC;
-          font-family: DM Sans; font-weight: 500; font-size: 14px;
-          padding: 12px 24px; border-radius: 6px;
-          border: 1px solid #1A1A32; cursor: pointer;
+          background: transparent; color: #9090B0; font-family: DM Sans;
+          font-weight: 500; font-size: 14px; padding: 12px 24px;
+          border-radius: 6px; border: 1px solid #1A1A32; cursor: pointer;
           transition: border-color 0.15s, color 0.15s;
         }
         .btn-ghost:hover { border-color: #4FC3F7; color: #F0F0F8; }
 
-        .pain-card {
-          background: #0A0A16; border: 1px solid #141428;
-          border-radius: 8px; padding: 28px 24px;
-          transition: border-color 0.2s;
-        }
-        .pain-card:hover { border-color: #1E1E3A; }
-
-        .prompt-demo {
+        .output-card {
           background: #040408; border: 1px solid #1A1A32;
-          border-radius: 8px; padding: 20px; font-family: DM Sans;
-          font-size: 13px; color: #B0B0CC; line-height: 1.8;
-          white-space: pre-wrap; font-variant-ligatures: none;
-        }
-
-        .output-demo {
-          background: rgba(91,224,106,0.03);
-          border: 1px solid rgba(91,224,106,0.15);
-          border-radius: 8px; padding: 20px; font-family: DM Sans;
-          font-size: 13px; color: #7DD8A0; line-height: 1.8;
+          border-radius: 8px; padding: 20px;
+          font-family: DM Sans; font-size: 13px;
+          color: #B0B0CC; line-height: 1.85;
           white-space: pre-wrap;
         }
+
+        .doc-pill {
+          display: inline-flex; align-items: center; gap: 8px;
+          background: #0A0A18; border: 1px solid #1A1A32;
+          border-radius: 6px; padding: 10px 16px;
+          font-size: 13px; font-weight: 600; color: #9090B0;
+          transition: border-color 0.2s, color 0.2s;
+        }
+        .doc-pill:hover { border-color: #4FC3F7; color: #F0F0F8; }
+
+        .doc-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
 
         .feature-row {
           display: flex; align-items: center; gap: 14px;
           padding: 14px 0; border-bottom: 1px solid #0F0F1E;
-          font-size: 16px; color: #B0B0CC;
+          font-size: 16px; color: #9090B0;
         }
         .feature-row:last-child { border-bottom: none; }
 
@@ -444,8 +573,7 @@ function Landing({ onBuy, onEnterGate }) {
           max-width: 440px; margin: 0 auto; position: relative;
         }
         .pricing-main::before {
-          content: ""; position: absolute;
-          top: 0; left: 0; right: 0; height: 1px;
+          content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
           background: linear-gradient(90deg, transparent, #4FC3F7, transparent);
         }
 
@@ -461,37 +589,17 @@ function Landing({ onBuy, onEnterGate }) {
           display: block; margin-bottom: 14px;
         }
 
-        .ch-card {
-          background: #0A0A14; border-radius: 8px;
-          padding: 22px; border: 1px solid #111122;
-          transition: border-color 0.2s;
-        }
-        .ch-card:hover { border-color: #1A1A32; }
-
-        .ch-row {
-          font-size: 14px; color: #6060A0; padding: 8px 0;
-          border-bottom: 1px solid #0D0D1C; display: flex;
-          align-items: center; gap: 10px;
-        }
-        .ch-row:last-child { border-bottom: none; }
+        .divider { height: 1px; background: #111120; }
 
         .ticker-track {
           overflow: hidden; border-top: 1px solid #111120;
-          border-bottom: 1px solid #111120;
-          background: #070710; padding: 10px 0;
+          border-bottom: 1px solid #111120; background: #070710; padding: 10px 0;
         }
-        .ticker-inner {
-          display: flex; white-space: nowrap;
-          animation: ticker 30s linear infinite;
-        }
-        @keyframes ticker {
-          from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
-        }
+        .ticker-inner { display: flex; white-space: nowrap; animation: ticker 32s linear infinite; }
+        @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         .ticker-item {
           font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
-          color: #252540; text-transform: uppercase; margin-right: 40px;
-          flex-shrink: 0;
+          color: #252540; text-transform: uppercase; margin-right: 40px; flex-shrink: 0;
         }
         .ticker-sep { color: #4FC3F7; margin-right: 40px; flex-shrink: 0; font-size: 11px; }
 
@@ -501,64 +609,52 @@ function Landing({ onBuy, onEnterGate }) {
           border-radius: 6px; padding: 10px 20px; margin-bottom: 36px;
         }
 
-        .divider { height: 1px; background: #111120; }
-
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(16px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
         .fu1 { animation: fadeUp 0.6s 0.05s both; }
         .fu2 { animation: fadeUp 0.6s 0.18s both; }
         .fu3 { animation: fadeUp 0.6s 0.32s both; }
         .fu4 { animation: fadeUp 0.6s 0.46s both; }
+        .fu5 { animation: fadeUp 0.6s 0.58s both; }
 
         @media (max-width: 820px) {
           .two-col { grid-template-columns: 1fr !important; }
           .three-col { grid-template-columns: 1fr !important; }
           .hide-mobile { display: none !important; }
           .hero-actions { flex-direction: column !important; align-items: stretch !important; }
-          .hero-actions button { text-align: center; }
+          .hero-actions button, .hero-actions a { text-align: center; }
         }
       `}</style>
 
-      {/* NAV */}
+      {/* ── NAV ── */}
       <nav style={{
         position:"sticky", top:0, zIndex:200,
         background:"rgba(7,7,13,0.96)", backdropFilter:"blur(16px)",
-        borderBottom:"1px solid #111120",
-        height:62, display:"flex", alignItems:"center",
-        padding:"0 clamp(20px,4vw,48px)", gap:40, justifyContent:"space-between"
+        borderBottom:"1px solid #111120", height:62,
+        display:"flex", alignItems:"center",
+        padding:"0 clamp(20px,4vw,48px)", justifyContent:"space-between"
       }}>
         <div style={{display:"flex", alignItems:"center", gap:10, flexShrink:0}}>
-          <div style={{
-            width:30, height:30, borderRadius:"50%",
-            border:"1.5px solid #4FC3F7",
-            display:"flex", alignItems:"center", justifyContent:"center"
-          }}>
-            <div style={{width:9, height:9, background:"#FFB347", borderRadius:"50%"}} />
+          <div style={{width:30,height:30,borderRadius:"50%",border:"1.5px solid #4FC3F7",display:"flex",alignItems:"center",justifyContent:"center"}}>
+            <div style={{width:9,height:9,background:"#FFB347",borderRadius:"50%"}} />
           </div>
-          <span style={{fontFamily:"Bebas Neue", fontSize:20, letterSpacing:"0.14em", color:"#F0F0F8"}}>CINEFY</span>
+          <span style={{fontFamily:"Bebas Neue",fontSize:20,letterSpacing:"0.14em"}}>CINEFY</span>
         </div>
-
-        <div className="hide-mobile" style={{display:"flex", gap:32, alignItems:"center"}}>
-          <button className="nav-link" onClick={() => scrollTo("pain")}>Why It Works</button>
-          <button className="nav-link" onClick={() => scrollTo("inside")}>What's Inside</button>
-          <button className="nav-link" onClick={() => scrollTo("examples")}>Examples</button>
-          <button className="nav-link" onClick={() => scrollTo("creator")}>About</button>
-          <button className="nav-link" onClick={() => scrollTo("pricing")}>Pricing</button>
+        <div className="hide-mobile" style={{display:"flex",gap:32,alignItems:"center"}}>
+          <button className="nav-link" onClick={() => { const el=document.getElementById("demo"); if(el) el.scrollIntoView({behavior:"smooth"}); }}>Try Free</button>
+          <button className="nav-link" onClick={() => { const el=document.getElementById("inside"); if(el) el.scrollIntoView({behavior:"smooth"}); }}>What's Inside</button>
+          <button className="nav-link" onClick={() => { const el=document.getElementById("examples"); if(el) el.scrollIntoView({behavior:"smooth"}); }}>Examples</button>
+          <button className="nav-link" onClick={() => { const el=document.getElementById("creator"); if(el) el.scrollIntoView({behavior:"smooth"}); }}>About</button>
+          <button className="nav-link" onClick={() => { const el=document.getElementById("pricing"); if(el) el.scrollIntoView({behavior:"smooth"}); }}>Pricing</button>
         </div>
-
-        <button className="btn-primary" onClick={() => window.open("https://cinefy.gumroad.com/l/mapzvs", "_blank")}>
-          Get Access — $29
-        </button>
+        <button className="btn-primary" onClick={onBuy}>Get Access — $29</button>
       </nav>
 
-      {/* TICKER */}
+      {/* ── TICKER ── */}
       <div className="ticker-track">
         <div className="ticker-inner">
           {[...Array(2)].map((_,i) => (
             <div key={i} style={{display:"flex"}}>
-              {["30 AI Prompts","Lighting Setups","Shot Lists","Visual Bibles","Camera Movement","Colour Grades","Client Proposals","Voiceover Scripts","Reel Breakdowns","Runway Prompts"].map((t,j) => (
+              {["Shot Lists","Lighting Briefs","Visual Bibles","Client Proposals","Sound Design Briefs","Colour Grade Direction","Voiceover Scripts","Reel Breakdowns","Campaign Briefs","Mood Board Briefs"].map((t,j) => (
                 <span key={j}><span className="ticker-item">{t}</span><span className="ticker-sep">—</span></span>
               ))}
             </div>
@@ -566,66 +662,62 @@ function Landing({ onBuy, onEnterGate }) {
         </div>
       </div>
 
-      {/* HERO */}
+      {/* ── HERO ── */}
       <section style={{
-        padding:"clamp(72px,12vw,120px) clamp(20px,5vw,48px) clamp(64px,10vw,100px)",
-        maxWidth:900, margin:"0 auto", textAlign:"center"
+        background:"radial-gradient(ellipse 80% 60% at 50% -10%, rgba(79,195,247,0.07) 0%, transparent 65%)",
+        padding:"clamp(64px,10vw,110px) clamp(20px,5vw,48px) clamp(48px,8vw,80px)",
+        maxWidth:960, margin:"0 auto", textAlign:"center"
       }}>
-        <div className="fu1" style={{marginBottom:28}}>
-          <div style={{
-            display:"inline-block", background:"rgba(79,195,247,0.06)",
-            border:"1px solid rgba(79,195,247,0.16)", borderRadius:4,
-            padding:"5px 14px"
-          }}>
-            <span style={{fontSize:11, fontWeight:700, letterSpacing:"0.12em", color:"#4FC3F7"}}>
-              LAUNCH PRICE — $29
-            </span>
+        <div className="fu1" style={{marginBottom:24}}>
+          <div style={{display:"inline-block",background:"rgba(79,195,247,0.06)",border:"1px solid rgba(79,195,247,0.16)",borderRadius:4,padding:"5px 14px"}}>
+            <span style={{fontSize:11,fontWeight:700,letterSpacing:"0.12em",color:"#4FC3F7"}}>LAUNCH PRICE — $29 · NOT A PDF · A WORKING TOOL</span>
           </div>
         </div>
 
         <h1 className="fu2" style={{
           fontFamily:"Bebas Neue",
-          fontSize:"clamp(56px,11vw,104px)",
-          lineHeight:0.9, letterSpacing:"0.025em", marginBottom:24
+          fontSize:"clamp(52px,10vw,96px)",
+          lineHeight:0.9, letterSpacing:"0.025em", marginBottom:20
         }}>
-          The Filmmaker's<br />
-          <span style={{color:"#4FC3F7"}}>AI Bible</span>
+          Client-Ready Filmmaking<br />
+          <span style={{color:"#4FC3F7"}}>Documents in Seconds</span>
         </h1>
 
-        <p className="fu3" style={{
-          fontSize:"clamp(17px,2.4vw,22px)", color:"#7070A0",
-          lineHeight:1.65, maxWidth:560, margin:"0 auto 12px"
-        }}>
-          30 AI prompts that instantly create cinematic shots, lighting setups, and scene ideas.
+        <p className="fu3" style={{fontSize:"clamp(17px,2.4vw,21px)",color:"#B0B0CC",lineHeight:1.65,maxWidth:620,margin:"0 auto 12px"}}>
+          Shot lists. Lighting briefs. Visual bibles. Client proposals. Sound design documents — generated in the precise technical language of professional cinema.
         </p>
-        <p className="fu3" style={{
-          fontSize:"clamp(15px,1.8vw,18px)", color:"#3A3A5A",
-          lineHeight:1.6, maxWidth:480, margin:"0 auto 44px",
-          fontStyle:"italic"
-        }}>
-          Stop staring at a blank timeline.
+        <p className="fu3" style={{fontSize:"clamp(14px,1.8vw,17px)",color:"#7A7A9A",lineHeight:1.6,maxWidth:520,margin:"0 auto 40px",fontStyle:"italic"}}>
+          What used to take hours now takes seconds.
         </p>
 
-        <div className="fu4 hero-actions" style={{display:"flex", justifyContent:"center", gap:12, flexWrap:"wrap"}}>
-          <button className="btn-primary-lg" onClick={() => window.open("https://cinefy.gumroad.com/l/mapzvs", "_blank")}>
+        {/* Document type pills */}
+        <div className="fu4" style={{display:"flex",flexWrap:"wrap",justifyContent:"center",gap:8,marginBottom:36}}>
+          {[["#4FC3F7","Shot List"],["#4FC3F7","Visual Bible"],["#FFB347","Lighting Brief"],["#FFB347","Client Proposal"],["#B48EF7","AI Video Prompt"],["#5BE06A","Sound Design Brief"]].map(([col,label]) => (
+            <div key={label} className="doc-pill">
+              <div className="doc-dot" style={{background:col}} />
+              {label}
+            </div>
+          ))}
+        </div>
+
+        <div className="fu5 hero-actions" style={{display:"flex",justifyContent:"center",gap:12,flexWrap:"wrap"}}>
+          <button className="btn-primary-lg" onClick={onBuy}>
             Get Instant Access — $29
           </button>
           <button className="btn-ghost" onClick={onEnterGate}>
-            Try the Prompt Studio
+            Try the Studio Free
           </button>
         </div>
-        <p className="fu4" style={{fontSize:12, color:"#2A2A40", marginTop:16}}>
-          Works with ChatGPT, Claude, and Gemini · Instant delivery · No subscription
+        <p className="fu5" style={{fontSize:12,color:"#252535",marginTop:14}}>
+          Works with ChatGPT, Claude &amp; Gemini · Instant delivery · No subscription
         </p>
 
-        <div style={{
-          display:"flex", justifyContent:"center", gap:"clamp(28px,5vw,60px)",
-          marginTop:56, paddingTop:40, borderTop:"1px solid #111120", flexWrap:"wrap"
-        }}>
-          {[["30","Prompts"],["6","Chapters"],["1","System"],["∞","Uses"]].map(([v,l]) => (
+        {/* Stats */}
+        <div style={{display:"flex",justifyContent:"center",gap:"clamp(28px,5vw,60px)",marginTop:52,paddingTop:40,borderTop:"1px solid #111120",flexWrap:"wrap"}}>
+          {[["29","Prompts"],["6","Chapters"],["PDF","Export"],["∞","Uses"]].map(([v,l]) => (
             <div key={l} style={{textAlign:"center"}}>
-              <div style={{fontFamily:"Bebas Neue", fontSize:40, color:"#4FC3F7", lineHeight:1}}>{v}</div>
-              <div style={{fontSize:11, fontWeight:700, color:"#3A3A5A", letterSpacing:"0.1em", marginTop:5}}>{l.toUpperCase()}</div>
+              <div style={{fontFamily:"Bebas Neue",fontSize:38,color:"#4FC3F7",lineHeight:1}}>{v}</div>
+              <div style={{fontSize:11,fontWeight:700,color:"#3A3A5A",letterSpacing:"0.1em",marginTop:5}}>{l.toUpperCase()}</div>
             </div>
           ))}
         </div>
@@ -633,74 +725,74 @@ function Landing({ onBuy, onEnterGate }) {
 
       <div className="divider" />
 
-      {/* PAIN */}
-      <section id="pain" style={{padding:"80px clamp(20px,5vw,48px)", maxWidth:960, margin:"0 auto"}}>
-        <div style={{textAlign:"center", marginBottom:52}}>
+      {/* ── FREE DEMO — right after hero ── */}
+      <section id="demo" style={{padding:"72px clamp(20px,5vw,48px)", maxWidth:900, margin:"0 auto"}}>
+        <div style={{textAlign:"center",marginBottom:36}}>
+          <div style={{display:"inline-block",background:"rgba(91,224,106,0.06)",border:"1px solid rgba(91,224,106,0.2)",borderRadius:4,padding:"5px 14px",marginBottom:14}}>
+            <span style={{fontSize:11,fontWeight:700,letterSpacing:"0.12em",color:"#5BE06A"}}>TRY IT FREE — NO ACCOUNT NEEDED</span>
+          </div>
+          <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(30px,5vw,50px)",letterSpacing:"0.04em",marginBottom:10}}>
+            Generate a Client-Ready Lighting Brief Right Now
+          </h2>
+          <p style={{fontSize:16,color:"#7A7A9A",maxWidth:520,margin:"0 auto"}}>
+            Fill in your scene below. Copy the prompt, paste it into ChatGPT or Claude, and get a professional lighting setup in seconds.
+          </p>
+        </div>
+        <FreeDemo006 onUnlock={onEnterGate} />
+      </section>
+
+      <div className="divider" />
+
+      {/* ── PAIN ── */}
+      <section style={{padding:"72px clamp(20px,5vw,48px)",maxWidth:960,margin:"0 auto"}}>
+        <div style={{textAlign:"center",marginBottom:48}}>
           <span className="section-label">The Problem</span>
-          <h2 style={{fontFamily:"Bebas Neue", fontSize:"clamp(34px,6vw,56px)", letterSpacing:"0.04em", lineHeight:1}}>
+          <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(34px,6vw,56px)",letterSpacing:"0.04em",lineHeight:1}}>
             Every filmmaker knows<br />this feeling.
           </h2>
         </div>
-
-        <div className="three-col" style={{display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:16, marginBottom:40}}>
+        <div className="three-col" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16,marginBottom:40}}>
           {[
-            ["Blank timeline","Every project starts with a blank timeline and a vague brief. The creative direction is in your head — translating it into a shot list or lighting plan takes hours."],
-            ["Flat results","You type a prompt into AI. It gives you something generic. The output doesn't sound like a DP — it sounds like a description of a stock photo."],
-            ["Starting from scratch","The same research, the same briefs, the same lighting plans — rebuilt from zero on every single project. There is no system."],
-          ].map(([t, b]) => (
-            <div key={t} className="pain-card">
-              <div style={{width:24, height:1, background:"#FFB347", marginBottom:20}} />
-              <div style={{fontSize:16, fontWeight:700, marginBottom:10, color:"#E0E0F0"}}>{t}</div>
-              <div style={{fontSize:14, color:"#5A5A7A", lineHeight:1.7}}>{b}</div>
+            ["Blank page","Every project starts from zero. The shot list, the lighting brief, the client proposal — rebuilt from scratch every single time."],
+            ["Generic AI output","You type a prompt. You get something that sounds like a stock photo caption. Not a DP brief. Not a real lighting setup. Generic slop."],
+            ["Hours lost","Writing professional filmmaking documents — the kind clients expect and crews can execute — takes hours you don't have."],
+          ].map(([t,b]) => (
+            <div key={t} style={{background:"#0A0A16",border:"1px solid #141428",borderRadius:8,padding:"28px 24px",transition:"border-color 0.2s"}}>
+              <div style={{width:24,height:1,background:"#FFB347",marginBottom:20}} />
+              <div style={{fontSize:16,fontWeight:700,marginBottom:10,color:"#E0E0F0"}}>{t}</div>
+              <div style={{fontSize:14,color:"#7A7A9A",lineHeight:1.7}}>{b}</div>
             </div>
           ))}
         </div>
-
-        <div style={{
-          background:"#070710", border:"1px solid rgba(79,195,247,0.12)",
-          borderRadius:8, padding:"28px 32px", textAlign:"center"
-        }}>
-          <p style={{
-            fontFamily:"Bebas Neue", fontSize:"clamp(22px,3.5vw,34px)",
-            letterSpacing:"0.04em", color:"#4FC3F7", lineHeight:1.2
-          }}>
-            What if you could generate cinematic ideas in seconds —<br />in the language a DP actually speaks?
+        <div style={{background:"#070710",border:"1px solid rgba(79,195,247,0.12)",borderRadius:8,padding:"28px 32px",textAlign:"center"}}>
+          <p style={{fontFamily:"Bebas Neue",fontSize:"clamp(20px,3.5vw,32px)",letterSpacing:"0.04em",color:"#4FC3F7",lineHeight:1.2}}>
+            What if you could generate client-ready filmmaking documents<br />in the time it takes to describe your scene?
           </p>
         </div>
       </section>
 
       <div className="divider" />
 
-      {/* SOLUTION */}
-      <section style={{padding:"80px clamp(20px,5vw,48px)", background:"#040409"}}>
-        <div style={{maxWidth:960, margin:"0 auto", textAlign:"center"}}>
+      {/* ── SOLUTION ── */}
+      <section style={{padding:"72px clamp(20px,5vw,48px)",background:"#040409"}}>
+        <div style={{maxWidth:960,margin:"0 auto",textAlign:"center"}}>
           <span className="section-label">The Solution</span>
-          <h2 style={{fontFamily:"Bebas Neue", fontSize:"clamp(34px,6vw,56px)", letterSpacing:"0.04em", marginBottom:16}}>
-            The Filmmaker's AI Bible
+          <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(34px,6vw,56px)",letterSpacing:"0.04em",marginBottom:16}}>
+            Not a Prompt Pack.<br /><span style={{color:"#4FC3F7"}}>A Professional Output System.</span>
           </h2>
-          <p style={{
-            fontSize:"clamp(16px,2vw,18px)", color:"#6060A0",
-            maxWidth:580, margin:"0 auto 52px", lineHeight:1.75
-          }}>
-            30 prompts engineered in the precise technical vocabulary of professional cinematography — designed to produce outputs that sound like a senior DP wrote them, not a text generator.
+          <p style={{fontSize:"clamp(16px,2vw,18px)",color:"#7A7A9A",maxWidth:620,margin:"0 auto 52px",lineHeight:1.75}}>
+            Cinefy generates documents that sound like a senior DP wrote them — because every prompt is engineered in the precise technical vocabulary of professional cinematography. Fill in your project details. Get a client-ready deliverable. Send it.
           </p>
-
-          <div className="three-col" style={{display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:16, textAlign:"left"}}>
+          <div className="three-col" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16,textAlign:"left"}}>
             {[
-              {col:"#4FC3F7", tag:"CHAPTERS 01–02", title:"Pre-Production & Cinematography",
-               body:"Brief decoder, shot lists, visual bibles, lighting setups, lens packages, camera movement sequences. Everything before the camera rolls."},
-              {col:"#B48EF7", tag:"CHAPTER 03", title:"AI Video Tool Prompts",
-               body:"Prompts engineered specifically for Runway Gen-3, Sora, and next-gen video tools. Not generic text prompts — cinematic video generation language."},
-              {col:"#5BE06A", tag:"CHAPTERS 04–06", title:"Post-Production & Business",
-               body:"Edit structure, sound design briefs, colour grade direction, client proposals, scope documents, discovery call frameworks, and a 30-day content calendar."},
+              {col:"#4FC3F7",tag:"CHAPTERS 01–02",title:"Pre-Production Documents",body:"Shot lists with emotional function per shot. Visual bibles your entire crew can execute from. Lighting briefs a gaffer can rig to. Mood board briefs an AI tool can generate from."},
+              {col:"#B48EF7",tag:"CHAPTER 03",title:"AI Video Prompts",body:"Prompts engineered specifically for Runway Gen-3 and Sora — in cinematic video generation language, not generic text prompts. The difference between amateur AI output and professional footage."},
+              {col:"#5BE06A",tag:"CHAPTERS 04–06",title:"Business & Marketing Docs",body:"Client proposals that close. Scope of work documents that prevent scope creep. Discovery call frameworks. Case study writers. Content calendars. The business documents filmmakers never learned to write."},
             ].map(c => (
-              <div key={c.title} style={{
-                background:"#07070D", border:`1px solid ${c.col}1A`,
-                borderLeft:`2px solid ${c.col}`, borderRadius:6, padding:24
-              }}>
-                <div style={{fontSize:10, fontWeight:700, letterSpacing:"0.12em", color:c.col, marginBottom:10}}>{c.tag}</div>
-                <div style={{fontSize:16, fontWeight:700, marginBottom:10, color:"#E0E0F0", lineHeight:1.3}}>{c.title}</div>
-                <div style={{fontSize:14, color:"#5A5A7A", lineHeight:1.7}}>{c.body}</div>
+              <div key={c.title} style={{background:"#07070D",border:`1px solid ${c.col}1A`,borderLeft:`2px solid ${c.col}`,borderRadius:6,padding:24}}>
+                <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.12em",color:c.col,marginBottom:10}}>{c.tag}</div>
+                <div style={{fontSize:16,fontWeight:700,marginBottom:10,color:"#E0E0F0",lineHeight:1.3}}>{c.title}</div>
+                <div style={{fontSize:14,color:"#7A7A9A",lineHeight:1.7}}>{c.body}</div>
               </div>
             ))}
           </div>
@@ -709,44 +801,33 @@ function Landing({ onBuy, onEnterGate }) {
 
       <div className="divider" />
 
-      {/* WHAT'S INSIDE */}
-      <section id="inside" style={{padding:"80px clamp(20px,5vw,48px)", maxWidth:1000, margin:"0 auto"}}>
-        <div style={{textAlign:"center", marginBottom:52}}>
+      {/* ── WHAT'S INSIDE ── */}
+      <section id="inside" style={{padding:"72px clamp(20px,5vw,48px)",maxWidth:1000,margin:"0 auto"}}>
+        <div style={{textAlign:"center",marginBottom:48}}>
           <span className="section-label">What's Inside</span>
-          <h2 style={{fontFamily:"Bebas Neue", fontSize:"clamp(34px,6vw,56px)", letterSpacing:"0.04em", marginBottom:8}}>
-            Inside the Filmmaker's Bible
+          <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(34px,6vw,56px)",letterSpacing:"0.04em",marginBottom:8}}>
+            29 Professional Documents
           </h2>
-          <p style={{fontSize:16, color:"#5A5A7A"}}>6 chapters · 30 prompts · one system</p>
+          <p style={{fontSize:16,color:"#7A7A9A"}}>6 chapters · every stage of production · client-ready output on every prompt</p>
         </div>
-
-        <div className="two-col" style={{display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:12}}>
+        <div className="two-col" style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:12}}>
           {[
-            {ch:"01", col:"#4FC3F7", title:"Pre-Production & Vision",
-             items:["The Brief Decoder","The Shot List Generator","The Visual Bible Builder","The Emotional Shot List","The Mood Board Brief"]},
-            {ch:"02", col:"#4FC3F7", title:"Cinematography & Visual Language",
-             items:["The Lighting Setup Designer","The Camera Movement Sequence","The Lens Language Advisor","The Colour Palette Generator","The Film Reference Matcher"]},
-            {ch:"03", col:"#B48EF7", title:"AI Video Tool Prompts",
-             items:["The Runway Cinematic Formula","The Sora Scene Builder","The Hero Shot Generator","The Transition Sequence Prompt","The BTS Content Generator"]},
-            {ch:"04", col:"#FFB347", title:"Post-Production & Editorial",
-             items:["The Edit Structure Planner","The Sound Design Brief","The Colour Grade Direction","The Voiceover Script Writer","The Pacing Analyzer"]},
-            {ch:"05", col:"#FFB347", title:"The Business of Filmmaking",
-             items:["The Client Proposal Builder","The Scope of Work Document","The Pricing Justification Script","The Difficult Client Response","The Discovery Call Framework"]},
-            {ch:"06", col:"#5BE06A", title:"Content & Self-Marketing",
-             items:["The Case Study Writer","The BTS Hook Generator","The Filmmaker Bio Writer","The Reel Breakdown Post","The Content Calendar Builder"]},
+            {ch:"01",col:"#4FC3F7",title:"Pre-Production & Vision",items:["The Brief Decoder","The Shot List Generator","The Visual Bible Builder","The Emotional Shot List","The Mood Board Brief"]},
+            {ch:"02",col:"#4FC3F7",title:"Cinematography & Visual Language",items:["The Lighting Setup Designer","The Camera Movement Sequence","The Lens Language Advisor","The Colour Palette Generator","The Film Reference Matcher"]},
+            {ch:"03",col:"#B48EF7",title:"AI Video Tool Prompts",items:["The Runway Cinematic Formula","The Sora Scene Builder","The Hero Shot Generator","The Transition Sequence Prompt","The BTS Content Generator"]},
+            {ch:"04",col:"#FFB347",title:"Post-Production & Editorial",items:["The Edit Structure Planner","The Sound Design Brief","The Colour Grade Direction","The Voiceover Script Writer","The Pacing Analyzer"]},
+            {ch:"05",col:"#FFB347",title:"The Business of Filmmaking",items:["The Client Proposal Builder","The Scope of Work Document","The Pricing Justification Script","The Difficult Client Response","The Discovery Call Framework"]},
+            {ch:"06",col:"#5BE06A",title:"Content & Self-Marketing",items:["The Case Study Writer","The BTS Hook Generator","The Filmmaker Bio Writer","The Reel Breakdown Post","The Content Calendar Builder"]},
           ].map(ch => (
-            <div key={ch.ch} className="ch-card">
-              <div style={{display:"flex", alignItems:"center", gap:10, marginBottom:14}}>
-                <div style={{
-                  fontSize:10, fontWeight:700, letterSpacing:"0.1em",
-                  color:ch.col, background:`${ch.col}12`,
-                  padding:"3px 10px", borderRadius:3
-                }}>CH {ch.ch}</div>
-                <span style={{fontSize:14, fontWeight:700, color:"#D0D0E8"}}>{ch.title}</span>
+            <div key={ch.ch} style={{background:"#0A0A14",borderRadius:8,padding:22,border:"1px solid #111122",transition:"border-color 0.2s"}}>
+              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
+                <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",color:ch.col,background:`${ch.col}12`,padding:"3px 10px",borderRadius:3}}>CH {ch.ch}</div>
+                <span style={{fontSize:14,fontWeight:700,color:"#D0D0E8"}}>{ch.title}</span>
               </div>
               {ch.items.map(item => (
-                <div key={item} className="ch-row">
-                  <div style={{width:3, height:3, borderRadius:"50%", background:ch.col, flexShrink:0}} />
-                  <span>{item}</span>
+                <div key={item} style={{fontSize:14,color:"#7A7A9A",padding:"8px 0",borderBottom:"1px solid #0D0D1C",display:"flex",alignItems:"center",gap:10}}>
+                  <div style={{width:3,height:3,borderRadius:"50%",background:ch.col,flexShrink:0}} />
+                  {item}
                 </div>
               ))}
             </div>
@@ -756,93 +837,91 @@ function Landing({ onBuy, onEnterGate }) {
 
       <div className="divider" />
 
-      {/* EXAMPLES */}
-      <section id="examples" style={{padding:"80px clamp(20px,5vw,48px)", background:"#040409"}}>
-        <div style={{maxWidth:980, margin:"0 auto"}}>
-          <div style={{textAlign:"center", marginBottom:52}}>
-            <span className="section-label">Prompt Examples</span>
-            <h2 style={{fontFamily:"Bebas Neue", fontSize:"clamp(34px,6vw,56px)", letterSpacing:"0.04em", marginBottom:12}}>
-              See the difference
+      {/* ── EXAMPLES ── */}
+      <section id="examples" style={{padding:"72px clamp(20px,5vw,48px)",background:"#040409"}}>
+        <div style={{maxWidth:980,margin:"0 auto"}}>
+          <div style={{textAlign:"center",marginBottom:48}}>
+            <span className="section-label">Output Examples</span>
+            <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(34px,6vw,56px)",letterSpacing:"0.04em",marginBottom:12}}>
+              This Is What Gets Generated
             </h2>
-            <p style={{fontSize:16, color:"#5A5A7A", maxWidth:520, margin:"0 auto"}}>
-              Specificity is the gap between generic AI output and professional cinematic direction.
+            <p style={{fontSize:16,color:"#7A7A9A",maxWidth:520,margin:"0 auto"}}>
+              Real output from real prompts. The kind of document you'd spend an hour writing — generated in seconds.
             </p>
           </div>
-
-          <div style={{display:"flex", flexDirection:"column", gap:32}}>
+          <div style={{display:"flex",flexDirection:"column",gap:28}}>
             {[
-              {num:"007", col:"#4FC3F7", title:"The Camera Movement Sequence",
-               prompt:`You are a DP designing a camera movement sequence for this scene:
+              {num:"002",col:"#4FC3F7",title:"Shot List Generator",label:"CLIENT-READY SHOT LIST",
+               prompt:`You are a professional cinematographer building a shot list for a luxury skincare brand film.
 
-A man receives a phone call that ends his marriage. He is in his kitchen. He hangs up and does not move for 30 seconds.
+Creative direction: Intimate golden hour — Terrence Malick aesthetic, natural light only, motivated movement.
+Location: Modern minimalist apartment, floor-to-ceiling west-facing windows.
+Subject: Female founder, late 30s, confident and unhurried.
+Total shots: 6`,
+               result:`SHOT 001 — THE OPEN
+Type: ECU | Lens: 100mm macro, T2.8 | Movement: LOCKED
+Subject's hands unwrapping product. Shallow focus. Background warm blur.
+Emotional Function: Establish ritual before we see her face. The product introduced through touch, not display.
 
-For each move:
-— Starting frame and ending frame
-— Type of movement and speed
-— What motivates the move in the scene (always motivated, never stylistic)
-— What the viewer feels during and after the move
+SHOT 002 — THE TURN
+Type: MS | Lens: 85mm, T2.0 | Movement: IMPERCEPTIBLE PUSH IN — begins on her exhale
+Subject at window, three-quarter back. She turns toward light.
+Emotional Function: The turn IS the narrative pivot. Before: routine. After: ritual.
 
-Include at least one completely static shot and explain its function.`,
-               result:`MOVE 01 | 0:00–0:20 | LOCKED OFF | 50mm
-He answers the phone. We do not move. The stillness IS the setup.
+HERO SHOT: Shot 002. The turn toward light is the entire brand promise made visual.
+Protect it. Shoot it first.`},
+              {num:"006",col:"#FFB347",title:"Lighting Setup Designer",label:"CLIENT-READY LIGHTING BRIEF",
+               prompt:`You are a professional gaffer and DP designing a lighting setup.
 
-MOVE 02 | 0:20–0:35 | VERY SLOW DOLLY IN | 85mm
-Motivated by: the moment he stops speaking. The move is attentive — the way a person leans forward sensing something is wrong.
-
-MOVE 03 | 0:50–1:30 | LOCKED OFF AGAIN | 35mm
-He is small in the frame. We do not move. The stillness after movement is louder than the movement was.`},
-              {num:"006", col:"#4FC3F7", title:"The Lighting Setup Designer",
-               prompt:`You are a professional gaffer and DP designing a lighting setup for this scene:
-
-Interior interview. Female CEO, 45. Feeling: authoritative but warm. Modern corner office, two floor-to-ceiling windows facing north.
-
+Scene: Interior interview. Female CEO, 45. Authoritative but warm. Modern corner office, two floor-to-ceiling windows facing north.
 Tone: Quietly powerful — available-feeling light that is precisely controlled.
-Equipment: Two ARRI SkyPanel S60s, two 4x4 bounce frames, one negative fill flag.
+Equipment: Two ARRI SkyPanel S60s, two 4x4 bounce frames, one negative fill flag.`,
+               result:`KEY LIGHT
+S60-C camera-left, 45 degrees, 5600K, quarter grid. 7ft height.
+Produces Rembrandt triangle on camera-side cheek. Ratio: 3:1.
+Why: The 45-degree angle creates authority. Anything more frontal flattens her.
 
-Design: key, fill/negative fill, background treatment, practicals, one film reference.`,
-               result:`KEY: S60-C camera-left, 45 degrees, 5600K, quarter grid. 7ft high. Rembrandt triangle camera-side cheek. Ratio: 3:1.
+NEGATIVE FILL
+4x4 black flag camera-right, 18 inches from subject. No fill source.
+The shadow is not a mistake — it is the characterisation.
 
-NEGATIVE FILL: 4x4 black flag camera-right, 18 inches from subject. No fill. The shadow is the authority.
+BACKGROUND
+North window left overexposed by 1.5 stops. Reads as window, not light source.
 
-BACKGROUND: Leave north window overexposed 1.5 stops. Reads as window, not a light source.
+FILM REFERENCE: Janusz Kaminski — Lincoln (2012). The cabinet scenes.`},
+              {num:"021",col:"#5BE06A",title:"Client Proposal Builder",label:"CLIENT-READY PROPOSAL EXTRACT",
+               prompt:`Write a production proposal for a regional hospital launching a patient experience campaign.
+Three 90-second films, one per flagship facility.
+Budget: $42,000. Creative approach: Real patients, real staff — no actors, no scripts.`,
+               result:`THE OPENING
+"You are not trying to advertise your hospital. You are trying to show people who are afraid that they will be met with care. Those are completely different films — and only one of them works.
 
-REFERENCE: Janusz Kaminski — Lincoln (2012). The cabinet scenes.`},
-              {num:"023", col:"#FFB347", title:"The Pricing Justification Script",
-               prompt:`Help me respond to this client pricing objection:
+What you described to us is a campaign that earns trust before it asks for it. We know how to make that film."
 
-"We love the proposal but your price is about 40% higher than we budgeted. Any flexibility?"
+SCOPE
+Deliverables: Three (3) brand films, 1:30 each, 16:9 4K master + H.264 web + audio stems.
+Plus: Nine (9) social cuts, 0:15 each, 1:1 and 9:16 formats.
+Revisions: Two rounds included per film.
 
-My quote: $24,000
-Experience: 8 years, 200+ productions
-Project: 3-day commercial shoot, two-camera doc style
-
-Response should hold the price, reframe as investment, offer one scope reduction only, end with a forward-moving question. Tone: warm and direct.`,
-               result:`"The $24,000 reflects three days of production and post-production that typically runs 80+ hours on a project like this.
-
-If the budget is firm, one option: we pull back to a single shoot day and I deliver one film instead of three social cuts. Same quality. More focused story.
-
-That said, what you originally described needs what I quoted to be done properly.
-
-Should I scope out the single-day version so you can see exactly what changes?"`},
+THE CLOSE
+"The next step is a 30-minute call to walk through our approach for all three facilities. We are ready when you are."`},
             ].map(ex => (
-              <div key={ex.num} style={{
-                background:"#07070D", border:"1px solid #141428",
-                borderRadius:10, padding:28
-              }}>
-                <div style={{display:"flex", alignItems:"center", gap:10, marginBottom:20, paddingBottom:16, borderBottom:"1px solid #0F0F1E"}}>
-                  <div style={{fontSize:10, fontWeight:700, letterSpacing:"0.1em", color:ex.col, background:`${ex.col}12`, padding:"3px 10px", borderRadius:3}}>
-                    PROMPT {ex.num}
+              <div key={ex.num} style={{background:"#07070D",border:"1px solid #141428",borderRadius:10,padding:28}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,marginBottom:20,paddingBottom:16,borderBottom:"1px solid #0F0F1E",flexWrap:"wrap"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:10}}>
+                    <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",color:ex.col,background:`${ex.col}12`,padding:"3px 10px",borderRadius:3}}>PROMPT {ex.num}</div>
+                    <span style={{fontSize:15,fontWeight:700,color:"#D0D0E8"}}>{ex.title}</span>
                   </div>
-                  <span style={{fontSize:15, fontWeight:700, color:"#D0D0E8"}}>{ex.title}</span>
+                  <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",color:ex.col,background:`${ex.col}08`,border:`1px solid ${ex.col}22`,padding:"4px 12px",borderRadius:20}}>{ex.label}</div>
                 </div>
-                <div className="two-col" style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:16}}>
+                <div className="two-col" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
                   <div>
-                    <div style={{fontSize:10, fontWeight:700, letterSpacing:"0.1em", color:"#3A3A5A", marginBottom:10}}>THE PROMPT</div>
-                    <div className="prompt-demo" style={{borderLeft:`2px solid ${ex.col}33`}}>{ex.prompt}</div>
+                    <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",color:"#3A3A5A",marginBottom:10}}>THE PROMPT</div>
+                    <div className="output-card" style={{borderLeft:`2px solid ${ex.col}33`}}>{ex.prompt}</div>
                   </div>
                   <div>
-                    <div style={{fontSize:10, fontWeight:700, letterSpacing:"0.1em", color:"#5BE06A", marginBottom:10}}>EXAMPLE OUTPUT</div>
-                    <div className="output-demo">{ex.result}</div>
+                    <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",color:"#5BE06A",marginBottom:10}}>GENERATED OUTPUT</div>
+                    <div className="output-card" style={{background:"rgba(91,224,106,0.02)",border:"1px solid rgba(91,224,106,0.12)",color:"#A0D8A8"}}>{ex.result}</div>
                   </div>
                 </div>
               </div>
@@ -853,756 +932,124 @@ Should I scope out the single-day version so you can see exactly what changes?"`
 
       <div className="divider" />
 
-      {/* FREE PROMPT 006 DEMO */}
-      <section id="free-demo" style={{padding:"80px clamp(20px,5vw,48px)", maxWidth:900, margin:"0 auto"}}>
-        <div style={{textAlign:"center", marginBottom:40}}>
-          <div style={{
-            display:"inline-block", background:"rgba(91,224,106,0.06)",
-            border:"1px solid rgba(91,224,106,0.2)", borderRadius:4,
-            padding:"5px 14px", marginBottom:16
-          }}>
-            <span style={{fontSize:11, fontWeight:700, letterSpacing:"0.12em", color:"#5BE06A"}}>
-              TRY IT FREE — PROMPT 006
-            </span>
-          </div>
-          <h2 style={{fontFamily:"Bebas Neue", fontSize:"clamp(32px,5vw,52px)", letterSpacing:"0.04em", marginBottom:12}}>
-            See What a Real Prompt Produces
-          </h2>
-          <p style={{fontSize:16, color:"#5A5A7A", maxWidth:500, margin:"0 auto"}}>
-            Fill in your scene below and copy the complete lighting setup prompt — free, no purchase needed.
-          </p>
-        </div>
-
-        <FreeDemo006 onUnlock={onEnterGate} />
-      </section>
-
-
-      <div className="divider" />
-
-      {/* CREATOR */}
-      <section id="creator" style={{padding:"80px clamp(20px,5vw,48px)", maxWidth:720, margin:"0 auto", textAlign:"center"}}>
+      {/* ── CREATOR ── */}
+      <section id="creator" style={{padding:"72px clamp(20px,5vw,48px)",maxWidth:720,margin:"0 auto",textAlign:"center"}}>
         <span className="section-label">The Creator</span>
-        <div style={{
-          width:60, height:60, borderRadius:"50%",
-          border:"1.5px solid #4FC3F7",
-          display:"flex", alignItems:"center", justifyContent:"center",
-          margin:"0 auto 24px"
-        }}>
-          <div style={{fontFamily:"Bebas Neue", fontSize:20, color:"#4FC3F7", letterSpacing:"0.1em"}}>DC</div>
+        <div style={{width:60,height:60,borderRadius:"50%",border:"1.5px solid #4FC3F7",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 24px"}}>
+          <div style={{fontFamily:"Bebas Neue",fontSize:20,color:"#4FC3F7",letterSpacing:"0.1em"}}>DC</div>
         </div>
-        <h2 style={{fontFamily:"Bebas Neue", fontSize:"clamp(28px,5vw,44px)", letterSpacing:"0.04em", marginBottom:20}}>
-          Built by a working filmmaker
+        <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(28px,5vw,44px)",letterSpacing:"0.04em",marginBottom:20}}>
+          Built by a Working Filmmaker
         </h2>
-        <p style={{fontSize:"clamp(15px,1.8vw,17px)", color:"#6060A0", lineHeight:1.8, marginBottom:20}}>
+        <p style={{fontSize:"clamp(15px,1.8vw,17px)",color:"#7A7A9A",lineHeight:1.8,marginBottom:20}}>
           These prompts were not written by a prompt engineer. They were built by a filmmaker who understands lighting, composition, and cinematic storytelling — because they needed better tools for their own workflow.
         </p>
-        <p style={{fontSize:"clamp(14px,1.6vw,16px)", color:"#404060", lineHeight:1.75, marginBottom:36}}>
-          Every prompt was tested on real productions before it made it into this collection. If it did not produce professional-grade output, it did not ship.
+        <p style={{fontSize:"clamp(14px,1.6vw,16px)",color:"#4A4A6A",lineHeight:1.75,marginBottom:36}}>
+          Every prompt was tested on real productions. If it did not produce a document you could hand to a client or crew, it did not ship.
         </p>
-        <div style={{
-          background:"#07070F", border:"1px solid #1A1A32",
-          borderRadius:8, padding:"20px 28px",
-          fontStyle:"italic", color:"#6060A0",
-          fontSize:16, lineHeight:1.65
-        }}>
+        <div style={{background:"#07070F",border:"1px solid #1A1A32",borderRadius:8,padding:"20px 28px",fontStyle:"italic",color:"#7A7A9A",fontSize:16,lineHeight:1.65}}>
           "I have the vision. I have the gear. I needed a system."
-          <div style={{color:"#4FC3F7", fontStyle:"normal", fontWeight:700, fontSize:12, letterSpacing:"0.08em", marginTop:12}}>
-            — DAMON · CINEFY
-          </div>
+          <div style={{color:"#4FC3F7",fontStyle:"normal",fontWeight:700,fontSize:12,letterSpacing:"0.08em",marginTop:12}}>— DAMON · CINEFY</div>
         </div>
       </section>
 
       <div className="divider" />
 
-      {/* PRICING */}
-      <section id="pricing" style={{padding:"80px clamp(20px,5vw,48px)", background:"#040409"}}>
-        <div style={{maxWidth:960, margin:"0 auto", textAlign:"center"}}>
+      {/* ── PRICING ── */}
+      <section id="pricing" style={{padding:"72px clamp(20px,5vw,48px)",background:"#040409"}}>
+        <div style={{maxWidth:960,margin:"0 auto",textAlign:"center"}}>
           <span className="section-label">Pricing</span>
-          <h2 style={{fontFamily:"Bebas Neue", fontSize:"clamp(34px,6vw,56px)", letterSpacing:"0.04em", marginBottom:8}}>
+          <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(34px,6vw,56px)",letterSpacing:"0.04em",marginBottom:8}}>
             Get Instant Access
           </h2>
-          <p style={{fontSize:16, color:"#5A5A7A", marginBottom:40}}>One price. All 30 prompts. Yours forever.</p>
-
+          <p style={{fontSize:16,color:"#7A7A9A",marginBottom:40}}>One price. 29 prompts. Client-ready outputs. Yours forever.</p>
           <div className="scarcity-pill">
-            <div style={{width:6, height:6, borderRadius:"50%", background:"#FFB347"}} />
-            <span style={{fontSize:13, fontWeight:700, color:"#FFB347"}}>Launch Price: $29</span>
-            <span style={{fontSize:13, color:"#404060"}}>— Regular price will be $49</span>
+            <div style={{width:6,height:6,borderRadius:"50%",background:"#FFB347"}} />
+            <span style={{fontSize:13,fontWeight:700,color:"#FFB347"}}>Launch Price: $29</span>
+            <span style={{fontSize:13,color:"#404060"}}>— Regular price will be $49</span>
           </div>
-
           <div className="pricing-main">
-            <div style={{fontSize:11, fontWeight:700, letterSpacing:"0.12em", color:"#4FC3F7", marginBottom:24}}>
-              THE FILMMAKER'S AI BIBLE
-            </div>
-            <div style={{display:"flex", alignItems:"baseline", justifyContent:"center", gap:12, marginBottom:6}}>
-              <span style={{fontFamily:"Bebas Neue", fontSize:80, color:"#F0F0F8", lineHeight:1}}>$29</span>
+            <div style={{fontSize:11,fontWeight:700,letterSpacing:"0.12em",color:"#4FC3F7",marginBottom:24}}>THE FILMMAKER'S AI BIBLE</div>
+            <div style={{display:"flex",alignItems:"baseline",justifyContent:"center",gap:12,marginBottom:6}}>
+              <span style={{fontFamily:"Bebas Neue",fontSize:80,color:"#F0F0F8",lineHeight:1}}>$29</span>
               <div style={{textAlign:"left"}}>
-                <div style={{fontSize:18, color:"#2A2A3A", textDecoration:"line-through"}}>$49</div>
-                <div style={{fontSize:11, fontWeight:700, color:"#5BE06A", letterSpacing:"0.08em"}}>SAVE $20</div>
+                <div style={{fontSize:18,color:"#2A2A3A",textDecoration:"line-through"}}>$49</div>
+                <div style={{fontSize:11,fontWeight:700,color:"#5BE06A",letterSpacing:"0.08em"}}>SAVE $20</div>
               </div>
             </div>
-            <p style={{fontSize:12, color:"#3A3A5A", marginBottom:28}}>One-time purchase · No subscription</p>
-
+            <p style={{fontSize:12,color:"#3A3A5A",marginBottom:28}}>One-time purchase · No subscription</p>
             <div style={{marginBottom:28}}>
               {[
-                "30 professional AI prompts",
-                "6 complete chapters",
-                "Interactive prompt studio",
+                "29 client-ready filmmaking prompts",
+                "6 complete production chapters",
+                "Interactive prompt studio — not a PDF",
+                "Live prompt editing before you copy",
+                "Branded PDF export on key prompts",
                 "Works with ChatGPT, Claude, and Gemini",
                 "Instant access — yours forever",
-                "Future prompt packs at member price",
               ].map(f => (
                 <div key={f} className="feature-row">
-                  <div style={{width:16, height:16, borderRadius:"50%", background:"rgba(91,224,106,0.1)", border:"1px solid rgba(91,224,106,0.3)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0}}>
-                    <div style={{width:5, height:5, borderRadius:"50%", background:"#5BE06A"}} />
+                  <div style={{width:16,height:16,borderRadius:"50%",background:"rgba(91,224,106,0.1)",border:"1px solid rgba(91,224,106,0.3)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                    <div style={{width:5,height:5,borderRadius:"50%",background:"#5BE06A"}} />
                   </div>
                   <span style={{fontSize:15}}>{f}</span>
                 </div>
               ))}
             </div>
-
-            <button className="btn-primary-lg" style={{width:"100%"}} onClick={() => window.open("https://cinefy.gumroad.com/l/mapzvs", "_blank")}>
+            <button className="btn-primary-lg" style={{width:"100%"}} onClick={onBuy}>
               Get The Filmmaker's Bible — $29
             </button>
-            <p style={{fontSize:11, color:"#252535", marginTop:12}}>Instant delivery · cinefypro.co</p>
+            <p style={{fontSize:11,color:"#252535",marginTop:12}}>Instant delivery · cinefypro.co</p>
           </div>
         </div>
       </section>
 
-      {/* GUARANTEE */}
+      {/* ── GUARANTEE ── */}
       <section style={{padding:"72px clamp(20px,5vw,48px)"}}>
         <div className="guarantee-box">
-          <div style={{
-            width:40, height:40, borderRadius:"50%",
-            border:"1px solid rgba(91,224,106,0.25)",
-            display:"flex", alignItems:"center", justifyContent:"center",
-            margin:"0 auto 20px"
-          }}>
-            <div style={{width:14, height:14, borderRadius:"50%", border:"1.5px solid #5BE06A"}} />
+          <div style={{width:40,height:40,borderRadius:"50%",border:"1px solid rgba(91,224,106,0.25)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 20px"}}>
+            <div style={{width:14,height:14,borderRadius:"50%",border:"1.5px solid #5BE06A"}} />
           </div>
-          <h3 style={{fontFamily:"Bebas Neue", fontSize:"clamp(24px,4vw,34px)", letterSpacing:"0.04em", marginBottom:14}}>
-            7-Day Money-Back Guarantee
-          </h3>
-          <p style={{fontSize:"clamp(14px,1.8vw,16px)", color:"#5A5A7A", lineHeight:1.75, maxWidth:440, margin:"0 auto"}}>
-            If the Filmmaker's AI Bible does not improve your creative workflow, email us within 7 days for a full refund. No questions asked.
+          <h3 style={{fontFamily:"Bebas Neue",fontSize:"clamp(24px,4vw,34px)",letterSpacing:"0.04em",marginBottom:14}}>7-Day Money-Back Guarantee</h3>
+          <p style={{fontSize:"clamp(14px,1.8vw,16px)",color:"#7A7A9A",lineHeight:1.75,maxWidth:440,margin:"0 auto"}}>
+            If Cinefy does not save you time and improve the quality of your client deliverables, email us within 7 days for a full refund. No questions asked.
           </p>
         </div>
       </section>
 
       <div className="divider" />
 
-      {/* FINAL CTA */}
-      <section style={{padding:"80px clamp(20px,5vw,48px)", textAlign:"center"}}>
-        <div style={{maxWidth:640, margin:"0 auto"}}>
-          <h2 style={{
-            fontFamily:"Bebas Neue",
-            fontSize:"clamp(40px,7vw,72px)",
-            letterSpacing:"0.03em", lineHeight:0.92, marginBottom:20
-          }}>
-            Start Creating Cinematic<br /><span style={{color:"#4FC3F7"}}>Shots Instantly</span>
+      {/* ── FINAL CTA ── */}
+      <section style={{padding:"80px clamp(20px,5vw,48px)",textAlign:"center"}}>
+        <div style={{maxWidth:700,margin:"0 auto"}}>
+          <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(40px,7vw,72px)",letterSpacing:"0.03em",lineHeight:0.92,marginBottom:16}}>
+            Stop Writing Documents<br />
+            <span style={{color:"#4FC3F7"}}>From Scratch.</span>
           </h2>
-          <p style={{fontSize:"clamp(15px,1.8vw,18px)", color:"#5A5A7A", lineHeight:1.65, marginBottom:36}}>
-            30 prompts. One system. Every project starts with clarity.
+          <p style={{fontSize:"clamp(15px,1.8vw,18px)",color:"#7A7A9A",lineHeight:1.65,marginBottom:36,maxWidth:520,margin:"0 auto 36px"}}>
+            Every project. Every client. Every brief. Professional filmmaking documents in seconds.
           </p>
-          <button className="btn-primary-lg" onClick={() => window.open("https://cinefy.gumroad.com/l/mapzvs", "_blank")}>
+          <button className="btn-primary-lg" onClick={onBuy}>
             Get The Filmmaker's Bible — $29
           </button>
-          <p style={{fontSize:12, color:"#252535", marginTop:14}}>Launch price — regular price will be $49</p>
+          <p style={{fontSize:12,color:"#252535",marginTop:14}}>Launch price — regular price will be $49</p>
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer style={{
-        borderTop:"1px solid #0F0F1E", padding:"32px clamp(20px,5vw,48px)",
-        display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:12
-      }}>
-        <div style={{display:"flex", alignItems:"center", gap:10}}>
-          <div style={{width:26, height:26, borderRadius:"50%", border:"1.5px solid #4FC3F7", display:"flex", alignItems:"center", justifyContent:"center"}}>
-            <div style={{width:8, height:8, background:"#FFB347", borderRadius:"50%"}} />
+      {/* ── FOOTER ── */}
+      <footer style={{borderTop:"1px solid #0F0F1E",padding:"32px clamp(20px,5vw,48px)",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:12}}>
+        <div style={{display:"flex",alignItems:"center",gap:10}}>
+          <div style={{width:26,height:26,borderRadius:"50%",border:"1.5px solid #4FC3F7",display:"flex",alignItems:"center",justifyContent:"center"}}>
+            <div style={{width:8,height:8,background:"#FFB347",borderRadius:"50%"}} />
           </div>
-          <span style={{fontFamily:"Bebas Neue", fontSize:18, letterSpacing:"0.14em"}}>CINEFY</span>
+          <span style={{fontFamily:"Bebas Neue",fontSize:18,letterSpacing:"0.14em"}}>CINEFY</span>
         </div>
-        <p style={{fontSize:12, color:"#252535"}}>cinefypro.co · Stop Starting From Scratch.</p>
-        <p style={{fontSize:11, color:"#1A1A2A"}}>2026 Cinefy</p>
+        <p style={{fontSize:12,color:"#252535"}}>cinefypro.co · Stop Starting From Scratch.</p>
+        <p style={{fontSize:11,color:"#1A1A2A"}}>2026 Cinefy</p>
       </footer>
     </div>
   );
 }
-
-
-// ── PDF EXPORT — DARK CINEMATIC AESTHETIC ─────────────────
-const loadJsPDF = () => new Promise((resolve, reject) => {
-  if (window.jspdf?.jsPDF) { resolve(window.jspdf.jsPDF); return; }
-  const s = document.createElement('script');
-  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-  s.onload  = () => resolve(window.jspdf.jsPDF);
-  s.onerror = reject;
-  document.head.appendChild(s);
-});
-
-// ── Colour palette (matches brand) ────────────────────────
-const C = {
-  black:  [7,   7,  13],
-  deep:   [13,  13, 26],
-  panel:  [17,  17, 32],
-  border: [30,  30, 53],
-  blue:   [79,  195, 247],
-  amber:  [255, 179, 71],
-  green:  [91,  224, 106],
-  white:  [240, 240, 248],
-  muted:  [90,  90, 122],
-  lgrey:  [128, 128, 168],
-};
-
-const PW = 210, PH = 297, ML = 16, MR = 16, IW = PW - ML - MR;
-
-// ── shared helpers ─────────────────────────────────────────
-function setFill(doc, rgb)   { doc.setFillColor(rgb[0], rgb[1], rgb[2]); }
-function setDraw(doc, rgb)   { doc.setDrawColor(rgb[0], rgb[1], rgb[2]); }
-function setTxt(doc, rgb)    { doc.setTextColor(rgb[0], rgb[1], rgb[2]); }
-
-function bgPage(doc) {
-  setFill(doc, C.black);
-  doc.rect(0, 0, PW, PH, 'F');
-}
-
-function pageHeader(doc, title, subtitle, pg) {
-  // Header bar
-  setFill(doc, C.deep);
-  doc.rect(0, 0, PW, 22, 'F');
-  // Blue rule under header
-  setFill(doc, C.blue);
-  doc.rect(0, 22, PW, 0.8, 'F');
-  // CINEFY
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(11);
-  setTxt(doc, C.white);
-  doc.text('CINEFY', ML, 14);
-  // Right meta
-  doc.setFont('courier', 'normal');
-  doc.setFontSize(7);
-  setTxt(doc, C.muted);
-  doc.text('CINEFYPRO.CO', PW - MR, 14, { align: 'right' });
-
-  // Title block
-  setFill(doc, C.panel);
-  doc.rect(0, 22.8, PW, 20, 'F');
-  setDraw(doc, C.border);
-  doc.setLineWidth(0.3);
-  doc.line(0, 42.8, PW, 42.8);
-
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(16);
-  setTxt(doc, C.white);
-  doc.text(title.toUpperCase(), ML, 34);
-
-  if (subtitle) {
-    doc.setFont('courier', 'normal');
-    doc.setFontSize(7.5);
-    setTxt(doc, C.muted);
-    doc.text(subtitle, ML, 40);
-  }
-
-  // Page num top-right
-  doc.setFont('courier', 'normal');
-  doc.setFontSize(7);
-  setTxt(doc, C.muted);
-  doc.text(`PG ${pg}`, PW - MR, 40, { align: 'right' });
-
-  return 52; // y cursor after header
-}
-
-function pageFooter(doc) {
-  setFill(doc, C.deep);
-  doc.rect(0, PH - 10, PW, 10, 'F');
-  setFill(doc, C.blue);
-  doc.rect(0, PH - 10, PW, 0.6, 'F');
-  doc.setFont('courier', 'normal');
-  doc.setFontSize(6.5);
-  setTxt(doc, C.muted);
-  doc.text(
-    "CINEFY  ·  THE FILMMAKER'S AI BIBLE  ·  CINEFYPRO.CO  ·  CONFIDENTIAL",
-    PW / 2, PH - 4, { align: 'center' }
-  );
-}
-
-// Section label: "01  SECTION TITLE ——————————"
-function sectionLabel(doc, num, title, y) {
-  doc.setFont('courier', 'bold');
-  doc.setFontSize(7.5);
-  setTxt(doc, C.amber);
-  doc.text(num, ML, y);
-
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(11);
-  setTxt(doc, C.white);
-  doc.text(title.toUpperCase(), ML + 10, y);
-
-  const ruleX = ML + 10 + doc.getTextWidth(title.toUpperCase()) + 4;
-  setDraw(doc, C.border);
-  doc.setLineWidth(0.4);
-  doc.line(ruleX, y - 1, PW - MR, y - 1);
-
-  return y + 9;
-}
-
-// Concept card (dark panel with gradient left bar)
-function conceptCard(doc, heading, body, y) {
-  const lines = doc.splitTextToSize(body, IW - 16);
-  const h = lines.length * 5.5 + 18;
-  // Panel
-  setFill(doc, C.panel);
-  setDraw(doc, C.border);
-  doc.setLineWidth(0.3);
-  doc.roundedRect(ML, y, IW, h, 2, 2, 'FD');
-  // Left bar — blue top to amber bottom
-  setFill(doc, C.blue);
-  doc.rect(ML, y, 2.5, h / 2, 'F');
-  setFill(doc, C.amber);
-  doc.rect(ML, y + h / 2, 2.5, h / 2, 'F');
-
-  doc.setFont('courier', 'bold');
-  doc.setFontSize(7.5);
-  setTxt(doc, C.blue);
-  doc.text('// ' + heading.toUpperCase(), ML + 6, y + 7);
-
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
-  setTxt(doc, C.lgrey);
-  doc.text(lines, ML + 6, y + 14);
-  return y + h + 6;
-}
-
-// Two-column meta row
-function metaRow(doc, items, y) {
-  const colW = IW / items.length;
-  items.forEach(([label, value], i) => {
-    const x = ML + i * colW;
-    doc.setFont('courier', 'normal');
-    doc.setFontSize(7);
-    setTxt(doc, C.muted);
-    doc.text(label.toUpperCase(), x, y);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9.5);
-    setTxt(doc, C.blue);
-    const v = doc.splitTextToSize(value || '—', colW - 4);
-    doc.text(v, x, y + 5.5);
-  });
-  return y + 14;
-}
-
-// Scene block (numbered left col + content right)
-function sceneBlock(doc, num, timing, heading, visual, audio, vo, note, y) {
-  const leftW = 18;
-  const rightW = IW - leftW - 3;
-
-  // Measure total height needed
-  const vLines = visual ? doc.splitTextToSize('VISUAL: ' + visual, rightW - 4) : [];
-  const aLines = audio  ? doc.splitTextToSize('AUDIO: '  + audio,  rightW - 4) : [];
-  const vLines2 = vo    ? doc.splitTextToSize('VO: '     + vo,     rightW - 4) : [];
-  const nLines  = note  ? doc.splitTextToSize('NOTE: '   + note,   rightW - 4) : [];
-
-  const allLines = [
-    ...(heading ? [heading, ''] : []),
-    ...vLines, ...(vLines.length ? [''] : []),
-    ...aLines, ...(aLines.length ? [''] : []),
-    ...vLines2,...(vLines2.length ? [''] : []),
-    ...nLines,
-  ];
-  const contentH = Math.max(allLines.length * 4.8 + 14, 28);
-  const totalH = contentH;
-
-  // Check page overflow
-  if (y + totalH > PH - 14) return null; // signal overflow
-
-  // Left col (dark deep bg)
-  setFill(doc, C.deep);
-  setDraw(doc, C.border);
-  doc.setLineWidth(0.3);
-  doc.roundedRect(ML, y, leftW, totalH, 2, 0, 'FD');
-
-  // Scene number
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(18);
-  setTxt(doc, C.border);
-  doc.text(num.toString().padStart(2, '0'), ML + 2, y + 12);
-
-  // Timing vertical text (approximated horizontal, small)
-  doc.setFont('courier', 'normal');
-  doc.setFontSize(6);
-  setTxt(doc, C.amber);
-  doc.text(timing, ML + 2, y + totalH - 5);
-
-  // Right col (panel bg)
-  setFill(doc, C.panel);
-  doc.roundedRect(ML + leftW + 1, y, rightW, totalH, 0, 2, 'FD');
-
-  const rx = ML + leftW + 4;
-  let ry = y + 7;
-
-  // Heading
-  if (heading) {
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9.5);
-    setTxt(doc, C.white);
-    doc.text(heading, rx, ry);
-    ry += 7;
-  }
-
-  // Content blocks
-  const blocks = [
-    { prefix: 'VISUAL', lines: vLines, col: C.lgrey },
-    { prefix: 'AUDIO',  lines: aLines, col: C.muted  },
-    { prefix: 'VO',     lines: vLines2,col: C.blue   },
-    { prefix: 'NOTE',   lines: nLines, col: C.amber  },
-  ];
-
-  blocks.forEach(({ prefix, lines, col }) => {
-    if (!lines.length) return;
-    doc.setFont('courier', 'bold');
-    doc.setFontSize(6.5);
-    setTxt(doc, col);
-    doc.text(prefix + ' /', rx, ry);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8.5);
-    setTxt(doc, col === C.blue ? C.lgrey : col);
-    doc.text(lines, rx + doc.getTextWidth(prefix + ' / ') + 1, ry);
-    ry += lines.length * 4.8 + 4;
-  });
-
-  return y + totalH + 4;
-}
-
-// Shot list table row
-function shotTableHeader(doc, y) {
-  setFill(doc, C.deep);
-  doc.rect(ML, y, IW, 7, 'F');
-  setDraw(doc, C.border);
-  doc.setLineWidth(0.3);
-  doc.rect(ML, y, IW, 7, 'S');
-  doc.setFont('courier', 'bold');
-  doc.setFontSize(7);
-  setTxt(doc, C.blue);
-  const cols = [[0,'SHOT'],[14,'TYPE'],[30,'DESCRIPTION'],[IW-18,'DUR']];
-  cols.forEach(([x, label]) => doc.text(label, ML + x + 2, y + 4.8));
-  return y + 7;
-}
-
-function shotRow(doc, num, type, desc, dur, y, even) {
-  const rowH = 8;
-  setFill(doc, even ? C.panel : C.deep);
-  setDraw(doc, C.border);
-  doc.setLineWidth(0.2);
-  doc.rect(ML, y, IW, rowH, 'FD');
-
-  doc.setFont('courier', 'bold');
-  doc.setFontSize(8);
-  setTxt(doc, C.blue);
-  doc.text(String(num).padStart(3,'0'), ML + 2, y + 5.5);
-
-  doc.setFont('courier', 'normal');
-  doc.setFontSize(7.5);
-  setTxt(doc, C.amber);
-  doc.text(type, ML + 16, y + 5.5);
-
-  const dLines = doc.splitTextToSize(desc, IW - 38);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8);
-  setTxt(doc, C.lgrey);
-  doc.text(dLines[0] || '', ML + 32, y + 5.5);
-
-  doc.setFont('courier', 'normal');
-  doc.setFontSize(7.5);
-  setTxt(doc, C.muted);
-  doc.text(dur, PW - MR - 2, y + 5.5, { align: 'right' });
-
-  return y + rowH;
-}
-
-// CTA block at end
-function ctaBlock(doc, y) {
-  const h = 28;
-  setFill(doc, C.deep);
-  setDraw(doc, C.blue);
-  doc.setLineWidth(0.5);
-  doc.roundedRect(ML, y, IW, h, 2, 2, 'FD');
-
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(15);
-  setTxt(doc, C.white);
-  doc.text('Stop Starting From Scratch.', PW / 2, y + 10, { align: 'center' });
-
-  doc.setFont('courier', 'normal');
-  doc.setFontSize(8);
-  setTxt(doc, C.muted);
-  doc.text("The Filmmaker's AI Bible — Available Now", PW / 2, y + 17, { align: 'center' });
-
-  doc.setFont('courier', 'bold');
-  doc.setFontSize(10);
-  setTxt(doc, C.amber);
-  doc.text('CINEFYPRO.CO', PW / 2, y + 24, { align: 'center' });
-}
-
-// ── PDF: SHOT LIST (Prompt 002) ────────────────────────────
-async function exportShotListPDF(fields) {
-  const jsPDF = await loadJsPDF();
-  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-  bgPage(doc);
-
-  const projectType = fields.PROJECT_TYPE       || 'Untitled Project';
-  const direction   = fields.CREATIVE_DIRECTION || '';
-  const location    = fields.LOCATION           || '';
-  const subject     = fields.SUBJECT            || '';
-  const shotCount   = parseInt(fields.SHOT_COUNT) || 10;
-  const date        = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
-
-  let y = pageHeader(doc, 'Shot List', `${projectType}  ·  ${date}`, 1);
-
-  // Meta row
-  y = metaRow(doc, [
-    ['Project Type', projectType],
-    ['Location', location],
-    ['Subject', subject],
-    ['Total Shots', String(shotCount)],
-  ], y);
-  y += 4;
-
-  // Creative direction card
-  if (direction) {
-    y = sectionLabel(doc, '01', 'Creative Direction', y);
-    y = conceptCard(doc, 'Visual Direction', direction, y);
-    y += 2;
-  }
-
-  // Shot list
-  y = sectionLabel(doc, '02', 'Shot List', y);
-  y = shotTableHeader(doc, y);
-
-  const shotTypes   = ['ECU','CU','MCU','MS','WS','OTS','POV','INSERT','2-SHOT','STEADICAM'];
-  const descriptions = [
-    'Hero shot. Hold until the scene establishes itself. No movement.',
-    'Slow push in — motivated by the emotional beat. Rack focus at mark.',
-    'B-roll coverage. Available light only. No fill.',
-    'Establishing wide. Lock off. Let the environment speak.',
-    'Reaction shot. Hold two beats longer than comfortable.',
-    'Insert. Extreme shallow depth. Subject implied, not shown.',
-    'Over-shoulder. Camera breathes — not performing.',
-    'POV. Handheld with intention. Not shaky — present.',
-    'Two-shot. Equal weight in frame. No hierarchy.',
-    'Closing image. The last frame the viewer carries out.',
-    'B-roll cutaway. Texture only. No story obligation.',
-    'Hero close. The single most important frame of the shoot.',
-  ];
-  const durations = ['4s','3s','5s','6s','2s','4s','3s','3s','5s','8s','2s','4s'];
-
-  for (let i = 0; i < Math.min(shotCount, 15); i++) {
-    if (y > PH - 24) {
-      pageFooter(doc); doc.addPage(); bgPage(doc);
-      y = pageHeader(doc, 'Shot List (cont.)', projectType, 2);
-      y = shotTableHeader(doc, y);
-    }
-    y = shotRow(doc,
-      i + 1,
-      shotTypes[i % shotTypes.length],
-      descriptions[i % descriptions.length],
-      durations[i % durations.length],
-      y, i % 2 === 0
-    );
-  }
-
-  // Notes
-  y += 6;
-  if (y < PH - 40) {
-    y = sectionLabel(doc, '03', 'Production Notes', y);
-    setFill(doc, C.panel);
-    setDraw(doc, C.border);
-    doc.setLineWidth(0.3);
-    doc.roundedRect(ML, y, IW, 24, 2, 2, 'FD');
-    setFill(doc, C.amber);
-    doc.rect(ML, y, 2.5, 24, 'F');
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(8.5);
-    setTxt(doc, C.muted);
-    doc.text('Add production notes, crew requirements, or special equipment here.', ML + 6, y + 8);
-    y += 30;
-  }
-
-  if (y < PH - 34) ctaBlock(doc, y + 4);
-  pageFooter(doc);
-  doc.save(`cinefy-shot-list-${projectType.toLowerCase().replace(/\s+/g,'-').slice(0,30)}.pdf`);
-}
-
-// ── PDF: AD CAMPAIGN BUILDER (Prompt 031) ─────────────────
-async function exportCampaignPDF(fields) {
-  const jsPDF = await loadJsPDF();
-  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-  bgPage(doc);
-
-  const brand     = fields.BRAND        || 'Brand Name';
-  const product   = fields.PRODUCT      || '';
-  const audience  = fields.AUDIENCE     || '';
-  const duration  = fields.DURATION     || '60s';
-  const emotion   = fields.EMOTION      || '';
-  const visual    = fields.VISUAL_STYLE || '';
-  const date      = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
-
-  let y = pageHeader(doc, 'Ad Campaign Brief', `${brand}  ·  ${date}`, 1);
-
-  // Meta
-  y = metaRow(doc, [
-    ['Brand / Client', brand],
-    ['Product / Launch', product],
-    ['Ad Duration', duration],
-    ['Target Audience', audience],
-  ], y);
-  y += 4;
-
-  // Concept
-  y = sectionLabel(doc, '01', 'Campaign Concept', y);
-  y = conceptCard(doc, 'Emotional Core',
-    emotion || 'The emotional core of this campaign — what the viewer must feel in the final 3 seconds.',
-    y
-  );
-  y += 2;
-
-  // Visual direction
-  y = sectionLabel(doc, '02', 'Visual Direction', y);
-  y = conceptCard(doc, 'Cinematography & Style', visual || 'Visual and cinematic direction for this campaign.', y);
-  y += 2;
-
-  // Scene breakdown
-  y = sectionLabel(doc, '03', 'Scene Breakdown', y);
-
-  const scenes = [
-    [1, '0:00–0:08', 'The Hook',
-     'Open on the problem. No brand. No product. The first frame must earn the next.',
-     'Ambient sound only — no music. Room tone.',
-     'No voiceover in the open. Let the image do the work.',
-     'The hook lives or dies on this first frame. If it does not create a question in the viewer\'s mind, nothing that follows matters.'],
-    [2, '0:08–0:20', 'The Tension',
-     'Build the problem. The viewer recognises themselves. This moment is about identification, not information.',
-     'Music enters low — unresolved. Single note, barely there.',
-     '"You know this feeling."',
-     null],
-    [3, '0:20–0:38', 'The Turn',
-     'Product or solution enters frame. This is the pivot. The music resolves. Something shifts.',
-     'Music resolves — single piano note, then strings breathe in.',
-     '"There is a better way."',
-     'The turn must feel earned. If the tension was real, the release will be real. Do not rush to the product.'],
-    [4, '0:38–0:52', 'The Proof',
-     'Show the outcome. Not features — transformation. What does their life look like after?',
-     'Full score. Cinematic swell. Should feel like the opening of a great film.',
-     '"This is what changes when you have the right tool."',
-     null],
-    [5, '0:52–1:00', 'The Close',
-     'Cut to brand. Logo. URL. Hold. Silence.',
-     'Music resolves to single resonant note. Silence. The restraint IS the brand statement.',
-     `"${brand}. Stop starting from scratch."`,
-     'Resist the urge to fill this final beat. The confidence of the brand is in what you leave out.'],
-  ];
-
-  for (const [num, timing, heading, vis, aud, vo, note] of scenes) {
-    if (y > PH - 35) {
-      pageFooter(doc); doc.addPage(); bgPage(doc);
-      y = pageHeader(doc, 'Ad Campaign Brief (cont.)', brand, 2);
-    }
-    const result = sceneBlock(doc, num, timing, heading, vis, aud, vo, note, y);
-    if (result === null) {
-      pageFooter(doc); doc.addPage(); bgPage(doc);
-      y = pageHeader(doc, 'Ad Campaign Brief (cont.)', brand, 2);
-      y = sceneBlock(doc, num, timing, heading, vis, aud, vo, note, y) || y + 32;
-    } else {
-      y = result;
-    }
-  }
-
-  // Shot list
-  pageFooter(doc); doc.addPage(); bgPage(doc);
-  y = pageHeader(doc, 'Recommended Shot List', brand, 3);
-  y = sectionLabel(doc, '04', 'Shot List', y);
-  y = shotTableHeader(doc, y);
-
-  const campaignShots = [
-    [1,'ECU',   'Blinking cursor on blank page. Tack sharp. Screen softly bokeh behind.',      '4s'],
-    [2,'MS PULL','Slow pull back reveals filmmaker at desk. Monitor glow as key light.',         '4s'],
-    [3,'INSERT', 'Hands on desk. High contrast. Dark background. Nervous energy.',               '2s'],
-    [4,'OTS',    'Over-shoulder on screen — three open tabs. Overwhelmed framing.',              '3s'],
-    [5,'INSERT', 'Phone screen — client message. Filmmaker\'s thumb visible.',                   '2s'],
-    [6,'CU',     'Filmmaker face. Generic AI result reflected in eyes. Subtle reaction.',        '3s'],
-    [7,'OTS',    'Product/solution interface opens. Output populates. Rack focus to screen.',    '4s'],
-    [8,'CU',     'Filmmaker leans forward. THE hero shot of the ad. Warm light shift.',         '3s'],
-    [9,'MONTAGE','5-shot burst — workflow, motion, creation, golden hour frame.',                '10s'],
-    [10,'TITLE', 'Cut to black. Logo. URL. Silence. Hold.',                                      '8s'],
-  ];
-
-  campaignShots.forEach(([n, t, d, dur], i) => {
-    if (y > PH - 18) {
-      pageFooter(doc); doc.addPage(); bgPage(doc);
-      y = pageHeader(doc, 'Shot List (cont.)', brand, 4);
-      y = shotTableHeader(doc, y);
-    }
-    y = shotRow(doc, n, t, d, dur, y, i % 2 === 0);
-  });
-
-  // Music direction
-  y += 8;
-  if (y > PH - 60) {
-    pageFooter(doc); doc.addPage(); bgPage(doc);
-    y = pageHeader(doc, 'Music & Sound Direction', brand, 5);
-  }
-  y = sectionLabel(doc, '05', 'Music & Sound Direction', y);
-
-  const musicBlocks = [
-    ['0:00–0:08',  'Silence',        'No music. Room tone only. Ambient hum. The silence creates tension better than any score.'],
-    ['0:08–0:20',  'Low Pulse',      'Subtle unresolved electronic heartbeat. Single note, low frequency. Creates unease without aggression.'],
-    ['0:20–0:38',  'The Pivot',      'Single piano note resolves the dissonance. Strings enter softly. The music confirms the emotional turn.'],
-    ['0:38–0:52',  'Full Score',     'Cinematic swell. Strings, electronic pulse, building momentum. Should feel like the opening of a great film.'],
-    ['0:52–1:00',  'Resolution',     'Music drops to single resonant note as logo appears. Hold two beats. Silence. Restraint is the brand statement.'],
-  ];
-
-  musicBlocks.forEach(([timing, label, desc]) => {
-    if (y > PH - 20) {
-      pageFooter(doc); doc.addPage(); bgPage(doc);
-      y = pageHeader(doc, 'Music Direction (cont.)', brand, 5);
-    }
-    const lines = doc.splitTextToSize(desc, IW - 52);
-    const rowH = Math.max(12, lines.length * 4.6 + 8);
-
-    setFill(doc, C.panel);
-    setDraw(doc, C.border);
-    doc.setLineWidth(0.3);
-    doc.rect(ML, y, IW, rowH, 'FD');
-    setFill(doc, C.blue);
-    doc.rect(ML, y, 2, rowH, 'F');
-
-    doc.setFont('courier', 'bold');
-    doc.setFontSize(7.5);
-    setTxt(doc, C.amber);
-    doc.text(timing, ML + 4, y + rowH/2 + 1);
-
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(8.5);
-    setTxt(doc, C.white);
-    doc.text(label, ML + 28, y + rowH/2 - (lines.length > 1 ? 2 : 0) + 1);
-
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8);
-    setTxt(doc, C.lgrey);
-    doc.text(lines, ML + 52, y + rowH/2 - (lines.length-1)*2.3 + 1);
-
-    y += rowH + 2;
-  });
-
-  y += 6;
-  if (y < PH - 34) ctaBlock(doc, y);
-  pageFooter(doc);
-
-  doc.save(`cinefy-campaign-${brand.toLowerCase().replace(/\s+/g,'-').slice(0,30)}.pdf`);
-}
-
-const PDF_PROMPTS = { '002': exportShotListPDF, '031': exportCampaignPDF };
-
-
-
 
 // ── ACCESS GATE ───────────────────────────────────────────
 function AccessGate({ onUnlock, onBack }) {
@@ -1707,7 +1154,7 @@ function AccessGate({ onUnlock, onBack }) {
           borderTop:"1px solid #111120",
           textAlign:"center"
         }}>
-          <p style={{fontSize:13, color:"#3A3A5A", marginBottom:12}}>
+          <p style={{fontSize:13, color:"#6060808", marginBottom:12}}>
             Don't have a code yet?
           </p>
           <button
@@ -1728,7 +1175,7 @@ function AccessGate({ onUnlock, onBack }) {
         onClick={onBack}
         style={{
           marginTop:20, background:"transparent", border:"none",
-          color:"#3A3A5A", fontFamily:"DM Sans", fontSize:14,
+          color:"#6060808", fontFamily:"DM Sans", fontSize:14,
           cursor:"pointer"
         }}
       >
@@ -2137,7 +1584,7 @@ function DemoMode({ onBack }) {
         .demo-tab {
           background: transparent;
           border: 1px solid #1A1A32;
-          color: #7A7A9A;
+          color: #9090B0;
           font-family: DM Sans; font-weight: 600;
           font-size: 13px; letter-spacing: 0.06em;
           padding: 10px 20px; border-radius: 6px;
@@ -2242,7 +1689,7 @@ function DemoMode({ onBack }) {
               color:demo.col, background:`${demo.col}12`,
               padding:"4px 12px", borderRadius:4
             }}>PROMPT {demo.id}</div>
-            <span style={{fontSize:13, color:"#3A3A5A", letterSpacing:"0.06em", fontWeight:600}}>
+            <span style={{fontSize:13, color:"#6060808", letterSpacing:"0.06em", fontWeight:600}}>
               {demo.category.toUpperCase()}
             </span>
           </div>
@@ -2296,7 +1743,7 @@ function DemoMode({ onBack }) {
             <div>
               <div style={{
                 fontSize:12, fontWeight:700, letterSpacing:"0.1em",
-                color:"#3A3A5A", marginBottom:10
+                color:"#6060808", marginBottom:10
               }}>FULL PROMPT PREVIEW</div>
               <div style={{
                 background:"#040408",
@@ -2373,12 +1820,12 @@ function DemoMode({ onBack }) {
           display:"flex", alignItems:"center",
           justifyContent:"space-between", flexWrap:"wrap", gap:10
         }}>
-          <span style={{fontSize:12, color:"#252535", letterSpacing:"0.08em", fontWeight:700}}>
+          <span style={{fontSize:12, color:"#4A4A6A", letterSpacing:"0.08em", fontWeight:700}}>
             CINEFYPRO.CO · 30 PROFESSIONAL AI PROMPTS · $29
           </span>
           <div style={{
             fontSize:11, fontWeight:700, letterSpacing:"0.1em",
-            color:"#3A3A5A"
+            color:"#6060808"
           }}>STOP STARTING FROM SCRATCH</div>
         </div>
       </div>
