@@ -714,7 +714,7 @@ function Landing({ onBuy, onEnterGate }) {
 
         {/* Stats */}
         <div style={{display:"flex",justifyContent:"center",gap:"clamp(28px,5vw,60px)",marginTop:52,paddingTop:40,borderTop:"1px solid #111120",flexWrap:"wrap"}}>
-          {[["29","Prompts"],["6","Chapters"],["PDF","Export"],["∞","Uses"]].map(([v,l]) => (
+          {[["30","Prompts"],["6","Chapters"],["PDF","Export"],["∞","Uses"]].map(([v,l]) => (
             <div key={l} style={{textAlign:"center"}}>
               <div style={{fontFamily:"Bebas Neue",fontSize:38,color:"#4FC3F7",lineHeight:1}}>{v}</div>
               <div style={{fontSize:11,fontWeight:700,color:"#3A3A5A",letterSpacing:"0.1em",marginTop:5}}>{l.toUpperCase()}</div>
@@ -806,9 +806,9 @@ function Landing({ onBuy, onEnterGate }) {
         <div style={{textAlign:"center",marginBottom:48}}>
           <span className="section-label">What's Inside</span>
           <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(34px,6vw,56px)",letterSpacing:"0.04em",marginBottom:8}}>
-            29 Professional Documents
+            30 Professional Documents
           </h2>
-          <p style={{fontSize:16,color:"#7A7A9A"}}>6 chapters · every stage of production · client-ready output on every prompt</p>
+          <p style={{fontSize:16,color:"#7A7A9A"}}>6 chapters · 30 prompts · client-ready output on every prompt</p>
         </div>
         <div className="two-col" style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:12}}>
           {[
@@ -962,7 +962,7 @@ THE CLOSE
           <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(34px,6vw,56px)",letterSpacing:"0.04em",marginBottom:8}}>
             Get Instant Access
           </h2>
-          <p style={{fontSize:16,color:"#7A7A9A",marginBottom:40}}>One price. 29 prompts. Client-ready outputs. Yours forever.</p>
+          <p style={{fontSize:16,color:"#7A7A9A",marginBottom:40}}>One price. 30 prompts. Client-ready outputs. Yours forever.</p>
           <div className="scarcity-pill">
             <div style={{width:6,height:6,borderRadius:"50%",background:"#FFB347"}} />
             <span style={{fontSize:13,fontWeight:700,color:"#FFB347"}}>Launch Price: $29</span>
@@ -980,7 +980,7 @@ THE CLOSE
             <p style={{fontSize:12,color:"#3A3A5A",marginBottom:28}}>One-time purchase · No subscription</p>
             <div style={{marginBottom:28}}>
               {[
-                "29 client-ready filmmaking prompts",
+                "30 client-ready filmmaking prompts",
                 "6 complete production chapters",
                 "Interactive prompt studio — not a PDF",
                 "Live prompt editing before you copy",
@@ -1184,6 +1184,170 @@ function AccessGate({ onUnlock, onBack }) {
     </div>
   );
 }
+
+
+
+// ── PDF EXPORT UTILITIES ──────────────────────────────────
+const loadJsPDF = () => new Promise((resolve, reject) => {
+  if (window.jspdf?.jsPDF) { resolve(window.jspdf.jsPDF); return; }
+  const s = document.createElement('script');
+  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+  s.onload  = () => resolve(window.jspdf.jsPDF);
+  s.onerror = reject;
+  document.head.appendChild(s);
+});
+
+const C = {
+  black:[7,7,13],deep:[13,13,26],panel:[17,17,32],border:[30,30,53],
+  blue:[79,195,247],amber:[255,179,71],green:[91,224,106],
+  white:[240,240,248],muted:[90,90,122],lgrey:[144,144,176],
+};
+const PW=210,PH=297,ML=16,IW=178;
+const sf=(doc,rgb)=>doc.setFillColor(rgb[0],rgb[1],rgb[2]);
+const sd=(doc,rgb)=>doc.setDrawColor(rgb[0],rgb[1],rgb[2]);
+const st=(doc,rgb)=>doc.setTextColor(rgb[0],rgb[1],rgb[2]);
+function bgPDF(doc){sf(doc,C.black);doc.rect(0,0,PW,PH,'F');}
+function pdfHead(doc,title,sub,pg){
+  sf(doc,C.deep);doc.rect(0,0,PW,22,'F');
+  sf(doc,C.blue);doc.rect(0,22,PW,0.8,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(11);st(doc,C.white);doc.text('CINEFY',ML,14);
+  doc.setFont('helvetica','normal');doc.setFontSize(7);st(doc,C.muted);doc.text('CINEFYPRO.CO',PW-ML,14,{align:'right'});
+  sf(doc,C.panel);doc.rect(0,22.8,PW,20,'F');
+  sd(doc,C.border);doc.setLineWidth(0.3);doc.line(0,42.8,PW,42.8);
+  doc.setFont('helvetica','bold');doc.setFontSize(16);st(doc,C.white);doc.text(title.toUpperCase(),ML,34);
+  if(sub){doc.setFont('helvetica','normal');doc.setFontSize(7.5);st(doc,C.muted);doc.text(sub,ML,40);}
+  return 52;
+}
+function pdfFooter(doc){
+  sf(doc,C.deep);doc.rect(0,PH-10,PW,10,'F');
+  sf(doc,C.blue);doc.rect(0,PH-10,PW,0.6,'F');
+  doc.setFont('helvetica','normal');doc.setFontSize(6.5);st(doc,C.muted);
+  doc.text("CINEFY · THE FILMMAKER'S AI BIBLE · CINEFYPRO.CO",PW/2,PH-4,{align:'center'});
+}
+function pdfSection(doc,num,title,y){
+  doc.setFont('courier','bold');doc.setFontSize(7.5);st(doc,C.amber);doc.text(num,ML,y);
+  doc.setFont('helvetica','bold');doc.setFontSize(11);st(doc,C.white);doc.text(title.toUpperCase(),ML+10,y);
+  sd(doc,C.border);doc.setLineWidth(0.4);
+  const rx=ML+10+doc.getTextWidth(title.toUpperCase())+4;
+  doc.line(rx,y-1,PW-ML,y-1);
+  return y+9;
+}
+function pdfTwoFields(doc,l1,v1,l2,v2,y){
+  const cw=IW/2-3,c2x=ML+cw+6;
+  doc.setFont('helvetica','bold');doc.setFontSize(7.5);st(doc,C.muted);
+  doc.text(l1.toUpperCase(),ML,y);doc.text(l2.toUpperCase(),c2x,y);
+  const a=doc.splitTextToSize(v1||'—',cw-8),b=doc.splitTextToSize(v2||'—',cw-8);
+  const bh=Math.max(10,Math.max(a.length,b.length)*5+6);
+  sf(doc,C.panel);sd(doc,C.border);doc.setLineWidth(0.3);
+  doc.roundedRect(ML,y+2,cw,bh,1.5,1.5,'FD');doc.roundedRect(c2x,y+2,cw,bh,1.5,1.5,'FD');
+  doc.setFont('helvetica','normal');doc.setFontSize(9);st(doc,C.white);
+  doc.text(a,ML+4,y+7);doc.text(b,c2x+4,y+7);
+  return y+bh+6;
+}
+function pdfField(doc,label,value,y){
+  const lines=doc.splitTextToSize(value||'—',IW-8);
+  const h=Math.max(10,lines.length*5+6);
+  doc.setFont('helvetica','bold');doc.setFontSize(7.5);st(doc,C.muted);doc.text(label.toUpperCase(),ML,y);
+  sf(doc,C.panel);sd(doc,C.border);doc.setLineWidth(0.3);doc.roundedRect(ML,y+2,IW,h,1.5,1.5,'FD');
+  doc.setFont('helvetica','normal');doc.setFontSize(9);st(doc,C.white);doc.text(lines,ML+4,y+7);
+  return y+h+6;
+}
+function pdfShotRow(doc,num,type,desc,dur,y,even){
+  const rh=8;
+  sf(doc,even?C.panel:C.deep);sd(doc,C.border);doc.setLineWidth(0.2);doc.rect(ML,y,IW,rh,'FD');
+  doc.setFont('courier','bold');doc.setFontSize(8);st(doc,C.blue);doc.text(String(num).padStart(3,'0'),ML+2,y+5.5);
+  doc.setFont('courier','normal');doc.setFontSize(7.5);st(doc,C.amber);doc.text(type,ML+16,y+5.5);
+  const dl=doc.splitTextToSize(desc,IW-38);
+  doc.setFont('helvetica','normal');doc.setFontSize(8);st(doc,C.lgrey);doc.text(dl[0]||'',ML+32,y+5.5);
+  doc.setFont('courier','normal');doc.setFontSize(7.5);st(doc,C.muted);doc.text(dur,PW-ML-2,y+5.5,{align:'right'});
+  return y+rh;
+}
+function pdfCTA(doc,y){
+  sf(doc,C.deep);sd(doc,C.blue);doc.setLineWidth(0.5);doc.roundedRect(ML,y,IW,26,2,2,'FD');
+  doc.setFont('helvetica','bold');doc.setFontSize(14);st(doc,C.white);doc.text('Stop Starting From Scratch.',PW/2,y+9,{align:'center'});
+  doc.setFont('courier','bold');doc.setFontSize(9);st(doc,C.amber);doc.text('CINEFYPRO.CO',PW/2,y+20,{align:'center'});
+}
+
+async function exportShotListPDF(fields) {
+  const jsPDF = await loadJsPDF();
+  const doc = new jsPDF({unit:'mm',format:'a4'});
+  bgPDF(doc);
+  const pt=fields.PROJECT_TYPE||'Untitled Project',dir=fields.CREATIVE_DIRECTION||'',
+        loc=fields.LOCATION||'',sub=fields.SUBJECT||'',cnt=parseInt(fields.SHOT_COUNT)||10,
+        date=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  let y=pdfHead(doc,'Shot List',`${pt}  ·  ${date}`,1);
+  y=pdfTwoFields(doc,'Project Type',pt,'Total Shots',String(cnt),y);
+  y=pdfTwoFields(doc,'Location',loc,'Primary Subject',sub,y);
+  if(dir){y=pdfSection(doc,'01','Creative Direction',y+2);y=pdfField(doc,'Visual Direction',dir,y);}
+  y=pdfSection(doc,'02','Shot List',y+2);
+  // Table header
+  sf(doc,C.deep);doc.rect(ML,y,IW,7,'F');
+  doc.setFont('courier','bold');doc.setFontSize(7);st(doc,C.blue);
+  [['SHOT',0],['TYPE',14],['DESCRIPTION',30],['DUR',IW-18]].forEach(([h,x])=>doc.text(h,ML+x+2,y+4.8));
+  y+=7;
+  const types=['ECU','CU','MCU','MS','WS','OTS','POV','INSERT','2-SHOT','STEADICAM'],
+        descs=['Hero shot. Hold until the scene establishes itself. No movement.','Slow push in — motivated by the emotional beat. Rack focus at mark.','B-roll coverage. Available light only.','Establishing wide. Lock off. Let the environment speak.','Reaction shot. Hold two beats longer than comfortable.','Insert. Extreme shallow depth. Subject implied, not shown.','Over-shoulder. Camera breathes — not performing.','POV. Handheld with intention. Not shaky — present.','Two-shot. Equal weight in frame.','Closing image. The last frame the viewer carries out.'],
+        durs=['4s','3s','5s','6s','2s','4s','3s','3s','5s','8s'];
+  for(let i=0;i<Math.min(cnt,15);i++){
+    if(y>PH-24){pdfFooter(doc);doc.addPage();bgPDF(doc);y=pdfHead(doc,'Shot List (cont.)',pt,2);
+      sf(doc,C.deep);doc.rect(ML,y,IW,7,'F');doc.setFont('courier','bold');doc.setFontSize(7);st(doc,C.blue);
+      [['SHOT',0],['TYPE',14],['DESCRIPTION',30],['DUR',IW-18]].forEach(([h,x])=>doc.text(h,ML+x+2,y+4.8));y+=7;}
+    y=pdfShotRow(doc,i+1,types[i%types.length],descs[i%descs.length],durs[i%durs.length],y,i%2===0);
+  }
+  if(y<PH-36){y+=6;y=pdfSection(doc,'03','Production Notes',y);
+    sf(doc,C.panel);sd(doc,C.border);doc.setLineWidth(0.3);doc.roundedRect(ML,y,IW,22,2,2,'FD');
+    sf(doc,C.amber);doc.rect(ML,y,2.5,22,'F');
+    doc.setFont('helvetica','italic');doc.setFontSize(8.5);st(doc,C.muted);
+    doc.text('Add production notes, crew requirements, or special equipment here.',ML+5,y+8);}
+  pdfFooter(doc);
+  doc.save(`cinefy-shot-list-${pt.toLowerCase().replace(/\s+/g,'-').slice(0,30)}.pdf`);
+}
+
+async function exportCampaignPDF(fields) {
+  const jsPDF = await loadJsPDF();
+  const doc = new jsPDF({unit:'mm',format:'a4'});
+  bgPDF(doc);
+  const brand=fields.BRAND||'Brand Name',product=fields.PRODUCT||'',
+        audience=fields.AUDIENCE||'',duration=fields.DURATION||'60s',
+        emotion=fields.EMOTION||'',visual=fields.VISUAL_STYLE||'',
+        date=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  let y=pdfHead(doc,'Ad Campaign Brief',`${brand}  ·  ${date}`,1);
+  y=pdfTwoFields(doc,'Brand / Client',brand,'Ad Duration',duration,y);
+  y=pdfTwoFields(doc,'Product / Launch',product,'Target Audience',audience,y);
+  y+=2;y=pdfSection(doc,'01','Campaign Concept',y);
+  y=pdfField(doc,'Emotional Core',emotion||'The emotional truth this ad must leave the viewer feeling.',y);
+  y+=2;y=pdfSection(doc,'02','Visual Direction',y);
+  y=pdfField(doc,'Cinematography & Style',visual||'Visual and cinematic direction.',y);
+  y+=2;y=pdfSection(doc,'03','Scene Breakdown',y);
+  const scenes=[
+    [1,'0:00–0:08','The Hook','Open on the problem. No brand. No product. The first frame must earn the next.','Ambient sound only — no music.','No voiceover. Let the image work.'],
+    [2,'0:08–0:20','The Tension','Build the problem. The viewer recognises themselves.','Music enters low — unresolved.','You know this feeling.'],
+    [3,'0:20–0:38','The Turn','Product enters frame. Music resolves. Something shifts.','Single piano note then strings.','There is a better way.'],
+    [4,'0:38–0:52','The Proof','Show the outcome. Not features — transformation.','Full cinematic score.','This is what changes.'],
+    [5,'0:52–1:00','The Close','Cut to brand. Logo. URL. Hold. Silence.','Single resonant note. Silence.','Stop starting from scratch.'],
+  ];
+  for(const [num,timing,heading,vis,aud,vo] of scenes){
+    if(y>PH-32){pdfFooter(doc);doc.addPage();bgPDF(doc);y=pdfHead(doc,'Campaign Brief (cont.)',brand,2);}
+    const lw=18,rw=IW-lw-3;
+    const vl=doc.splitTextToSize('VISUAL: '+vis,rw-4),al=doc.splitTextToSize('AUDIO: '+aud,rw-4),vol=doc.splitTextToSize('VO: '+vo,rw-4);
+    const ch=Math.max((vl.length+al.length+vol.length)*4.8+18,28);
+    sf(doc,C.deep);sd(doc,C.border);doc.setLineWidth(0.3);doc.roundedRect(ML,y,lw,ch,2,0,'FD');
+    doc.setFont('helvetica','bold');doc.setFontSize(18);st(doc,C.border);doc.text(String(num).padStart(2,'0'),ML+2,y+12);
+    doc.setFont('courier','normal');doc.setFontSize(6);st(doc,C.amber);doc.text(timing,ML+2,y+ch-5);
+    sf(doc,C.panel);doc.roundedRect(ML+lw+1,y,rw,ch,0,2,'FD');
+    const rx=ML+lw+4;let ry=y+7;
+    doc.setFont('helvetica','bold');doc.setFontSize(9.5);st(doc,C.white);doc.text(heading,rx,ry);ry+=7;
+    [[vl,C.lgrey],[al,C.muted],[vol,C.blue]].forEach(([lines,col])=>{
+      if(!lines.length)return;doc.setFont('helvetica','normal');doc.setFontSize(8.5);st(doc,col);doc.text(lines,rx,ry);ry+=lines.length*4.8+3;
+    });
+    y+=ch+3;
+  }
+  if(y<PH-30)pdfCTA(doc,y+8);
+  pdfFooter(doc);
+  doc.save(`cinefy-campaign-${brand.toLowerCase().replace(/\s+/g,'-').slice(0,30)}.pdf`);
+}
+
+const PDF_PROMPTS = { '002': exportShotListPDF, '031': exportCampaignPDF };
 
 
 // ── PROMPT STUDIO ─────────────────────────────────────────
