@@ -1054,22 +1054,50 @@ THE CLOSE
 // ── ACCESS GATE ───────────────────────────────────────────
 function AccessGate({ onUnlock, onBack }) {
   const [code, setCode] = useState("");
+  const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [checking, setChecking] = useState(false);
 
   const VALID_CODES = ["CINEFY2026", "cinefy2026"];
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    // Validate email first
+    if (!email || !email.includes("@") || !email.includes(".")) {
+      setEmailError("Please enter a valid email address.");
+      return;
+    }
+    if (!code.trim()) {
+      setError("Please enter your access code.");
+      return;
+    }
     setChecking(true);
-    setTimeout(() => {
-      if (VALID_CODES.includes(code.trim().toUpperCase()) ||
-          VALID_CODES.includes(code.trim())) {
-        onUnlock();
-      } else {
-        setError("Invalid access code. Check your Gumroad receipt and try again.");
-        setChecking(false);
-      }
-    }, 600);
+    setError(""); setEmailError("");
+
+    const isValid = VALID_CODES.includes(code.trim().toUpperCase()) ||
+                    VALID_CODES.includes(code.trim());
+    if (!isValid) {
+      setError("Invalid access code. Check your Gumroad receipt and try again.");
+      setChecking(false);
+      return;
+    }
+
+    // Submit email to Formspree before unlocking
+    try {
+      await fetch("https://formspree.io/f/xjgazdvz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          email,
+          source: "Cinefy Studio Access — Code Redemption",
+          code: code.trim().toUpperCase(),
+          timestamp: new Date().toISOString(),
+        }),
+      });
+    } catch (_) {
+      // Silently continue even if Formspree fails — don't block access
+    }
+    onUnlock();
   };
 
   return (
@@ -1120,21 +1148,51 @@ function AccessGate({ onUnlock, onBack }) {
       }}>
         <div style={{textAlign:"center", marginBottom:32}}>
           <h1 style={{fontFamily:"Bebas Neue", fontSize:32, letterSpacing:"0.06em", marginBottom:8}}>
-            Enter Access Code
+            Unlock Your Studio
           </h1>
-          <p style={{fontSize:15, color:"#5A5A7A", lineHeight:1.6}}>
-            Your access code was delivered to your email after purchase. Check your Gumroad receipt.
+          <p style={{fontSize:15, color:"#7A7A9A", lineHeight:1.6}}>
+            Enter your email and the access code from your Gumroad receipt to unlock all 30 prompts.
           </p>
         </div>
 
         <div style={{display:"flex", flexDirection:"column", gap:12}}>
-          <input
-            className="gate-input"
-            placeholder="Enter your code"
-            value={code}
-            onChange={e => { setCode(e.target.value); setError(""); }}
-            onKeyDown={e => e.key === "Enter" && handleSubmit()}
-          />
+
+          {/* Email field — required */}
+          <div>
+            <label style={{display:"block",fontSize:11,fontWeight:700,letterSpacing:"0.08em",color:"#7A7A9A",marginBottom:7}}>
+              YOUR EMAIL <span style={{color:"#FF6B6B"}}>*</span>
+            </label>
+            <input
+              type="email"
+              placeholder="your@email.com"
+              value={email}
+              onChange={e => { setEmail(e.target.value); setEmailError(""); }}
+              onKeyDown={e => e.key === "Enter" && handleSubmit()}
+              style={{
+                background:"#040408", border:`1px solid ${emailError ? "#FF6B6B" : "#1A1A32"}`,
+                color:"#F0F0F8", fontFamily:"DM Sans", fontSize:16,
+                width:"100%", padding:"14px 18px", borderRadius:8,
+                outline:"none", transition:"border-color 0.15s",
+              }}
+            />
+            {emailError && (
+              <p style={{fontSize:12,color:"#FF6B6B",marginTop:5}}>{emailError}</p>
+            )}
+          </div>
+
+          {/* Access code field */}
+          <div>
+            <label style={{display:"block",fontSize:11,fontWeight:700,letterSpacing:"0.08em",color:"#7A7A9A",marginBottom:7}}>
+              ACCESS CODE <span style={{color:"#FF6B6B"}}>*</span>
+            </label>
+            <input
+              className="gate-input"
+              placeholder="Enter your code"
+              value={code}
+              onChange={e => { setCode(e.target.value); setError(""); }}
+              onKeyDown={e => e.key === "Enter" && handleSubmit()}
+            />
+          </div>
 
           {error && (
             <p style={{
@@ -1144,9 +1202,14 @@ function AccessGate({ onUnlock, onBack }) {
             }}>{error}</p>
           )}
 
-          <button className="gate-btn" onClick={handleSubmit} disabled={!code.trim() || checking}>
-            {checking ? "Checking..." : "Unlock Studio"}
+          <button className="gate-btn" onClick={handleSubmit}
+            disabled={!code.trim() || !email.trim() || checking}>
+            {checking ? "Verifying..." : "Unlock Studio"}
           </button>
+
+          <p style={{fontSize:11,color:"#3A3A5A",textAlign:"center"}}>
+            Your email is used to save your access and receive Cinefy updates. No spam.
+          </p>
         </div>
 
         <div style={{
@@ -1358,6 +1421,9 @@ function Studio({ onBack, onDemo }) {
   const [copied, setCopied] = useState(false);
   const [search, setSearch] = useState("");
   const [editedPrompt, setEditedPrompt] = useState(null);
+  const [studioEmail, setStudioEmail] = useState("");
+  const [studioEmailSent, setStudioEmailSent] = useState(false);
+  const [studioEmailSaving, setStudioEmailSaving] = useState(false);
   const outputRef = useRef(null);
 
   const allCats = ["All", ...CATS];
@@ -1387,6 +1453,24 @@ function Studio({ onBack, onDemo }) {
   };
 
   const chCol = CH_COLOR[selected.ch] || COLORS.blue;
+
+  const submitStudioEmail = async () => {
+    if (!studioEmail || !studioEmail.includes("@")) return;
+    setStudioEmailSaving(true);
+    try {
+      await fetch("https://formspree.io/f/xjgazdvz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          email: studioEmail,
+          source: `Cinefy Studio — Prompt ${selected.id} — ${selected.name}`,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+      setStudioEmailSent(true);
+    } catch (_) { setStudioEmailSent(true); }
+    setStudioEmailSaving(false);
+  };
 
   return (
     <div style={{background:COLORS.bg, minHeight:"100vh", fontFamily:"'DM Sans', sans-serif", color:COLORS.white, display:"flex", flexDirection:"column"}}>
@@ -1523,6 +1607,64 @@ function Studio({ onBack, onDemo }) {
 
             {/* Output */}
             <div>
+
+              {/* Optional email capture */}
+              {!studioEmailSent ? (
+                <div style={{
+                  display:"flex", alignItems:"center", gap:10,
+                  padding:"12px 16px", marginBottom:16,
+                  background:"rgba(79,195,247,0.03)",
+                  border:"1px solid #1A1A32", borderRadius:8,
+                  flexWrap:"wrap"
+                }}>
+                  <div style={{flex:1, minWidth:200}}>
+                    <p style={{fontSize:12,color:COLORS.lgrey,marginBottom:0}}>
+                      Enter your email to save your work and get updates from CINEFY
+                    </p>
+                  </div>
+                  <div style={{display:"flex",gap:8,flexShrink:0}}>
+                    <input
+                      type="email"
+                      placeholder="your@email.com"
+                      value={studioEmail}
+                      onChange={e => setStudioEmail(e.target.value)}
+                      onKeyDown={e => e.key === "Enter" && submitStudioEmail()}
+                      style={{
+                        background:"#040408", border:"1px solid #1A1A32",
+                        color:"#F0F0F8", fontFamily:"DM Sans", fontSize:13,
+                        padding:"8px 14px", borderRadius:6, outline:"none",
+                        width:200, transition:"border-color 0.15s"
+                      }}
+                    />
+                    <button
+                      onClick={submitStudioEmail}
+                      disabled={!studioEmail.trim() || studioEmailSaving}
+                      style={{
+                        background:"#4FC3F7", color:"#07070D",
+                        fontFamily:"DM Sans", fontWeight:700, fontSize:13,
+                        padding:"8px 16px", borderRadius:6, border:"none",
+                        cursor:"pointer", whiteSpace:"nowrap",
+                        opacity: (!studioEmail.trim() || studioEmailSaving) ? 0.5 : 1
+                      }}
+                    >
+                      {studioEmailSaving ? "..." : "Save"}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div style={{
+                  padding:"10px 16px", marginBottom:16,
+                  background:"rgba(91,224,106,0.04)",
+                  border:"1px solid rgba(91,224,106,0.2)", borderRadius:8,
+                  display:"flex", alignItems:"center", gap:10
+                }}>
+                  <div style={{width:6,height:6,borderRadius:"50%",background:"#5BE06A",flexShrink:0}} />
+                  <p style={{fontSize:12,color:"#5BE06A",margin:0}}>
+                    You're on the list — we'll keep you updated on new prompts and features.
+                  </p>
+                </div>
+              )}
+
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14,flexWrap:"wrap",gap:10}}>
                 <div style={{fontSize:13,fontWeight:700,color:COLORS.green,letterSpacing:"0.08em"}}>
                   YOUR PROMPT — READY TO COPY
