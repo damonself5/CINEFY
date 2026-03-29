@@ -499,163 +499,143 @@ function scrollTo(id) {
 
 function Landing({ onBuy, onEnterGate }) {
   return (
-    <div style={{background:"#07070D", color:"#F0F0F8", fontFamily:"'DM Sans', sans-serif", lineHeight:1}}>
+    <div style={{background:"#07070D", color:"#F0F0F8", fontFamily:"'DM Sans', sans-serif"}}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #07070D; }
-        ::-webkit-scrollbar-thumb { background: #1A1A32; }
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-thumb { background: #1A1A2E; }
 
-        .nav-link {
-          color: #9090B0; font-size: 14px; font-family: DM Sans; font-weight: 500;
-          text-decoration: none; cursor: pointer; letter-spacing: 0.02em;
-          transition: color 0.2s; background: none; border: none; padding: 0;
+        .lp-nav-link {
+          background: none; border: none; color: #4A4A6A;
+          font-family: DM Sans; font-size: 14px; font-weight: 500;
+          cursor: pointer; padding: 0; transition: color 0.15s; letter-spacing: 0.01em;
         }
-        .nav-link:hover { color: #F0F0F8; }
+        .lp-nav-link:hover { color: #F0F0F8; }
 
-        .btn-primary {
+        .lp-btn {
           background: #4FC3F7; color: #07070D;
           font-family: DM Sans; font-weight: 700; font-size: 15px;
-          letter-spacing: 0.02em; padding: 12px 28px; border-radius: 6px;
-          border: none; cursor: pointer; transition: background 0.15s, transform 0.1s;
-          white-space: nowrap;
-        }
-        .btn-primary:hover { background: #7DD4F8; transform: translateY(-1px); }
-
-        .btn-primary-lg {
-          background: #4FC3F7; color: #07070D; font-family: DM Sans;
-          font-weight: 700; font-size: 17px; letter-spacing: 0.02em;
-          padding: 18px 44px; border-radius: 6px; border: none;
+          padding: 13px 28px; border-radius: 8px; border: none;
           cursor: pointer; transition: background 0.15s, transform 0.1s;
-          display: inline-block;
+          letter-spacing: 0.01em; white-space: nowrap;
         }
-        .btn-primary-lg:hover { background: #7DD4F8; transform: translateY(-1px); }
+        .lp-btn:hover { background: #7DD4F8; transform: translateY(-1px); }
+        .lp-btn:active { transform: translateY(0); }
 
-        .btn-ghost {
-          background: transparent; color: #9090B0; font-family: DM Sans;
-          font-weight: 500; font-size: 14px; padding: 12px 24px;
-          border-radius: 6px; border: 1px solid #1A1A32; cursor: pointer;
-          transition: border-color 0.15s, color 0.15s;
+        .lp-btn-lg {
+          background: #4FC3F7; color: #07070D;
+          font-family: DM Sans; font-weight: 700; font-size: 17px;
+          padding: 17px 40px; border-radius: 8px; border: none;
+          cursor: pointer; transition: background 0.15s, transform 0.1s;
+          letter-spacing: 0.01em; display: inline-block;
         }
-        .btn-ghost:hover { border-color: #4FC3F7; color: #F0F0F8; }
+        .lp-btn-lg:hover { background: #7DD4F8; transform: translateY(-1px); }
 
-        .output-card {
-          background: #040408; border: 1px solid #1A1A32;
-          border-radius: 8px; padding: 20px;
-          font-family: DM Sans; font-size: 13px;
-          color: #B0B0CC; line-height: 1.85;
-          white-space: pre-wrap;
+        .lp-rule { height: 1px; background: #0D0D1C; }
+
+        .lp-card {
+          background: #0A0A16; border: 1px solid #0F0F1E;
+          border-radius: 10px; padding: 28px 24px;
+          transition: border-color 0.2s;
+        }
+        .lp-card:hover { border-color: #1A1A2E; }
+
+        .lp-feature-row {
+          display: flex; align-items: center; gap: 16px;
+          padding: 16px 0; border-bottom: 1px solid #0A0A16;
+        }
+        .lp-feature-row:last-child { border-bottom: none; }
+
+        .lp-ch-row {
+          display: flex; align-items: baseline; gap: 12px;
+          padding: 12px 0; border-bottom: 1px solid #0A0A16;
+        }
+        .lp-ch-row:last-child { border-bottom: none; }
+
+        @keyframes lp-up {
+          from { opacity: 0; transform: translateY(14px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .u1 { animation: lp-up 0.55s 0.05s both; }
+        .u2 { animation: lp-up 0.55s 0.18s both; }
+        .u3 { animation: lp-up 0.55s 0.30s both; }
+        .u4 { animation: lp-up 0.55s 0.42s both; }
+
+        .lp-ticker {
+          overflow: hidden; border-top: 1px solid #0D0D1C;
+          border-bottom: 1px solid #0D0D1C; padding: 9px 0;
+          background: #050509;
+        }
+        .lp-ticker-inner {
+          display: flex; white-space: nowrap;
+          animation: lp-ticker 36s linear infinite;
+        }
+        @keyframes lp-ticker {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-50%); }
+        }
+        .lp-ticker-item {
+          font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+          color: #1E1E2E; text-transform: uppercase;
+          margin-right: 36px; flex-shrink: 0;
         }
 
-        .doc-pill {
-          display: inline-flex; align-items: center; gap: 8px;
-          background: #0A0A18; border: 1px solid #1A1A32;
-          border-radius: 6px; padding: 10px 16px;
-          font-size: 13px; font-weight: 600; color: #9090B0;
-          transition: border-color 0.2s, color 0.2s;
-        }
-        .doc-pill:hover { border-color: #4FC3F7; color: #F0F0F8; }
-
-        .doc-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
-
-        .feature-row {
-          display: flex; align-items: center; gap: 14px;
-          padding: 14px 0; border-bottom: 1px solid #0F0F1E;
-          font-size: 16px; color: #9090B0;
-        }
-        .feature-row:last-child { border-bottom: none; }
-
-        .pricing-main {
-          background: #0A0A18; border: 1px solid #1A1A32;
+        .lp-pricing {
+          background: #0A0A16; border: 1px solid #141428;
           border-radius: 12px; padding: 40px 36px;
-          max-width: 440px; margin: 0 auto; position: relative;
+          max-width: 420px; margin: 0 auto; position: relative;
         }
-        .pricing-main::before {
-          content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-          background: linear-gradient(90deg, transparent, #4FC3F7, transparent);
+        .lp-pricing::before {
+          content: ""; position: absolute;
+          top: 0; left: 0; right: 0; height: 1px;
+          background: linear-gradient(90deg, transparent, #4FC3F7 40%, transparent);
         }
-
-        .guarantee-box {
-          max-width: 600px; margin: 0 auto; text-align: center;
-          background: #0A0A16; border: 1px solid #1A1A32;
-          border-radius: 10px; padding: 36px 32px;
-        }
-
-        .section-label {
-          font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
-          color: #3A3A5A; text-transform: uppercase;
-          display: block; margin-bottom: 14px;
-        }
-
-        .divider { height: 1px; background: #111120; }
-
-        .ticker-track {
-          overflow: hidden; border-top: 1px solid #111120;
-          border-bottom: 1px solid #111120; background: #070710; padding: 10px 0;
-        }
-        .ticker-inner { display: flex; white-space: nowrap; animation: ticker 32s linear infinite; }
-        @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-        .ticker-item {
-          font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
-          color: #252540; text-transform: uppercase; margin-right: 40px; flex-shrink: 0;
-        }
-        .ticker-sep { color: #4FC3F7; margin-right: 40px; flex-shrink: 0; font-size: 11px; }
-
-        .scarcity-pill {
-          display: inline-flex; align-items: center; gap: 8px;
-          background: rgba(255,179,71,0.06); border: 1px solid rgba(255,179,71,0.18);
-          border-radius: 6px; padding: 10px 20px; margin-bottom: 36px;
-        }
-
-        @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
-        .fu1 { animation: fadeUp 0.6s 0.05s both; }
-        .fu2 { animation: fadeUp 0.6s 0.18s both; }
-        .fu3 { animation: fadeUp 0.6s 0.32s both; }
-        .fu4 { animation: fadeUp 0.6s 0.46s both; }
-        .fu5 { animation: fadeUp 0.6s 0.58s both; }
 
         @media (max-width: 820px) {
-          .two-col { grid-template-columns: 1fr !important; }
-          .three-col { grid-template-columns: 1fr !important; }
-          .hide-mobile { display: none !important; }
-          .hero-actions { flex-direction: column !important; align-items: stretch !important; }
-          .hero-actions button, .hero-actions a { text-align: center; }
+          .lp-two { grid-template-columns: 1fr !important; }
+          .lp-three { grid-template-columns: 1fr !important; }
+          .lp-hide { display: none !important; }
+          .lp-hero-cta { flex-direction: column !important; align-items: flex-start !important; }
         }
       `}</style>
 
       {/* ── NAV ── */}
       <nav style={{
         position:"sticky", top:0, zIndex:200,
-        background:"rgba(7,7,13,0.96)", backdropFilter:"blur(16px)",
-        borderBottom:"1px solid #111120", height:62,
-        display:"flex", alignItems:"center",
-        padding:"0 clamp(20px,4vw,48px)", justifyContent:"space-between"
+        background:"rgba(7,7,13,0.97)", backdropFilter:"blur(20px)",
+        borderBottom:"1px solid #0D0D1C",
+        height:58, display:"flex", alignItems:"center",
+        padding:"0 clamp(20px,4vw,56px)", justifyContent:"space-between"
       }}>
-        <div style={{display:"flex", alignItems:"center", gap:10, flexShrink:0}}>
-          <div style={{width:30,height:30,borderRadius:"50%",border:"1.5px solid #4FC3F7",display:"flex",alignItems:"center",justifyContent:"center"}}>
-            <div style={{width:9,height:9,background:"#FFB347",borderRadius:"50%"}} />
+        <div style={{display:"flex", alignItems:"center", gap:10}}>
+          <div style={{
+            width:28, height:28, borderRadius:"50%",
+            border:"1.5px solid #4FC3F7",
+            display:"flex", alignItems:"center", justifyContent:"center"
+          }}>
+            <div style={{width:9, height:9, background:"#FFB347", borderRadius:"50%"}} />
           </div>
-          <span style={{fontFamily:"Bebas Neue",fontSize:20,letterSpacing:"0.14em"}}>CINEFY</span>
+          <span style={{fontFamily:"Bebas Neue", fontSize:19, letterSpacing:"0.14em", color:"#F0F0F8"}}>CINEFY</span>
         </div>
-        <div className="hide-mobile" style={{display:"flex",gap:32,alignItems:"center"}}>
-          <button className="nav-link" onClick={() => { const el=document.getElementById("demo"); if(el) el.scrollIntoView({behavior:"smooth"}); }}>Try Free</button>
-          <button className="nav-link" onClick={() => { const el=document.getElementById("inside"); if(el) el.scrollIntoView({behavior:"smooth"}); }}>What's Inside</button>
-          <button className="nav-link" onClick={() => { const el=document.getElementById("examples"); if(el) el.scrollIntoView({behavior:"smooth"}); }}>Examples</button>
-          <button className="nav-link" onClick={() => { const el=document.getElementById("creator"); if(el) el.scrollIntoView({behavior:"smooth"}); }}>About</button>
-          <button className="nav-link" onClick={() => { const el=document.getElementById("pricing"); if(el) el.scrollIntoView({behavior:"smooth"}); }}>Pricing</button>
+
+        <div className="lp-hide" style={{display:"flex", gap:36, alignItems:"center"}}>
+          <button className="lp-nav-link" onClick={() => document.getElementById("problem")?.scrollIntoView({behavior:"smooth"})}>Why Cinefy</button>
+          <button className="lp-nav-link" onClick={() => document.getElementById("inside")?.scrollIntoView({behavior:"smooth"})}>What's Inside</button>
+          <button className="lp-nav-link" onClick={() => document.getElementById("pricing")?.scrollIntoView({behavior:"smooth"})}>Pricing</button>
         </div>
-        <button className="btn-primary" onClick={onBuy}>Get Access — $29</button>
+
+        <button className="lp-btn" onClick={onEnterGate}>Try Free</button>
       </nav>
 
       {/* ── TICKER ── */}
-      <div className="ticker-track">
-        <div className="ticker-inner">
+      <div className="lp-ticker">
+        <div className="lp-ticker-inner">
           {[...Array(2)].map((_,i) => (
             <div key={i} style={{display:"flex"}}>
-              {["Shot Lists","Lighting Briefs","Visual Bibles","Client Proposals","Sound Design Briefs","Colour Grade Direction","Voiceover Scripts","Reel Breakdowns","Campaign Briefs","Mood Board Briefs"].map((t,j) => (
-                <span key={j}><span className="ticker-item">{t}</span><span className="ticker-sep">—</span></span>
+              {["Shot Lists","Lighting Briefs","Visual Bibles","Client Proposals","Sound Design Briefs","Colour Grade Direction","Campaign Briefs","Voiceover Scripts","Reel Breakdowns","Mood Board Briefs"].map((t,j) => (
+                <span key={j} className="lp-ticker-item">{t}<span style={{color:"#4FC3F7",marginLeft:36}}>—</span></span>
               ))}
             </div>
           ))}
@@ -664,153 +644,143 @@ function Landing({ onBuy, onEnterGate }) {
 
       {/* ── HERO ── */}
       <section style={{
-        background:"radial-gradient(ellipse 80% 60% at 50% -10%, rgba(79,195,247,0.07) 0%, transparent 65%)",
-        padding:"clamp(64px,10vw,110px) clamp(20px,5vw,48px) clamp(48px,8vw,80px)",
-        maxWidth:960, margin:"0 auto", textAlign:"center"
+        padding:"clamp(80px,12vw,130px) clamp(20px,5vw,56px) clamp(72px,10vw,110px)",
+        maxWidth:1000, margin:"0 auto"
       }}>
-        <div className="fu1" style={{marginBottom:24}}>
-          <div style={{display:"inline-block",background:"rgba(79,195,247,0.06)",border:"1px solid rgba(79,195,247,0.16)",borderRadius:4,padding:"5px 14px"}}>
-            <span style={{fontSize:11,fontWeight:700,letterSpacing:"0.12em",color:"#4FC3F7"}}>LAUNCH PRICE — $29 · NOT A PDF · A WORKING TOOL</span>
-          </div>
+        <div className="u1" style={{marginBottom:20}}>
+          <span style={{
+            fontSize:11, fontWeight:700, letterSpacing:"0.12em",
+            color:"#4FC3F7", textTransform:"uppercase"
+          }}>The Filmmaker's AI Bible</span>
         </div>
 
-        <h1 className="fu2" style={{
+        <h1 className="u2" style={{
           fontFamily:"Bebas Neue",
-          fontSize:"clamp(52px,10vw,96px)",
-          lineHeight:0.9, letterSpacing:"0.025em", marginBottom:20
+          fontSize:"clamp(56px,10vw,104px)",
+          lineHeight:0.9, letterSpacing:"0.02em",
+          color:"#F0F0F8", marginBottom:28,
+          maxWidth:820
         }}>
-          Client-Ready Filmmaking<br />
-          <span style={{color:"#4FC3F7"}}>Documents in Seconds</span>
+          The documents you need.<br />
+          <span style={{color:"#4FC3F7"}}>Generated instantly.</span>
         </h1>
 
-        <p className="fu3" style={{fontSize:"clamp(17px,2.4vw,21px)",color:"#B0B0CC",lineHeight:1.65,maxWidth:620,margin:"0 auto 12px"}}>
-          Shot lists. Lighting briefs. Visual bibles. Client proposals. Sound design documents — generated in the precise technical language of professional cinema.
-        </p>
-        <p className="fu3" style={{fontSize:"clamp(14px,1.8vw,17px)",color:"#7A7A9A",lineHeight:1.6,maxWidth:520,margin:"0 auto 40px",fontStyle:"italic"}}>
-          What used to take hours now takes seconds.
+        <p className="u3" style={{
+          fontSize:"clamp(16px,2vw,20px)", color:"#5A5A7A",
+          lineHeight:1.7, maxWidth:520, marginBottom:44
+        }}>
+          Shot lists, lighting briefs, visual bibles, client proposals — written in the precise technical language of professional cinema. What used to take hours now takes seconds.
         </p>
 
-        {/* Document type pills */}
-        <div className="fu4" style={{display:"flex",flexWrap:"wrap",justifyContent:"center",gap:8,marginBottom:36}}>
-          {[["#4FC3F7","Shot List"],["#4FC3F7","Visual Bible"],["#FFB347","Lighting Brief"],["#FFB347","Client Proposal"],["#B48EF7","AI Video Prompt"],["#5BE06A","Sound Design Brief"]].map(([col,label]) => (
-            <div key={label} className="doc-pill">
-              <div className="doc-dot" style={{background:col}} />
-              {label}
-            </div>
-          ))}
-        </div>
-
-        <div className="fu5 hero-actions" style={{display:"flex",justifyContent:"center",gap:12,flexWrap:"wrap"}}>
-          <button className="btn-primary-lg" onClick={onBuy}>
-            Get Instant Access — $29
-          </button>
-          <button className="btn-ghost" onClick={onEnterGate}>
+        <div className="u4 lp-hero-cta" style={{display:"flex", alignItems:"center", gap:16, flexWrap:"wrap"}}>
+          <button className="lp-btn-lg" onClick={onEnterGate}>
             Try the Studio Free
           </button>
+          <div style={{display:"flex", alignItems:"center", gap:8}}>
+            <div style={{width:5, height:5, borderRadius:"50%", background:"#5BE06A"}} />
+            <span style={{fontSize:13, color:"#3A3A5A", fontWeight:500}}>Beta access · No card required</span>
+          </div>
         </div>
-        <p className="fu5" style={{fontSize:12,color:"#252535",marginTop:14}}>
-          Works with ChatGPT, Claude &amp; Gemini · Instant delivery · No subscription
-        </p>
 
         {/* Stats */}
-        <div style={{display:"flex",justifyContent:"center",gap:"clamp(28px,5vw,60px)",marginTop:52,paddingTop:40,borderTop:"1px solid #111120",flexWrap:"wrap"}}>
-          {[["30","Prompts"],["6","Chapters"],["PDF","Export"],["∞","Uses"]].map(([v,l]) => (
-            <div key={l} style={{textAlign:"center"}}>
-              <div style={{fontFamily:"Bebas Neue",fontSize:38,color:"#4FC3F7",lineHeight:1}}>{v}</div>
-              <div style={{fontSize:11,fontWeight:700,color:"#3A3A5A",letterSpacing:"0.1em",marginTop:5}}>{l.toUpperCase()}</div>
+        <div style={{
+          display:"flex", gap:"clamp(32px,5vw,64px)",
+          marginTop:64, paddingTop:40,
+          borderTop:"1px solid #0D0D1C", flexWrap:"wrap"
+        }}>
+          {[["30","Prompts"],["6","Chapters"],["PDF","Export"],["0","Guesswork"]].map(([v,l]) => (
+            <div key={l}>
+              <div style={{fontFamily:"Bebas Neue", fontSize:36, color:"#F0F0F8", lineHeight:1}}>{v}</div>
+              <div style={{fontSize:11, fontWeight:600, color:"#2A2A3A", letterSpacing:"0.1em", marginTop:5}}>{l.toUpperCase()}</div>
             </div>
           ))}
         </div>
       </section>
 
-      <div className="divider" />
+      <div className="lp-rule" />
 
-      {/* ── FREE DEMO — right after hero ── */}
-      <section id="demo" style={{padding:"72px clamp(20px,5vw,48px)", maxWidth:900, margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:36}}>
-          <div style={{display:"inline-block",background:"rgba(91,224,106,0.06)",border:"1px solid rgba(91,224,106,0.2)",borderRadius:4,padding:"5px 14px",marginBottom:14}}>
-            <span style={{fontSize:11,fontWeight:700,letterSpacing:"0.12em",color:"#5BE06A"}}>TRY IT FREE — NO ACCOUNT NEEDED</span>
-          </div>
-          <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(30px,5vw,50px)",letterSpacing:"0.04em",marginBottom:10}}>
-            Generate a Client-Ready Lighting Brief Right Now
+      {/* ── PROBLEM ── */}
+      <section id="problem" style={{padding:"80px clamp(20px,5vw,56px)", maxWidth:1000, margin:"0 auto"}}>
+        <div style={{maxWidth:520, marginBottom:56}}>
+          <span style={{fontSize:11,fontWeight:700,letterSpacing:"0.1em",color:"#3A3A5A",textTransform:"uppercase",display:"block",marginBottom:14}}>The Problem</span>
+          <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(34px,5.5vw,58px)",letterSpacing:"0.03em",lineHeight:0.95,color:"#F0F0F8",marginBottom:16}}>
+            Every filmmaker knows this wall.
           </h2>
-          <p style={{fontSize:16,color:"#7A7A9A",maxWidth:520,margin:"0 auto"}}>
-            Fill in your scene below. Copy the prompt, paste it into ChatGPT or Claude, and get a professional lighting setup in seconds.
+          <p style={{fontSize:16,color:"#4A4A6A",lineHeight:1.75}}>
+            The vision is clear. The gear is ready. But the documents that get a project from your head to the set — the briefs, the shot lists, the proposals — take hours to write and rarely come out sounding like a professional made them.
           </p>
         </div>
-        <FreeDemo006 onUnlock={onEnterGate} />
-      </section>
 
-      <div className="divider" />
-
-      {/* ── PAIN ── */}
-      <section style={{padding:"72px clamp(20px,5vw,48px)",maxWidth:960,margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:48}}>
-          <span className="section-label">The Problem</span>
-          <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(34px,6vw,56px)",letterSpacing:"0.04em",lineHeight:1}}>
-            Every filmmaker knows<br />this feeling.
-          </h2>
-        </div>
-        <div className="three-col" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16,marginBottom:40}}>
+        <div className="lp-three" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16}}>
           {[
-            ["Blank page","Every project starts from zero. The shot list, the lighting brief, the client proposal — rebuilt from scratch every single time."],
-            ["Generic AI output","You type a prompt. You get something that sounds like a stock photo caption. Not a DP brief. Not a real lighting setup. Generic slop."],
-            ["Hours lost","Writing professional filmmaking documents — the kind clients expect and crews can execute — takes hours you don't have."],
-          ].map(([t,b]) => (
-            <div key={t} style={{background:"#0A0A16",border:"1px solid #141428",borderRadius:8,padding:"28px 24px",transition:"border-color 0.2s"}}>
-              <div style={{width:24,height:1,background:"#FFB347",marginBottom:20}} />
-              <div style={{fontSize:16,fontWeight:700,marginBottom:10,color:"#E0E0F0"}}>{t}</div>
-              <div style={{fontSize:14,color:"#7A7A9A",lineHeight:1.7}}>{b}</div>
+            {col:"#4FC3F7",title:"Blank page syndrome",body:"Every project starts from zero. The same research, the same structure, rebuilt from scratch every single time."},
+            {col:"#FFB347",title:"Generic AI output",body:"Standard prompts produce standard results. Output that sounds like a stock photo caption, not a DP brief."},
+            {col:"#5BE06A",title:"Hours you don't have",body:"Writing documents that clients and crew actually respect takes time that should be spent on the work itself."},
+          ].map(c => (
+            <div key={c.title} className="lp-card">
+              <div style={{width:20,height:1,background:c.col,marginBottom:20}} />
+              <div style={{fontSize:15,fontWeight:700,color:"#E0E0F0",marginBottom:10,lineHeight:1.3}}>{c.title}</div>
+              <div style={{fontSize:14,color:"#4A4A6A",lineHeight:1.7}}>{c.body}</div>
             </div>
           ))}
         </div>
-        <div style={{background:"#070710",border:"1px solid rgba(79,195,247,0.12)",borderRadius:8,padding:"28px 32px",textAlign:"center"}}>
-          <p style={{fontFamily:"Bebas Neue",fontSize:"clamp(20px,3.5vw,32px)",letterSpacing:"0.04em",color:"#4FC3F7",lineHeight:1.2}}>
-            What if you could generate client-ready filmmaking documents<br />in the time it takes to describe your scene?
-          </p>
-        </div>
       </section>
 
-      <div className="divider" />
+      <div className="lp-rule" />
 
-      {/* ── SOLUTION ── */}
-      <section style={{padding:"72px clamp(20px,5vw,48px)",background:"#040409"}}>
-        <div style={{maxWidth:960,margin:"0 auto",textAlign:"center"}}>
-          <span className="section-label">The Solution</span>
-          <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(34px,6vw,56px)",letterSpacing:"0.04em",marginBottom:16}}>
-            Not a Prompt Pack.<br /><span style={{color:"#4FC3F7"}}>A Professional Output System.</span>
-          </h2>
-          <p style={{fontSize:"clamp(16px,2vw,18px)",color:"#7A7A9A",maxWidth:620,margin:"0 auto 52px",lineHeight:1.75}}>
-            Cinefy generates documents that sound like a senior DP wrote them — because every prompt is engineered in the precise technical vocabulary of professional cinematography. Fill in your project details. Get a client-ready deliverable. Send it.
-          </p>
-          <div className="three-col" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16,textAlign:"left"}}>
+      {/* ── WHAT IT DOES ── */}
+      <section style={{padding:"80px clamp(20px,5vw,56px)",background:"#050509"}}>
+        <div style={{maxWidth:1000,margin:"0 auto"}}>
+          <div style={{maxWidth:560,marginBottom:56}}>
+            <span style={{fontSize:11,fontWeight:700,letterSpacing:"0.1em",color:"#3A3A5A",textTransform:"uppercase",display:"block",marginBottom:14}}>The Solution</span>
+            <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(34px,5.5vw,58px)",letterSpacing:"0.03em",lineHeight:0.95,color:"#F0F0F8",marginBottom:16}}>
+              Not a prompt pack.<br />A professional output system.
+            </h2>
+            <p style={{fontSize:16,color:"#4A4A6A",lineHeight:1.75}}>
+              Every prompt in Cinefy is engineered in the precise vocabulary of professional cinema. Fill in your project details. Get a document you can hand to a client or crew immediately.
+            </p>
+          </div>
+
+          <div className="lp-two" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
             {[
-              {col:"#4FC3F7",tag:"CHAPTERS 01–02",title:"Pre-Production Documents",body:"Shot lists with emotional function per shot. Visual bibles your entire crew can execute from. Lighting briefs a gaffer can rig to. Mood board briefs an AI tool can generate from."},
-              {col:"#B48EF7",tag:"CHAPTER 03",title:"AI Video Prompts",body:"Prompts engineered specifically for Runway Gen-3 and Sora — in cinematic video generation language, not generic text prompts. The difference between amateur AI output and professional footage."},
-              {col:"#5BE06A",tag:"CHAPTERS 04–06",title:"Business & Marketing Docs",body:"Client proposals that close. Scope of work documents that prevent scope creep. Discovery call frameworks. Case study writers. Content calendars. The business documents filmmakers never learned to write."},
+              {col:"#4FC3F7",icon:"→",title:"Client-ready on every prompt",body:"Not a starting point. A finished document. The kind of output that makes clients trust you before a camera rolls."},
+              {col:"#4FC3F7",icon:"→",title:"Film vocabulary, not AI slop",body:"The outputs reference real DPs, real films, real ratios. It reads like a DP wrote it because it was trained to speak that language."},
+              {col:"#FFB347",icon:"→",title:"Interactive — not a PDF",body:"Edit any word before you copy. Customise every variable. The prompt adapts to your project, not the other way around."},
+              {col:"#5BE06A",icon:"→",title:"Client-ready PDF export",body:"On key prompts, generate a branded Cinefy PDF you can attach to an email and send to a client or department head immediately."},
             ].map(c => (
-              <div key={c.title} style={{background:"#07070D",border:`1px solid ${c.col}1A`,borderLeft:`2px solid ${c.col}`,borderRadius:6,padding:24}}>
-                <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.12em",color:c.col,marginBottom:10}}>{c.tag}</div>
-                <div style={{fontSize:16,fontWeight:700,marginBottom:10,color:"#E0E0F0",lineHeight:1.3}}>{c.title}</div>
-                <div style={{fontSize:14,color:"#7A7A9A",lineHeight:1.7}}>{c.body}</div>
+              <div key={c.title} className="lp-card">
+                <div style={{display:"flex",alignItems:"flex-start",gap:14}}>
+                  <div style={{
+                    width:28,height:28,borderRadius:6,
+                    background:`${c.col}10`,
+                    display:"flex",alignItems:"center",justifyContent:"center",
+                    flexShrink:0,marginTop:2
+                  }}>
+                    <span style={{color:c.col,fontSize:14,fontWeight:700}}>{c.icon}</span>
+                  </div>
+                  <div>
+                    <div style={{fontSize:15,fontWeight:700,color:"#E0E0F0",marginBottom:8,lineHeight:1.3}}>{c.title}</div>
+                    <div style={{fontSize:14,color:"#4A4A6A",lineHeight:1.7}}>{c.body}</div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <div className="divider" />
+      <div className="lp-rule" />
 
       {/* ── WHAT'S INSIDE ── */}
-      <section id="inside" style={{padding:"72px clamp(20px,5vw,48px)",maxWidth:1000,margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:48}}>
-          <span className="section-label">What's Inside</span>
-          <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(34px,6vw,56px)",letterSpacing:"0.04em",marginBottom:8}}>
-            30 Professional Documents
+      <section id="inside" style={{padding:"80px clamp(20px,5vw,56px)",maxWidth:1000,margin:"0 auto"}}>
+        <div style={{maxWidth:480,marginBottom:56}}>
+          <span style={{fontSize:11,fontWeight:700,letterSpacing:"0.1em",color:"#3A3A5A",textTransform:"uppercase",display:"block",marginBottom:14}}>What's Inside</span>
+          <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(34px,5.5vw,58px)",letterSpacing:"0.03em",lineHeight:0.95,color:"#F0F0F8"}}>
+            30 prompts.<br />6 chapters.<br />Every stage of production.
           </h2>
-          <p style={{fontSize:16,color:"#7A7A9A"}}>6 chapters · 30 prompts · client-ready output on every prompt</p>
         </div>
-        <div className="two-col" style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:12}}>
+
+        <div className="lp-two" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
           {[
             {ch:"01",col:"#4FC3F7",title:"Pre-Production & Vision",items:["The Brief Decoder","The Shot List Generator","The Visual Bible Builder","The Emotional Shot List","The Mood Board Brief"]},
             {ch:"02",col:"#4FC3F7",title:"Cinematography & Visual Language",items:["The Lighting Setup Designer","The Camera Movement Sequence","The Lens Language Advisor","The Colour Palette Generator","The Film Reference Matcher"]},
@@ -819,15 +789,22 @@ function Landing({ onBuy, onEnterGate }) {
             {ch:"05",col:"#FFB347",title:"The Business of Filmmaking",items:["The Client Proposal Builder","The Scope of Work Document","The Pricing Justification Script","The Difficult Client Response","The Discovery Call Framework"]},
             {ch:"06",col:"#5BE06A",title:"Content & Self-Marketing",items:["The Case Study Writer","The BTS Hook Generator","The Filmmaker Bio Writer","The Reel Breakdown Post","The Content Calendar Builder"]},
           ].map(ch => (
-            <div key={ch.ch} style={{background:"#0A0A14",borderRadius:8,padding:22,border:"1px solid #111122",transition:"border-color 0.2s"}}>
-              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
-                <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",color:ch.col,background:`${ch.col}12`,padding:"3px 10px",borderRadius:3}}>CH {ch.ch}</div>
-                <span style={{fontSize:14,fontWeight:700,color:"#D0D0E8"}}>{ch.title}</span>
+            <div key={ch.ch} style={{
+              background:"#0A0A14",border:"1px solid #0D0D1C",
+              borderRadius:10,padding:"22px 24px"
+            }}>
+              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16}}>
+                <div style={{
+                  width:4,height:16,borderRadius:2,
+                  background:ch.col,flexShrink:0
+                }} />
+                <span style={{fontSize:11,fontWeight:700,color:ch.col,letterSpacing:"0.08em"}}>CH {ch.ch}</span>
+                <span style={{fontSize:13,fontWeight:600,color:"#C0C0D8"}}>{ch.title}</span>
               </div>
               {ch.items.map(item => (
-                <div key={item} style={{fontSize:14,color:"#7A7A9A",padding:"8px 0",borderBottom:"1px solid #0D0D1C",display:"flex",alignItems:"center",gap:10}}>
-                  <div style={{width:3,height:3,borderRadius:"50%",background:ch.col,flexShrink:0}} />
-                  {item}
+                <div key={item} className="lp-ch-row">
+                  <div style={{width:3,height:3,borderRadius:"50%",background:"#1E1E2E",flexShrink:0}} />
+                  <span style={{fontSize:13,color:"#4A4A6A"}}>{item}</span>
                 </div>
               ))}
             </div>
@@ -835,217 +812,136 @@ function Landing({ onBuy, onEnterGate }) {
         </div>
       </section>
 
-      <div className="divider" />
-
-      {/* ── EXAMPLES ── */}
-      <section id="examples" style={{padding:"72px clamp(20px,5vw,48px)",background:"#040409"}}>
-        <div style={{maxWidth:980,margin:"0 auto"}}>
-          <div style={{textAlign:"center",marginBottom:48}}>
-            <span className="section-label">Output Examples</span>
-            <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(34px,6vw,56px)",letterSpacing:"0.04em",marginBottom:12}}>
-              This Is What Gets Generated
-            </h2>
-            <p style={{fontSize:16,color:"#7A7A9A",maxWidth:520,margin:"0 auto"}}>
-              Real output from real prompts. The kind of document you'd spend an hour writing — generated in seconds.
-            </p>
-          </div>
-          <div style={{display:"flex",flexDirection:"column",gap:28}}>
-            {[
-              {num:"002",col:"#4FC3F7",title:"Shot List Generator",label:"CLIENT-READY SHOT LIST",
-               prompt:`You are a professional cinematographer building a shot list for a luxury skincare brand film.
-
-Creative direction: Intimate golden hour — Terrence Malick aesthetic, natural light only, motivated movement.
-Location: Modern minimalist apartment, floor-to-ceiling west-facing windows.
-Subject: Female founder, late 30s, confident and unhurried.
-Total shots: 6`,
-               result:`SHOT 001 — THE OPEN
-Type: ECU | Lens: 100mm macro, T2.8 | Movement: LOCKED
-Subject's hands unwrapping product. Shallow focus. Background warm blur.
-Emotional Function: Establish ritual before we see her face. The product introduced through touch, not display.
-
-SHOT 002 — THE TURN
-Type: MS | Lens: 85mm, T2.0 | Movement: IMPERCEPTIBLE PUSH IN — begins on her exhale
-Subject at window, three-quarter back. She turns toward light.
-Emotional Function: The turn IS the narrative pivot. Before: routine. After: ritual.
-
-HERO SHOT: Shot 002. The turn toward light is the entire brand promise made visual.
-Protect it. Shoot it first.`},
-              {num:"006",col:"#FFB347",title:"Lighting Setup Designer",label:"CLIENT-READY LIGHTING BRIEF",
-               prompt:`You are a professional gaffer and DP designing a lighting setup.
-
-Scene: Interior interview. Female CEO, 45. Authoritative but warm. Modern corner office, two floor-to-ceiling windows facing north.
-Tone: Quietly powerful — available-feeling light that is precisely controlled.
-Equipment: Two ARRI SkyPanel S60s, two 4x4 bounce frames, one negative fill flag.`,
-               result:`KEY LIGHT
-S60-C camera-left, 45 degrees, 5600K, quarter grid. 7ft height.
-Produces Rembrandt triangle on camera-side cheek. Ratio: 3:1.
-Why: The 45-degree angle creates authority. Anything more frontal flattens her.
-
-NEGATIVE FILL
-4x4 black flag camera-right, 18 inches from subject. No fill source.
-The shadow is not a mistake — it is the characterisation.
-
-BACKGROUND
-North window left overexposed by 1.5 stops. Reads as window, not light source.
-
-FILM REFERENCE: Janusz Kaminski — Lincoln (2012). The cabinet scenes.`},
-              {num:"021",col:"#5BE06A",title:"Client Proposal Builder",label:"CLIENT-READY PROPOSAL EXTRACT",
-               prompt:`Write a production proposal for a regional hospital launching a patient experience campaign.
-Three 90-second films, one per flagship facility.
-Budget: $42,000. Creative approach: Real patients, real staff — no actors, no scripts.`,
-               result:`THE OPENING
-"You are not trying to advertise your hospital. You are trying to show people who are afraid that they will be met with care. Those are completely different films — and only one of them works.
-
-What you described to us is a campaign that earns trust before it asks for it. We know how to make that film."
-
-SCOPE
-Deliverables: Three (3) brand films, 1:30 each, 16:9 4K master + H.264 web + audio stems.
-Plus: Nine (9) social cuts, 0:15 each, 1:1 and 9:16 formats.
-Revisions: Two rounds included per film.
-
-THE CLOSE
-"The next step is a 30-minute call to walk through our approach for all three facilities. We are ready when you are."`},
-            ].map(ex => (
-              <div key={ex.num} style={{background:"#07070D",border:"1px solid #141428",borderRadius:10,padding:28}}>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,marginBottom:20,paddingBottom:16,borderBottom:"1px solid #0F0F1E",flexWrap:"wrap"}}>
-                  <div style={{display:"flex",alignItems:"center",gap:10}}>
-                    <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",color:ex.col,background:`${ex.col}12`,padding:"3px 10px",borderRadius:3}}>PROMPT {ex.num}</div>
-                    <span style={{fontSize:15,fontWeight:700,color:"#D0D0E8"}}>{ex.title}</span>
-                  </div>
-                  <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",color:ex.col,background:`${ex.col}08`,border:`1px solid ${ex.col}22`,padding:"4px 12px",borderRadius:20}}>{ex.label}</div>
-                </div>
-                <div className="two-col" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
-                  <div>
-                    <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",color:"#3A3A5A",marginBottom:10}}>THE PROMPT</div>
-                    <div className="output-card" style={{borderLeft:`2px solid ${ex.col}33`}}>{ex.prompt}</div>
-                  </div>
-                  <div>
-                    <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",color:"#5BE06A",marginBottom:10}}>GENERATED OUTPUT</div>
-                    <div className="output-card" style={{background:"rgba(91,224,106,0.02)",border:"1px solid rgba(91,224,106,0.12)",color:"#A0D8A8"}}>{ex.result}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <div className="divider" />
-
-      {/* ── CREATOR ── */}
-      <section id="creator" style={{padding:"72px clamp(20px,5vw,48px)",maxWidth:720,margin:"0 auto",textAlign:"center"}}>
-        <span className="section-label">The Creator</span>
-        <div style={{width:60,height:60,borderRadius:"50%",border:"1.5px solid #4FC3F7",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 24px"}}>
-          <div style={{fontFamily:"Bebas Neue",fontSize:20,color:"#4FC3F7",letterSpacing:"0.1em"}}>DC</div>
-        </div>
-        <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(28px,5vw,44px)",letterSpacing:"0.04em",marginBottom:20}}>
-          Built by a Working Filmmaker
-        </h2>
-        <p style={{fontSize:"clamp(15px,1.8vw,17px)",color:"#7A7A9A",lineHeight:1.8,marginBottom:20}}>
-          These prompts were not written by a prompt engineer. They were built by a filmmaker who understands lighting, composition, and cinematic storytelling — because they needed better tools for their own workflow.
-        </p>
-        <p style={{fontSize:"clamp(14px,1.6vw,16px)",color:"#4A4A6A",lineHeight:1.75,marginBottom:36}}>
-          Every prompt was tested on real productions. If it did not produce a document you could hand to a client or crew, it did not ship.
-        </p>
-        <div style={{background:"#07070F",border:"1px solid #1A1A32",borderRadius:8,padding:"20px 28px",fontStyle:"italic",color:"#7A7A9A",fontSize:16,lineHeight:1.65}}>
-          "I have the vision. I have the gear. I needed a system."
-          <div style={{color:"#4FC3F7",fontStyle:"normal",fontWeight:700,fontSize:12,letterSpacing:"0.08em",marginTop:12}}>— DAMON · CINEFY</div>
-        </div>
-      </section>
-
-      <div className="divider" />
+      <div className="lp-rule" />
 
       {/* ── PRICING ── */}
-      <section id="pricing" style={{padding:"72px clamp(20px,5vw,48px)",background:"#040409"}}>
-        <div style={{maxWidth:960,margin:"0 auto",textAlign:"center"}}>
-          <span className="section-label">Pricing</span>
-          <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(34px,6vw,56px)",letterSpacing:"0.04em",marginBottom:8}}>
-            Get Instant Access
-          </h2>
-          <p style={{fontSize:16,color:"#7A7A9A",marginBottom:40}}>One price. 30 prompts. Client-ready outputs. Yours forever.</p>
-          <div className="scarcity-pill">
-            <div style={{width:6,height:6,borderRadius:"50%",background:"#FFB347"}} />
-            <span style={{fontSize:13,fontWeight:700,color:"#FFB347"}}>Launch Price: $29</span>
-            <span style={{fontSize:13,color:"#404060"}}>— Regular price will be $49</span>
+      <section id="pricing" style={{padding:"80px clamp(20px,5vw,56px)",background:"#050509"}}>
+        <div style={{maxWidth:1000,margin:"0 auto"}}>
+          <div style={{maxWidth:420,marginBottom:56}}>
+            <span style={{fontSize:11,fontWeight:700,letterSpacing:"0.1em",color:"#3A3A5A",textTransform:"uppercase",display:"block",marginBottom:14}}>Pricing</span>
+            <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(34px,5.5vw,58px)",letterSpacing:"0.03em",lineHeight:0.95,color:"#F0F0F8",marginBottom:16}}>
+              Simple pricing.<br />No subscription.
+            </h2>
+            <p style={{fontSize:16,color:"#4A4A6A",lineHeight:1.75}}>
+              One price. All 30 prompts. The full studio. Yours forever.
+            </p>
           </div>
-          <div className="pricing-main">
-            <div style={{fontSize:11,fontWeight:700,letterSpacing:"0.12em",color:"#4FC3F7",marginBottom:24}}>THE FILMMAKER'S AI BIBLE</div>
-            <div style={{display:"flex",alignItems:"baseline",justifyContent:"center",gap:12,marginBottom:6}}>
-              <span style={{fontFamily:"Bebas Neue",fontSize:80,color:"#F0F0F8",lineHeight:1}}>$29</span>
-              <div style={{textAlign:"left"}}>
-                <div style={{fontSize:18,color:"#2A2A3A",textDecoration:"line-through"}}>$49</div>
-                <div style={{fontSize:11,fontWeight:700,color:"#5BE06A",letterSpacing:"0.08em"}}>SAVE $20</div>
+
+          <div className="lp-pricing">
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:28}}>
+              <div>
+                <div style={{fontSize:11,fontWeight:700,letterSpacing:"0.1em",color:"#3A3A5A",marginBottom:10}}>THE FILMMAKER'S AI BIBLE</div>
+                <div style={{display:"flex",alignItems:"baseline",gap:10}}>
+                  <span style={{fontFamily:"Bebas Neue",fontSize:72,color:"#F0F0F8",lineHeight:1}}>$29</span>
+                  <div>
+                    <div style={{fontSize:16,color:"#1E1E2E",textDecoration:"line-through"}}>$49</div>
+                    <div style={{fontSize:11,fontWeight:700,color:"#5BE06A",letterSpacing:"0.06em"}}>SAVE $20</div>
+                  </div>
+                </div>
+                <div style={{fontSize:12,color:"#2A2A3A",marginTop:4}}>Launch price · One-time · No subscription</div>
+              </div>
+              <div style={{
+                background:"rgba(255,179,71,0.06)",border:"1px solid rgba(255,179,71,0.15)",
+                borderRadius:6,padding:"8px 14px",textAlign:"center"
+              }}>
+                <div style={{fontSize:10,fontWeight:700,color:"#FFB347",letterSpacing:"0.08em"}}>LAUNCH</div>
+                <div style={{fontSize:10,color:"#4A4A4A",marginTop:2}}>Price rises to $49</div>
               </div>
             </div>
-            <p style={{fontSize:12,color:"#3A3A5A",marginBottom:28}}>One-time purchase · No subscription</p>
+
             <div style={{marginBottom:28}}>
               {[
-                "30 client-ready filmmaking prompts",
-                "6 complete production chapters",
-                "Interactive prompt studio — not a PDF",
-                "Live prompt editing before you copy",
-                "Branded PDF export on key prompts",
-                "Works with ChatGPT, Claude, and Gemini",
-                "Instant access — yours forever",
-              ].map(f => (
-                <div key={f} className="feature-row">
-                  <div style={{width:16,height:16,borderRadius:"50%",background:"rgba(91,224,106,0.1)",border:"1px solid rgba(91,224,106,0.3)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                    <div style={{width:5,height:5,borderRadius:"50%",background:"#5BE06A"}} />
-                  </div>
-                  <span style={{fontSize:15}}>{f}</span>
+                ["30 professional filmmaking prompts","#5BE06A"],
+                ["6 complete production chapters","#5BE06A"],
+                ["Interactive studio — not a PDF","#5BE06A"],
+                ["Live prompt editing before you copy","#5BE06A"],
+                ["Branded PDF export on key prompts","#5BE06A"],
+                ["Works with ChatGPT, Claude & Gemini","#5BE06A"],
+                ["Instant access · Yours forever","#5BE06A"],
+              ].map(([f,c]) => (
+                <div key={f} className="lp-feature-row">
+                  <div style={{width:5,height:5,borderRadius:"50%",background:c,flexShrink:0}} />
+                  <span style={{fontSize:15,color:"#8080A0"}}>{f}</span>
                 </div>
               ))}
             </div>
-            <button className="btn-primary-lg" style={{width:"100%"}} onClick={onBuy}>
+
+            <button className="lp-btn-lg" style={{width:"100%"}} onClick={onBuy}>
               Get The Filmmaker's Bible — $29
             </button>
-            <p style={{fontSize:11,color:"#252535",marginTop:12}}>Instant delivery · cinefypro.co</p>
+            <p style={{fontSize:11,color:"#2A2A3A",textAlign:"center",marginTop:12}}>Instant delivery · cinefypro.co</p>
           </div>
         </div>
       </section>
+
+      <div className="lp-rule" />
 
       {/* ── GUARANTEE ── */}
-      <section style={{padding:"72px clamp(20px,5vw,48px)"}}>
-        <div className="guarantee-box">
-          <div style={{width:40,height:40,borderRadius:"50%",border:"1px solid rgba(91,224,106,0.25)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 20px"}}>
+      <section style={{padding:"56px clamp(20px,5vw,56px)",maxWidth:1000,margin:"0 auto"}}>
+        <div style={{
+          display:"flex",alignItems:"center",gap:20,
+          maxWidth:600,flexWrap:"wrap"
+        }}>
+          <div style={{
+            width:40,height:40,borderRadius:"50%",
+            border:"1px solid #1A1A2E",
+            display:"flex",alignItems:"center",justifyContent:"center",
+            flexShrink:0
+          }}>
             <div style={{width:14,height:14,borderRadius:"50%",border:"1.5px solid #5BE06A"}} />
           </div>
-          <h3 style={{fontFamily:"Bebas Neue",fontSize:"clamp(24px,4vw,34px)",letterSpacing:"0.04em",marginBottom:14}}>7-Day Money-Back Guarantee</h3>
-          <p style={{fontSize:"clamp(14px,1.8vw,16px)",color:"#7A7A9A",lineHeight:1.75,maxWidth:440,margin:"0 auto"}}>
-            If Cinefy does not save you time and improve the quality of your client deliverables, email us within 7 days for a full refund. No questions asked.
-          </p>
+          <div>
+            <div style={{fontSize:15,fontWeight:700,color:"#E0E0F0",marginBottom:4}}>7-Day Money-Back Guarantee</div>
+            <div style={{fontSize:14,color:"#4A4A6A",lineHeight:1.65}}>If Cinefy does not save you time and improve your client deliverables, email us within 7 days for a full refund.</div>
+          </div>
         </div>
       </section>
 
-      <div className="divider" />
+      <div className="lp-rule" />
 
       {/* ── FINAL CTA ── */}
-      <section style={{padding:"80px clamp(20px,5vw,48px)",textAlign:"center"}}>
-        <div style={{maxWidth:700,margin:"0 auto"}}>
-          <h2 style={{fontFamily:"Bebas Neue",fontSize:"clamp(40px,7vw,72px)",letterSpacing:"0.03em",lineHeight:0.92,marginBottom:16}}>
-            Stop Writing Documents<br />
-            <span style={{color:"#4FC3F7"}}>From Scratch.</span>
+      <section style={{padding:"80px clamp(20px,5vw,56px)"}}>
+        <div style={{maxWidth:1000,margin:"0 auto"}}>
+          <h2 style={{
+            fontFamily:"Bebas Neue",
+            fontSize:"clamp(44px,8vw,88px)",
+            letterSpacing:"0.02em",lineHeight:0.9,
+            color:"#F0F0F8",marginBottom:28,maxWidth:700
+          }}>
+            Stop writing documents<br />
+            <span style={{color:"#4FC3F7"}}>from scratch.</span>
           </h2>
-          <p style={{fontSize:"clamp(15px,1.8vw,18px)",color:"#7A7A9A",lineHeight:1.65,marginBottom:36,maxWidth:520,margin:"0 auto 36px"}}>
-            Every project. Every client. Every brief. Professional filmmaking documents in seconds.
-          </p>
-          <button className="btn-primary-lg" onClick={onBuy}>
-            Get The Filmmaker's Bible — $29
-          </button>
-          <p style={{fontSize:12,color:"#252535",marginTop:14}}>Launch price — regular price will be $49</p>
+          <div style={{display:"flex",alignItems:"center",gap:16,flexWrap:"wrap"}}>
+            <button className="lp-btn-lg" onClick={onEnterGate}>
+              Try the Studio Free
+            </button>
+            <span style={{fontSize:13,color:"#2A2A3A"}}>or</span>
+            <button style={{
+              background:"transparent",border:"none",
+              color:"#4A4A6A",fontFamily:"DM Sans",fontWeight:500,
+              fontSize:14,cursor:"pointer",padding:0,
+              transition:"color 0.15s",textDecoration:"underline",
+              textDecorationColor:"#2A2A3A"
+            }} onClick={onBuy}>Purchase for $29 →</button>
+          </div>
         </div>
       </section>
 
       {/* ── FOOTER ── */}
-      <footer style={{borderTop:"1px solid #0F0F1E",padding:"32px clamp(20px,5vw,48px)",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:12}}>
+      <footer style={{
+        borderTop:"1px solid #0D0D1C",
+        padding:"28px clamp(20px,5vw,56px)",
+        display:"flex",alignItems:"center",
+        justifyContent:"space-between",flexWrap:"wrap",gap:12
+      }}>
         <div style={{display:"flex",alignItems:"center",gap:10}}>
-          <div style={{width:26,height:26,borderRadius:"50%",border:"1.5px solid #4FC3F7",display:"flex",alignItems:"center",justifyContent:"center"}}>
-            <div style={{width:8,height:8,background:"#FFB347",borderRadius:"50%"}} />
+          <div style={{width:22,height:22,borderRadius:"50%",border:"1.5px solid #4FC3F7",display:"flex",alignItems:"center",justifyContent:"center"}}>
+            <div style={{width:7,height:7,background:"#FFB347",borderRadius:"50%"}} />
           </div>
-          <span style={{fontFamily:"Bebas Neue",fontSize:18,letterSpacing:"0.14em"}}>CINEFY</span>
+          <span style={{fontFamily:"Bebas Neue",fontSize:16,letterSpacing:"0.14em",color:"#F0F0F8"}}>CINEFY</span>
         </div>
-        <p style={{fontSize:12,color:"#252535"}}>cinefypro.co · Stop Starting From Scratch.</p>
-        <p style={{fontSize:11,color:"#1A1A2A"}}>2026 Cinefy</p>
+        <span style={{fontSize:12,color:"#1E1E2E"}}>cinefypro.co · Stop Starting From Scratch.</span>
+        <span style={{fontSize:11,color:"#141420"}}>© 2026 Cinefy</span>
       </footer>
     </div>
   );
@@ -1473,125 +1369,267 @@ function Studio({ onBack, onDemo }) {
   };
 
   return (
-    <div style={{background:COLORS.bg, minHeight:"100vh", fontFamily:"'DM Sans', sans-serif", color:COLORS.white, display:"flex", flexDirection:"column"}}>
+    <div style={{background:"#07070D", minHeight:"100vh", fontFamily:"'DM Sans', sans-serif", color:"#F0F0F8", display:"flex", flexDirection:"column"}}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap');
         * { box-sizing: border-box; }
-        ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: #07070D; } ::-webkit-scrollbar-thumb { background: #1A1A32; border-radius:3px; }
-        .p-card { background: #0F0F1C; border: 1px solid #1A1A32; border-radius: 8px; padding: 14px 16px; cursor: pointer; transition: all 0.15s; }
-        .p-card:hover { border-color: #2A2A50; background: #111124; }
-        .p-card.active { border-color: var(--ch-col); background: #0D0D20; }
-        .cat-btn { background: transparent; border: 1px solid #1A1A32; color: #B0B0CC; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: 500; white-space: nowrap; transition: all 0.15s; font-family: 'DM Sans'; }
-        .cat-btn:hover { border-color: #2A2A50; color: #F0F0F8; }
-        .cat-btn.active { background: rgba(79,195,247,0.1); border-color: #4FC3F7; color: #4FC3F7; }
-        .field-input { background: #07070D; border: 1px solid #1A1A32; color: #F0F0F8; width: 100%; border-radius: 6px; padding: 10px 14px; font-size: 14px; font-family: 'DM Sans'; outline: none; resize: vertical; transition: border-color 0.15s; }
-        .field-input:focus { border-color: #4FC3F7; }
-        .field-input::placeholder { color: #3A3A5A; }
-        .copy-btn { background: linear-gradient(135deg,#4FC3F7,#0077B6); color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: 600; font-family: 'DM Sans'; transition: opacity 0.2s; }
-        .copy-btn:hover { opacity: 0.88; }
-        .output-box { background: #040408; border: 1px solid #1A1A32; border-radius: 8px; padding: 20px; font-family: 'DM Sans'; font-size: 14px; color: #C8C0A8; line-height: 1.8; white-space: pre-wrap; word-break: break-word; min-height: 200px; }
-        .sidebar { width: 300px; min-width: 300px; background: #0A0A14; border-right: 1px solid #1A1A32; overflow-y: auto; display: flex; flex-direction: column; height: calc(100vh - 60px); }
-        .main-panel { flex: 1; overflow-y: auto; height: calc(100vh - 60px); }
-        @media (max-width: 768px) { .studio-layout { flex-direction: column !important; } .sidebar { width: 100% !important; min-width: unset !important; height: auto !important; border-right: none !important; border-bottom: 1px solid #1A1A32; max-height: 40vh; } .main-panel { height: auto !important; } }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #07070D; }
+        ::-webkit-scrollbar-thumb { background: #1E1E2E; border-radius: 4px; }
+
+        /* ── Sidebar prompt rows ── */
+        .p-row {
+          display: flex; align-items: center; gap: 12px;
+          padding: 11px 16px; cursor: pointer;
+          border-radius: 6px; margin: 1px 8px;
+          transition: background 0.12s;
+          border: none; background: transparent;
+          width: calc(100% - 16px); text-align: left;
+        }
+        .p-row:hover { background: rgba(255,255,255,0.04); }
+        .p-row.active { background: rgba(79,195,247,0.08); }
+
+        /* ── Category tabs ── */
+        .cat-tab {
+          background: transparent; border: none;
+          color: #6060808; padding: 6px 14px; border-radius: 20px;
+          cursor: pointer; font-size: 12px; font-weight: 600;
+          letter-spacing: 0.04em; white-space: nowrap;
+          transition: all 0.12s; font-family: DM Sans;
+        }
+        .cat-tab:hover { color: #F0F0F8; background: rgba(255,255,255,0.05); }
+        .cat-tab.active { color: #4FC3F7; background: rgba(79,195,247,0.08); }
+
+        /* ── Search ── */
+        .s-input {
+          background: rgba(255,255,255,0.04); border: 1px solid #1A1A2E;
+          color: #F0F0F8; font-family: DM Sans; font-size: 14px;
+          width: 100%; padding: 9px 14px 9px 36px; border-radius: 8px;
+          outline: none; transition: border-color 0.15s;
+        }
+        .s-input:focus { border-color: #4FC3F7; background: rgba(255,255,255,0.06); }
+        .s-input::placeholder { color: #3A3A5A; }
+
+        /* ── Field inputs ── */
+        .f-input {
+          background: rgba(255,255,255,0.03); border: 1px solid #1A1A2E;
+          color: #F0F0F8; font-family: DM Sans; font-size: 14px;
+          width: 100%; padding: 12px 14px; border-radius: 8px;
+          outline: none; resize: vertical; transition: border-color 0.15s;
+          line-height: 1.6;
+        }
+        .f-input:focus { border-color: #4FC3F7; background: rgba(255,255,255,0.05); }
+        .f-input::placeholder { color: #2A2A3A; }
+
+        /* ── Output box ── */
+        .out-box {
+          background: rgba(255,255,255,0.02); border: 1px solid #1A1A2E;
+          border-radius: 10px; padding: 20px 22px;
+          font-family: DM Sans; font-size: 14px; color: #C8C0B0;
+          line-height: 1.85; white-space: pre-wrap; word-break: break-word;
+          min-height: 200px; width: 100%; resize: vertical; cursor: text;
+          transition: border-color 0.15s;
+        }
+        .out-box:focus { border-color: #2A2A3E; outline: none; }
+
+        /* ── Buttons ── */
+        .btn-copy {
+          background: #4FC3F7; color: #07070D;
+          border: none; padding: 10px 22px; border-radius: 8px;
+          cursor: pointer; font-size: 14px; font-weight: 700;
+          font-family: DM Sans; transition: background 0.15s, transform 0.1s;
+          letter-spacing: 0.01em;
+        }
+        .btn-copy:hover { background: #7DD4F8; transform: translateY(-1px); }
+        .btn-copy.copied { background: rgba(91,224,106,0.12); color: #5BE06A; border: 1px solid rgba(91,224,106,0.3); }
+
+        .btn-outline {
+          background: transparent; border: 1px solid #1A1A2E;
+          color: #9090B0; padding: 10px 18px; border-radius: 8px;
+          cursor: pointer; font-size: 14px; font-weight: 500;
+          font-family: DM Sans; transition: all 0.15s;
+          display: flex; align-items: center; gap: 7px;
+        }
+        .btn-outline:hover { border-color: #2A2A4E; color: #F0F0F8; }
+        .btn-outline.amber { border-color: rgba(255,179,71,0.3); color: #FFB347; }
+        .btn-outline.amber:hover { border-color: #FFB347; background: rgba(255,179,71,0.06); }
+
+        /* ── Section label ── */
+        .sec-label {
+          font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+          color: #3A3A5A; text-transform: uppercase; margin-bottom: 12px;
+          display: block;
+        }
+
+        /* ── Divider ── */
+        .div-line { height: 1px; background: #0F0F1E; margin: 28px 0; }
+
+        /* ── Layout ── */
+        .sidebar {
+          width: 280px; min-width: 280px; background: #060610;
+          border-right: 1px solid #0F0F1E; overflow-y: auto;
+          display: flex; flex-direction: column; height: calc(100vh - 56px);
+        }
+        .main-panel { flex: 1; overflow-y: auto; height: calc(100vh - 56px); }
+
+        @media (max-width: 768px) {
+          .studio-layout { flex-direction: column !important; }
+          .sidebar { width: 100% !important; min-width: unset !important; height: auto !important; border-right: none !important; border-bottom: 1px solid #0F0F1E; max-height: 45vh; }
+          .main-panel { height: auto !important; }
+        }
       `}</style>
 
-      {/* STUDIO NAV */}
-      <div style={{height:60,background:"#0A0A14",borderBottom:"1px solid #1A1A32",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 20px",flexShrink:0}}>
-        <div style={{display:"flex",alignItems:"center",gap:12}}>
-          <div style={{width:28,height:28,borderRadius:"50%",border:`2px solid ${COLORS.blue}`,display:"flex",alignItems:"center",justifyContent:"center"}}>
-            <div style={{width:10,height:10,background:COLORS.amber,borderRadius:"50%"}} />
+      {/* ── TOP NAV ── */}
+      <div style={{
+        height:56, background:"#060610",
+        borderBottom:"1px solid #0F0F1E",
+        display:"flex", alignItems:"center",
+        justifyContent:"space-between",
+        padding:"0 20px", flexShrink:0
+      }}>
+        {/* Left — logo + breadcrumb */}
+        <div style={{display:"flex", alignItems:"center", gap:10}}>
+          <div style={{
+            width:28, height:28, borderRadius:"50%",
+            border:"1.5px solid #4FC3F7",
+            display:"flex", alignItems:"center", justifyContent:"center"
+          }}>
+            <div style={{width:9, height:9, background:"#FFB347", borderRadius:"50%"}} />
           </div>
-          <span style={{fontFamily:"'Bebas Neue'",fontSize:20,letterSpacing:"0.12em"}}>CINEFY</span>
-          <span style={{color:COLORS.muted,fontSize:13,marginLeft:8}}>/ Prompt Studio</span>
+          <span style={{fontFamily:"Bebas Neue", fontSize:18, letterSpacing:"0.14em", color:"#F0F0F8"}}>CINEFY</span>
+          <span style={{color:"#1E1E2E", fontSize:16, margin:"0 2px"}}>/</span>
+          <span style={{fontSize:13, color:"#5A5A7A", fontWeight:500}}>Prompt Studio</span>
         </div>
-        <div style={{display:"flex",alignItems:"center",gap:12}}>
-          <span style={{fontSize:13,color:COLORS.muted}}>Prompt {selected.id} of 30</span>
-          <div style={{display:"flex",gap:8}}>
-            <button onClick={onDemo} style={{background:"rgba(180,142,247,0.08)",border:"1px solid rgba(180,142,247,0.25)",color:"#B48EF7",padding:"6px 16px",borderRadius:6,cursor:"pointer",fontSize:13,fontFamily:"'DM Sans'",fontWeight:600,letterSpacing:"0.04em"}}>Demo Mode</button>
-            <button onClick={onBack} style={{background:"transparent",border:`1px solid ${COLORS.border}`,color:COLORS.lgrey,padding:"6px 16px",borderRadius:6,cursor:"pointer",fontSize:13,fontFamily:"'DM Sans'"}}>← Landing</button>
-          </div>
+
+        {/* Center — prompt counter */}
+        <span style={{fontSize:12, color:"#3A3A5A", fontWeight:600, letterSpacing:"0.06em"}}>
+          {selected.id} / 30
+        </span>
+
+        {/* Right — actions */}
+        <div style={{display:"flex", gap:8}}>
+          <button onClick={onDemo} style={{
+            background:"transparent", border:"1px solid #1A1A2E",
+            color:"#7070808", padding:"6px 14px", borderRadius:6,
+            cursor:"pointer", fontSize:12, fontFamily:"DM Sans",
+            fontWeight:600, letterSpacing:"0.04em", transition:"all 0.15s"
+          }}>Demo</button>
+          <button onClick={onBack} style={{
+            background:"transparent", border:"1px solid #1A1A2E",
+            color:"#5A5A7A", padding:"6px 14px", borderRadius:6,
+            cursor:"pointer", fontSize:12, fontFamily:"DM Sans", transition:"all 0.15s"
+          }}>← Exit</button>
         </div>
       </div>
 
-      <div className="studio-layout" style={{display:"flex",flex:1,overflow:"hidden"}}>
+      <div className="studio-layout" style={{display:"flex", flex:1, overflow:"hidden"}}>
 
-        {/* SIDEBAR */}
+        {/* ── SIDEBAR ── */}
         <div className="sidebar">
+
           {/* Search */}
-          <div style={{padding:"16px 16px 12px"}}>
-            <input className="field-input" placeholder="Search prompts..." value={search} onChange={e => setSearch(e.target.value)} style={{width:"100%"}} />
+          <div style={{padding:"14px 12px 10px", position:"relative"}}>
+            <svg style={{position:"absolute", left:22, top:"50%", transform:"translateY(-50%)", pointerEvents:"none"}}
+              width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3A3A5A" strokeWidth="2">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input className="s-input" placeholder="Search prompts..." value={search}
+              onChange={e => setSearch(e.target.value)} />
           </div>
 
-          {/* Category pills */}
-          <div style={{padding:"0 16px 12px",display:"flex",flexWrap:"wrap",gap:6}}>
+          {/* Category tabs */}
+          <div style={{padding:"0 4px 10px", display:"flex", flexWrap:"wrap", gap:4}}>
             {allCats.map(cat => {
-              const shortCat = cat === "All" ? "All" : (cat || "").split(" ")[0];
+              const label = cat === "All" ? "All" : (cat || "").split(" ")[0];
               return (
-                <button key={cat} className={`cat-btn${activeCat===cat?" active":""}`} onClick={() => setActiveCat(cat)} title={cat}>
-                  {shortCat}
+                <button key={cat} className={`cat-tab${activeCat===cat?" active":""}`}
+                  onClick={() => setActiveCat(cat)} title={cat}>
+                  {label}
                 </button>
               );
             })}
           </div>
 
-          <div style={{padding:"0 8px",fontSize:12,color:COLORS.muted,letterSpacing:"0.06em",fontWeight:600,paddingBottom:8,paddingLeft:16}}>
+          {/* Count */}
+          <div style={{padding:"0 16px 8px", fontSize:11, color:"#2A2A3A", fontWeight:700, letterSpacing:"0.08em"}}>
             {filtered.length} PROMPT{filtered.length!==1?"S":""}
           </div>
 
           {/* Prompt list */}
-          <div style={{padding:"0 10px 16px",display:"flex",flexDirection:"column",gap:6}}>
+          <div style={{padding:"0 0 20px", display:"flex", flexDirection:"column"}}>
             {filtered.map(p => {
               const col = CH_COLOR[p.ch];
               const isActive = selected.id === p.id;
               return (
-                <div key={p.id} className={`p-card${isActive?" active":""}`} style={{"--ch-col":col}} onClick={() => selectPrompt(p)}>
-                  <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
-                    <span style={{fontSize:11,fontWeight:700,color:col,letterSpacing:"0.06em"}}>{p.id}</span>
-                    <span style={{width:4,height:4,borderRadius:"50%",background:col,flexShrink:0}} />
-                    <span style={{fontSize:11,color:COLORS.muted,letterSpacing:"0.04em"}}>{CH_NAMES[p.ch]}</span>
+                <button key={p.id} className={`p-row${isActive?" active":""}`}
+                  onClick={() => selectPrompt(p)}>
+                  <div style={{
+                    width:3, height:28, borderRadius:2,
+                    background: isActive ? col : "transparent",
+                    flexShrink:0, transition:"background 0.15s"
+                  }} />
+                  <div style={{flex:1, minWidth:0}}>
+                    <div style={{
+                      fontSize:13, fontWeight: isActive ? 600 : 400,
+                      color: isActive ? "#F0F0F8" : "#8080A0",
+                      lineHeight:1.3, transition:"color 0.12s",
+                      whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis"
+                    }}>{p.name}</div>
+                    <div style={{fontSize:11, color:"#3A3A5A", marginTop:2}}>{CH_NAMES[p.ch]}</div>
                   </div>
-                  <div style={{display:"flex",alignItems:"center",gap:8}}>
-                    <div style={{fontSize:14,fontWeight:600,color:isActive?COLORS.white:COLORS.lgrey,lineHeight:1.3}}>{p.name}</div>
-                    {PDF_PROMPTS[p.id] && <span style={{fontSize:9,fontWeight:700,letterSpacing:"0.08em",color:"#FFB347",background:"rgba(255,179,71,0.1)",border:"1px solid rgba(255,179,71,0.2)",padding:"2px 6px",borderRadius:3,flexShrink:0}}>PDF</span>}
-                  </div>
-                </div>
+                  {PDF_PROMPTS[p.id] && (
+                    <div style={{
+                      fontSize:9, fontWeight:700, letterSpacing:"0.06em",
+                      color:"#FFB347", flexShrink:0
+                    }}>PDF</div>
+                  )}
+                </button>
               );
             })}
           </div>
         </div>
 
-        {/* MAIN PANEL */}
+        {/* ── MAIN PANEL ── */}
         <div className="main-panel">
-          <div style={{padding:28,maxWidth:860}}>
+          <div style={{padding:"32px 36px", maxWidth:820}}>
 
             {/* Prompt header */}
-            <div style={{marginBottom:24}}>
-              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:10}}>
-                <span style={{fontSize:12,fontWeight:700,color:chCol,letterSpacing:"0.1em",background:`${chCol}16`,padding:"4px 12px",borderRadius:20}}>
-                  PROMPT {selected.id}
+            <div style={{marginBottom:32}}>
+              <div style={{display:"flex", alignItems:"center", gap:10, marginBottom:12}}>
+                <div style={{
+                  width:6, height:6, borderRadius:"50%",
+                  background:chCol, flexShrink:0
+                }} />
+                <span style={{fontSize:11, fontWeight:700, color:"#3A3A5A", letterSpacing:"0.1em"}}>
+                  {selected.cat.toUpperCase()}
                 </span>
-                <span style={{fontSize:12,color:COLORS.muted}}>CH {selected.ch}  ·  {selected.cat}</span>
+                <span style={{fontSize:11, color:"#2A2A3A"}}>·</span>
+                <span style={{fontSize:11, color:"#2A2A3A", letterSpacing:"0.06em"}}>PROMPT {selected.id}</span>
               </div>
-              <h1 style={{fontFamily:"'Bebas Neue'",fontSize:36,letterSpacing:"0.04em",marginBottom:8}}>{selected.name}</h1>
-              <p style={{fontSize:16,color:COLORS.lgrey,lineHeight:1.6}}>{selected.desc}</p>
+              <h1 style={{
+                fontFamily:"Bebas Neue", fontSize:38,
+                letterSpacing:"0.04em", color:"#F0F0F8",
+                lineHeight:1, marginBottom:10
+              }}>{selected.name}</h1>
+              <p style={{fontSize:15, color:"#7070908", lineHeight:1.65, maxWidth:600}}>{selected.desc}</p>
             </div>
 
-            <div style={{height:1,background:COLORS.border,marginBottom:24}} />
+            <div className="div-line" />
 
             {/* Variable inputs */}
-            {selected.vars.length > 0 && (
-              <div style={{marginBottom:24}}>
-                <div style={{fontSize:13,fontWeight:700,color:COLORS.amber,letterSpacing:"0.08em",marginBottom:16}}>
-                  CUSTOMISE YOUR PROMPT
-                </div>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:14}}>
-                  {selected.vars.map(v => (
+            {(selected.vars || []).length > 0 && (
+              <div style={{marginBottom:32}}>
+                <span className="sec-label">Customise your prompt</span>
+                <div style={{display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(260px,1fr))", gap:16}}>
+                  {(selected.vars || []).map(v => (
                     <div key={v.k}>
-                      <label style={{display:"block",fontSize:12,fontWeight:600,color:COLORS.lgrey,letterSpacing:"0.06em",marginBottom:6}}>
-                        [{v.k}]
-                        <span style={{color:COLORS.muted,fontWeight:400,marginLeft:4}}>— {v.l}</span>
+                      <label style={{
+                        display:"block", fontSize:11, fontWeight:600,
+                        color:"#4A4A6A", letterSpacing:"0.06em", marginBottom:7
+                      }}>
+                        {v.l}
                       </label>
-                      <textarea className="field-input"
+                      <textarea className="f-input"
                         rows={(v.ph || "").length > 60 ? 3 : 2}
                         placeholder={v.ph}
                         value={fieldVals[v.k] || ""}
@@ -1603,137 +1641,129 @@ function Studio({ onBack, onDemo }) {
               </div>
             )}
 
-            <div style={{height:1,background:COLORS.border,marginBottom:24}} />
+            <div className="div-line" />
 
-            {/* Output */}
+            {/* Output section */}
             <div>
-
               {/* Optional email capture */}
               {!studioEmailSent ? (
                 <div style={{
-                  display:"flex", alignItems:"center", gap:10,
-                  padding:"12px 16px", marginBottom:16,
-                  background:"rgba(79,195,247,0.03)",
-                  border:"1px solid #1A1A32", borderRadius:8,
+                  display:"flex", alignItems:"center", gap:12,
+                  padding:"12px 16px", marginBottom:20,
+                  background:"rgba(255,255,255,0.02)",
+                  border:"1px solid #0F0F1E", borderRadius:8,
                   flexWrap:"wrap"
                 }}>
-                  <div style={{flex:1, minWidth:200}}>
-                    <p style={{fontSize:12,color:COLORS.lgrey,marginBottom:0}}>
-                      Enter your email to save your work and get updates from CINEFY
-                    </p>
-                  </div>
-                  <div style={{display:"flex",gap:8,flexShrink:0}}>
-                    <input
-                      type="email"
-                      placeholder="your@email.com"
-                      value={studioEmail}
-                      onChange={e => setStudioEmail(e.target.value)}
+                  <p style={{fontSize:12, color:"#4A4A6A", flex:1, minWidth:180, margin:0}}>
+                    Enter your email to save your work and get updates from CINEFY
+                  </p>
+                  <div style={{display:"flex", gap:8, flexShrink:0}}>
+                    <input type="email" placeholder="your@email.com"
+                      value={studioEmail} onChange={e => setStudioEmail(e.target.value)}
                       onKeyDown={e => e.key === "Enter" && submitStudioEmail()}
                       style={{
-                        background:"#040408", border:"1px solid #1A1A32",
+                        background:"rgba(255,255,255,0.04)", border:"1px solid #1A1A2E",
                         color:"#F0F0F8", fontFamily:"DM Sans", fontSize:13,
-                        padding:"8px 14px", borderRadius:6, outline:"none",
-                        width:200, transition:"border-color 0.15s"
+                        padding:"8px 14px", borderRadius:6, outline:"none", width:190
                       }}
                     />
-                    <button
-                      onClick={submitStudioEmail}
+                    <button onClick={submitStudioEmail}
                       disabled={!studioEmail.trim() || studioEmailSaving}
                       style={{
-                        background:"#4FC3F7", color:"#07070D",
-                        fontFamily:"DM Sans", fontWeight:700, fontSize:13,
-                        padding:"8px 16px", borderRadius:6, border:"none",
-                        cursor:"pointer", whiteSpace:"nowrap",
-                        opacity: (!studioEmail.trim() || studioEmailSaving) ? 0.5 : 1
-                      }}
-                    >
-                      {studioEmailSaving ? "..." : "Save"}
-                    </button>
+                        background:"#4FC3F7", color:"#07070D", fontFamily:"DM Sans",
+                        fontWeight:700, fontSize:13, padding:"8px 16px",
+                        borderRadius:6, border:"none", cursor:"pointer",
+                        opacity:(!studioEmail.trim() || studioEmailSaving) ? 0.4 : 1
+                      }}>{studioEmailSaving ? "..." : "Save"}</button>
                   </div>
                 </div>
               ) : (
                 <div style={{
-                  padding:"10px 16px", marginBottom:16,
-                  background:"rgba(91,224,106,0.04)",
-                  border:"1px solid rgba(91,224,106,0.2)", borderRadius:8,
+                  padding:"10px 16px", marginBottom:20,
+                  background:"rgba(91,224,106,0.03)",
+                  border:"1px solid rgba(91,224,106,0.15)", borderRadius:8,
                   display:"flex", alignItems:"center", gap:10
                 }}>
-                  <div style={{width:6,height:6,borderRadius:"50%",background:"#5BE06A",flexShrink:0}} />
-                  <p style={{fontSize:12,color:"#5BE06A",margin:0}}>
-                    You're on the list — we'll keep you updated on new prompts and features.
-                  </p>
+                  <div style={{width:5, height:5, borderRadius:"50%", background:"#5BE06A", flexShrink:0}} />
+                  <p style={{fontSize:12, color:"#5BE06A", margin:0}}>You're on the list.</p>
                 </div>
               )}
 
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14,flexWrap:"wrap",gap:10}}>
-                <div style={{fontSize:13,fontWeight:700,color:COLORS.green,letterSpacing:"0.08em"}}>
-                  YOUR PROMPT — READY TO COPY
-                </div>
-                <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
-                  <button className="copy-btn" style={{background:copied?"rgba(91,224,106,0.15)":"linear-gradient(135deg,#4FC3F7,#0077B6)",color:copied?COLORS.green:COLORS.white,border:copied?`1px solid ${COLORS.green}`:"none"}} onClick={copyPrompt}>
-                    {copied ? "✓ Copied!" : "Copy Prompt"}
+              {/* Output label + actions */}
+              <div style={{display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:12, flexWrap:"wrap", gap:10}}>
+                <span className="sec-label" style={{margin:0}}>Your prompt</span>
+                <div style={{display:"flex", gap:8, flexWrap:"wrap"}}>
+                  <button className={`btn-copy${copied?" copied":""}`} onClick={copyPrompt}>
+                    {copied ? "✓ Copied" : "Copy Prompt"}
                   </button>
                   {PDF_PROMPTS[selected.id] && (
-                    <button className="copy-btn"
-                      style={{background:"transparent",border:"1px solid #FFB347",color:"#FFB347",display:"flex",alignItems:"center",gap:8}}
-                      onClick={() => PDF_PROMPTS[selected.id](fieldVals)}
-                    >
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    <button className="btn-outline amber"
+                      onClick={() => PDF_PROMPTS[selected.id](fieldVals)}>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                      </svg>
                       Download PDF
                     </button>
                   )}
-                  <button className="copy-btn" style={{background:"transparent",border:`1px solid ${COLORS.border}`,color:COLORS.lgrey}} onClick={() => { setFieldVals({}); setEditedPrompt(null); }}>
+                  <button className="btn-outline"
+                    onClick={() => { setFieldVals({}); setEditedPrompt(null); }}>
                     Reset
                   </button>
                 </div>
               </div>
-              <textarea
-                className="output-box"
-                ref={outputRef}
+
+              {/* Output textarea */}
+              <textarea className="out-box" ref={outputRef}
                 value={finalPrompt}
-                onChange={e => {
-                  // Allow direct editing — update via a local override
-                  setEditedPrompt(e.target.value);
-                }}
-                style={{
-                  width:"100%", resize:"vertical", cursor:"text",
-                  minHeight:180, fontFamily:"DM Sans"
-                }}
+                onChange={e => setEditedPrompt(e.target.value)}
               />
-              <p style={{fontSize:12,color:COLORS.muted,marginTop:8,lineHeight:1.6}}>
-                Click inside the prompt above to edit any word directly before copying. {Object.values(fieldVals).some(v => v) ? "Your custom details are filled in." : "Fill in the fields above to personalise, or paste as-is with the placeholder brackets."}
+              <p style={{fontSize:11, color:"#2A2A3A", marginTop:8, lineHeight:1.6}}>
+                Click inside to edit any word before copying. Paste into ChatGPT, Claude, or Gemini.
               </p>
+
               {PDF_PROMPTS[selected.id] && (
-                <div style={{marginTop:16,padding:"14px 18px",background:"rgba(255,179,71,0.04)",border:"1px solid rgba(255,179,71,0.15)",borderLeft:"2px solid #FFB347",borderRadius:6,display:"flex",alignItems:"center",gap:12}}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFB347" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                  <div>
-                    <span style={{fontSize:13,fontWeight:700,color:"#FFB347"}}>Client-Ready PDF Available</span>
-                    <span style={{fontSize:13,color:COLORS.muted,marginLeft:8}}>Fill in your details above, then click Download PDF to generate a branded deliverable.</span>
-                  </div>
+                <div style={{
+                  marginTop:16, padding:"12px 16px",
+                  background:"rgba(255,179,71,0.03)",
+                  border:"1px solid rgba(255,179,71,0.12)",
+                  borderRadius:8, display:"flex", alignItems:"center", gap:12
+                }}>
+                  <div style={{width:5, height:5, borderRadius:"50%", background:"#FFB347", flexShrink:0}} />
+                  <span style={{fontSize:12, color:"#7A7A9A"}}>
+                    Client-ready PDF available — fill in your details above then click Download PDF.
+                  </span>
                 </div>
               )}
             </div>
 
-            {/* Next prompt nav */}
-            <div style={{display:"flex",gap:12,marginTop:32,paddingTop:24,borderTop:`1px solid ${COLORS.border}`}}>
+            {/* Next / Previous */}
+            <div style={{display:"flex", gap:10, marginTop:40, paddingTop:28, borderTop:"1px solid #0F0F1E"}}>
               {PROMPTS.find(p => p && parseInt(p.id) === parseInt(selected.id)-1) && (
-                <button onClick={() => selectPrompt(PROMPTS.find(p => p && parseInt(p.id) === parseInt(selected.id)-1))}
-                  style={{background:"transparent",border:`1px solid ${COLORS.border}`,color:COLORS.lgrey,padding:"10px 20px",borderRadius:6,cursor:"pointer",fontSize:14,fontFamily:"'DM Sans'"}}>
+                <button className="btn-outline"
+                  onClick={() => selectPrompt(PROMPTS.find(p => p && parseInt(p.id) === parseInt(selected.id)-1))}>
                   ← Previous
                 </button>
               )}
               {PROMPTS.find(p => p && parseInt(p.id) === parseInt(selected.id)+1) && (
-                <button onClick={() => selectPrompt(PROMPTS.find(p => p && parseInt(p.id) === parseInt(selected.id)+1))}
-                  style={{background:`${chCol}18`,border:`1px solid ${chCol}`,color:chCol,padding:"10px 20px",borderRadius:6,cursor:"pointer",fontSize:14,fontFamily:"'DM Sans'",marginLeft:"auto"}}>
-                  Next Prompt →
+                <button style={{
+                  marginLeft:"auto", background:`${chCol}10`, border:`1px solid ${chCol}40`,
+                  color:chCol, padding:"10px 20px", borderRadius:8,
+                  cursor:"pointer", fontSize:14, fontFamily:"DM Sans", fontWeight:600,
+                  transition:"all 0.15s"
+                }}
+                  onClick={() => selectPrompt(PROMPTS.find(p => p && parseInt(p.id) === parseInt(selected.id)+1))}>
+                  Next →
                 </button>
               )}
             </div>
+
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // ── ROOT ──────────────────────────────────────────────────
